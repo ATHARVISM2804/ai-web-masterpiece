@@ -1,4 +1,4 @@
-import { ArrowDown, ArrowUpRight } from "lucide-react";
+import { ArrowDown } from "lucide-react";
 import profilePhoto from "@/assets/profile-photo.jpg";
 
 export default function HeroSection() {
@@ -13,61 +13,46 @@ export default function HeroSection() {
     <section className="min-h-screen flex items-center relative overflow-hidden bg-background">
       {/* Side vertical text - left */}
       <div className="hidden lg:flex absolute left-8 top-1/2 -translate-y-1/2">
-        <span className="vertical-text text-xs tracking-[0.3em] text-muted-foreground uppercase">
+        <span className="vertical-text text-xs tracking-[0.3em] text-muted-foreground uppercase font-body">
           Full Stack Developer
         </span>
       </div>
 
-      {/* Side vertical text - left bottom */}
-      <div className="hidden lg:flex absolute left-8 bottom-24">
-        <span className="text-xs tracking-widest text-muted-foreground">2024</span>
+      {/* Year - left bottom */}
+      <div className="hidden lg:flex absolute left-8 bottom-12">
+        <span className="text-xs tracking-widest text-muted-foreground font-body">2024</span>
       </div>
       
-      <div className="container mx-auto px-6 lg:px-20 py-20">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-8 items-center">
+      <div className="container mx-auto px-6 lg:px-16">
+        <div className="grid lg:grid-cols-2 gap-8 items-center min-h-screen py-24">
           {/* Left Content */}
-          <div className="order-2 lg:order-1 max-w-xl">
+          <div className="order-2 lg:order-1 max-w-xl lg:pl-12">
             {/* Stats */}
-            <div className="flex gap-16 mb-12 animate-fade-up">
+            <div className="flex gap-12 mb-16 animate-fade-up">
               <div className="text-left">
                 <span className="text-4xl md:text-5xl font-display font-light tracking-tight text-foreground">+200</span>
-                <p className="text-sm text-muted-foreground mt-2 font-body">Project completed</p>
+                <p className="text-sm text-muted-foreground mt-1 font-body">Project completed</p>
               </div>
               <div className="text-left">
                 <span className="text-4xl md:text-5xl font-display font-light tracking-tight text-foreground">+50</span>
-                <p className="text-sm text-muted-foreground mt-2 font-body">AI Agents built</p>
+                <p className="text-sm text-muted-foreground mt-1 font-body">AI Agents built</p>
               </div>
             </div>
 
             {/* Main Heading */}
-            <h1 className="font-display text-[5.5rem] md:text-[7rem] lg:text-[8rem] font-light tracking-tight text-foreground leading-[0.9] mb-8 animate-fade-up-delay-1">
+            <h1 className="font-display text-[6rem] md:text-[8rem] lg:text-[10rem] font-extralight tracking-tight text-foreground leading-[0.85] mb-6 animate-fade-up-delay-1">
               Hello
             </h1>
 
             {/* Subtitle */}
-            <p className="text-lg md:text-xl text-muted-foreground font-body leading-relaxed animate-fade-up-delay-2">
+            <p className="text-lg text-muted-foreground font-body leading-relaxed animate-fade-up-delay-2">
               — It's <span className="text-foreground">John Doe</span> a Full Stack Web Developer & AI Agent Developer
             </p>
-
-            {/* CTA Link */}
-            <div className="mt-12 animate-fade-up-delay-3">
-              <a
-                href="#contact"
-                onClick={(e) => {
-                  e.preventDefault();
-                  document.querySelector("#contact")?.scrollIntoView({ behavior: "smooth" });
-                }}
-                className="inline-flex items-center gap-2 text-sm font-medium text-foreground underline-animation"
-              >
-                Book A Call
-                <ArrowUpRight size={16} />
-              </a>
-            </div>
           </div>
 
           {/* Right Content - Profile Image */}
           <div className="order-1 lg:order-2 flex justify-center lg:justify-end">
-            <div className="relative w-full max-w-lg lg:max-w-none">
+            <div className="relative w-full max-w-md lg:max-w-lg xl:max-w-xl">
               <img
                 src={profilePhoto}
                 alt="John Doe - Full Stack & AI Developer"
@@ -81,11 +66,11 @@ export default function HeroSection() {
       {/* Scroll Indicator */}
       <button
         onClick={scrollToAbout}
-        className="absolute bottom-10 left-8 lg:left-20 flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors animate-fade-up-delay-4"
+        className="absolute bottom-12 left-8 lg:left-16 flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors animate-fade-up-delay-4 font-body"
         aria-label="Scroll to about section"
       >
-        <span className="text-sm font-body">Scroll down</span>
-        <ArrowDown size={16} />
+        <span className="text-sm">Scroll down</span>
+        <ArrowDown size={14} />
       </button>
     </section>
   );
