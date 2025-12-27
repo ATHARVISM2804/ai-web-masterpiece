@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ExternalLink, Github, ArrowRight, ArrowUpRight } from "lucide-react";
+import { ArrowRight, ArrowUpRight, ChevronUp } from "lucide-react";
 import project1 from "@/assets/project-1.jpg";
 import project2 from "@/assets/project-2.jpg";
 import project3 from "@/assets/project-3.jpg";
@@ -34,6 +34,36 @@ const projects = [
     tech: ["Python", "LangChain", "OpenAI", "FastAPI"],
     liveUrl: "#",
     githubUrl: "#"
+  },
+  {
+    id: 4,
+    title: "Social Media App",
+    category: "Full Stack",
+    description: "A modern social platform with real-time messaging, stories, and content sharing features.",
+    image: project1,
+    tech: ["React Native", "Firebase", "Redux", "Node.js"],
+    liveUrl: "#",
+    githubUrl: "#"
+  },
+  {
+    id: 5,
+    title: "Task Management Tool",
+    category: "Web App",
+    description: "Collaborative project management tool with Kanban boards, time tracking, and team analytics.",
+    image: project2,
+    tech: ["Vue.js", "GraphQL", "PostgreSQL", "Docker"],
+    liveUrl: "#",
+    githubUrl: "#"
+  },
+  {
+    id: 6,
+    title: "AI Image Generator",
+    category: "AI Project",
+    description: "Text-to-image generation platform using Stable Diffusion with custom model fine-tuning.",
+    image: project3,
+    tech: ["Python", "PyTorch", "Stable Diffusion", "AWS"],
+    liveUrl: "#",
+    githubUrl: "#"
   }
 ];
 
@@ -41,10 +71,13 @@ const filters = ["All", "Full Stack", "Web App", "AI Project"];
 
 export default function ProjectsSection() {
   const [activeFilter, setActiveFilter] = useState("All");
+  const [showAll, setShowAll] = useState(false);
 
   const filteredProjects = activeFilter === "All" 
     ? projects 
     : projects.filter(p => p.category === activeFilter);
+
+  const displayedProjects = showAll ? filteredProjects : filteredProjects.slice(0, 3);
 
   return (
     <section id="projects" className="py-24 lg:py-32 bg-tertiary">
@@ -66,7 +99,10 @@ export default function ProjectsSection() {
             {filters.map((filter) => (
               <button
                 key={filter}
-                onClick={() => setActiveFilter(filter)}
+                onClick={() => {
+                  setActiveFilter(filter);
+                  setShowAll(false);
+                }}
                 className={`px-4 py-2 rounded-full text-xs font-body border transition-all duration-200 ${
                   activeFilter === filter
                     ? "bg-foreground text-background border-foreground"
@@ -81,10 +117,10 @@ export default function ProjectsSection() {
 
         {/* Projects Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredProjects.map((project, index) => (
+          {displayedProjects.map((project, index) => (
             <article
               key={project.id}
-              className="group"
+              className="group animate-fade-up"
               style={{ animationDelay: `${index * 0.1}s` }}
             >
               {/* Image */}
@@ -124,19 +160,27 @@ export default function ProjectsSection() {
           ))}
         </div>
 
-        {/* View More Link */}
-        <div className="text-center mt-12">
-          <div className="inline-flex items-center gap-4">
-            <span className="text-sm text-muted-foreground font-body">Check out More</span>
-            <a
-              href="#"
-              className="inline-flex items-center gap-2 text-sm font-medium text-foreground hover:text-muted-foreground transition-colors"
+        {/* View More / Show Less */}
+        {filteredProjects.length > 3 && (
+          <div className="text-center mt-12">
+            <button
+              onClick={() => setShowAll(!showAll)}
+              className="inline-flex items-center gap-3 text-sm font-medium text-foreground hover:text-muted-foreground transition-colors group"
             >
-              <ArrowRight size={16} />
-              View More
-            </a>
+              <span className="text-sm text-muted-foreground font-body">
+                {showAll ? "Show Less" : "Check out More"}
+              </span>
+              <span className="inline-flex items-center gap-2">
+                {showAll ? (
+                  <ChevronUp size={16} className="transition-transform group-hover:-translate-y-1" />
+                ) : (
+                  <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
+                )}
+                {showAll ? "Collapse" : "View More"}
+              </span>
+            </button>
           </div>
-        </div>
+        )}
       </div>
     </section>
   );
