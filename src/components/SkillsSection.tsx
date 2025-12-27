@@ -51,19 +51,19 @@ const experiences = [
 const skillCategories = [
   {
     title: "Frontend",
-    skills: ["React", "Next.js", "TypeScript", "Tailwind CSS"]
+    skills: ["React", "Next.js", "TypeScript", "Tailwind CSS", "Vue.js", "HTML5/CSS3", "SASS"]
   },
   {
     title: "Backend",
-    skills: ["Node.js", "Python", "PostgreSQL", "MongoDB"]
+    skills: ["Python", "Django", "Flask", "Node.js", "Express.js", "PostgreSQL", "MongoDB", "REST APIs", "GraphQL"]
   },
   {
-    title: "AI & ML",
-    skills: ["OpenAI API", "LangChain", "TensorFlow", "Custom Agents"]
+    title: "AI & Automation",
+    skills: ["OpenAI API", "LangChain", "n8n", "Make.com", "Zapier", "AI Agents", "ChatGPT Integration", "TensorFlow", "Custom Workflows"]
   },
   {
-    title: "DevOps",
-    skills: ["Docker", "AWS", "CI/CD", "Kubernetes"]
+    title: "DevOps & Tools",
+    skills: ["Docker", "AWS", "CI/CD", "Git", "Linux", "Vercel", "Firebase"]
   }
 ];
 
