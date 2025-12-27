@@ -59,7 +59,7 @@ export default function ContactSection() {
             
             <div className="space-y-4">
               <a
-                href="mailto:hello@johndoe.dev"
+                href="mailto:atharv.golait@gmail.com"
                 className="flex items-center gap-4 p-5 bg-card border border-border rounded-2xl hover:border-foreground/20 transition-colors group"
               >
                 <div className="w-12 h-12 rounded-full border border-border flex items-center justify-center group-hover:bg-foreground group-hover:text-primary-foreground transition-colors">
@@ -67,7 +67,7 @@ export default function ContactSection() {
                 </div>
                 <div>
                   <p className="text-xs text-muted-foreground uppercase tracking-wide">Email</p>
-                  <p className="font-body text-foreground">hello@johndoe.dev</p>
+                  <p className="font-body text-foreground">atharv.golait@gmail.com</p>
                 </div>
               </a>
 
@@ -77,7 +77,7 @@ export default function ContactSection() {
                 </div>
                 <div>
                   <p className="text-xs text-muted-foreground uppercase tracking-wide">Location</p>
-                  <p className="font-body text-foreground">San Francisco, CA</p>
+                  <p className="font-body text-foreground">Nagpur, Maharashtra</p>
                 </div>
               </div>
 
@@ -87,7 +87,7 @@ export default function ContactSection() {
                 </div>
                 <div>
                   <p className="text-xs text-muted-foreground uppercase tracking-wide">Phone</p>
-                  <p className="font-body text-foreground">+1 (555) 123-4567</p>
+                  <p className="font-body text-foreground">+91 8329310930</p>
                 </div>
               </div>
             </div>
