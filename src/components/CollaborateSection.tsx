@@ -1,12 +1,18 @@
 import { Github, Linkedin, Twitter, ArrowUpRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import collaborateBg from "@/assets/collaborate-bg.png";
 
 const CollaborateSection = () => {
   return (
-    <section className="py-24 md:py-32 bg-muted/30 relative overflow-hidden">
-      {/* Decorative elements */}
-      <div className="absolute top-10 left-10 w-32 h-32 bg-primary/5 rounded-full blur-3xl" />
-      <div className="absolute bottom-10 right-10 w-48 h-48 bg-accent/10 rounded-full blur-3xl" />
+    <section className="py-24 md:py-32 relative overflow-hidden">
+      {/* Background Image */}
+      <div 
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+        style={{ backgroundImage: `url(${collaborateBg})` }}
+      />
+      
+      {/* Overlay for text readability */}
+      <div className="absolute inset-0 bg-background/60 backdrop-blur-[2px]" />
       
       <div className="container mx-auto px-6 relative z-10">
         <div className="max-w-3xl mx-auto text-center">
@@ -27,7 +33,7 @@ const CollaborateSection = () => {
               href="https://github.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="w-14 h-14 rounded-full bg-card border border-border flex items-center justify-center hover:bg-accent hover:border-primary transition-all duration-300 group"
+              className="w-14 h-14 rounded-full bg-card/80 backdrop-blur-sm border border-border flex items-center justify-center hover:bg-accent hover:border-primary transition-all duration-300 group"
             >
               <Github className="w-6 h-6 text-foreground group-hover:text-primary transition-colors" />
             </a>
@@ -35,7 +41,7 @@ const CollaborateSection = () => {
               href="https://linkedin.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="w-14 h-14 rounded-full bg-card border border-border flex items-center justify-center hover:bg-accent hover:border-primary transition-all duration-300 group"
+              className="w-14 h-14 rounded-full bg-card/80 backdrop-blur-sm border border-border flex items-center justify-center hover:bg-accent hover:border-primary transition-all duration-300 group"
             >
               <Linkedin className="w-6 h-6 text-foreground group-hover:text-primary transition-colors" />
             </a>
@@ -43,7 +49,7 @@ const CollaborateSection = () => {
               href="https://twitter.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="w-14 h-14 rounded-full bg-card border border-border flex items-center justify-center hover:bg-accent hover:border-primary transition-all duration-300 group"
+              className="w-14 h-14 rounded-full bg-card/80 backdrop-blur-sm border border-border flex items-center justify-center hover:bg-accent hover:border-primary transition-all duration-300 group"
             >
               <Twitter className="w-6 h-6 text-foreground group-hover:text-primary transition-colors" />
             </a>
