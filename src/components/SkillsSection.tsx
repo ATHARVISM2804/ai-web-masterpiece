@@ -1,118 +1,148 @@
-import { 
-  Code2, 
-  Database, 
-  Cloud, 
-  Cpu, 
-  Palette, 
-  GitBranch,
-  Server,
-  Layers
-} from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
+
+const experiences = [
+  {
+    company: "TechCorp Inc, San Francisco",
+    role: "Senior Full Stack Developer",
+    period: "January 2022 - Present",
+    description: "Leading development of AI-powered web applications, architecting scalable solutions",
+    tags: ["React", "Node.js"]
+  },
+  {
+    company: "AI Solutions Lab, New York",
+    role: "AI Agent Developer",
+    period: "March 2020 - December 2021",
+    description: "Built custom AI agents and automation tools for enterprise clients",
+    tags: ["Python", "LangChain"]
+  },
+  {
+    company: "StartupHub, Austin",
+    role: "Full Stack Developer",
+    period: "June 2018 - February 2020",
+    description: "Developed MVPs for multiple startups, from concept to launch",
+    tags: ["TypeScript", "AWS"]
+  }
+];
 
 const skillCategories = [
   {
     title: "Frontend",
-    icon: Palette,
-    skills: ["React", "Next.js", "TypeScript", "Tailwind CSS", "HTML/CSS"]
+    skills: ["React", "Next.js", "TypeScript", "Tailwind CSS"]
   },
   {
     title: "Backend",
-    icon: Server,
-    skills: ["Node.js", "Python", "Express", "Django", "FastAPI"]
+    skills: ["Node.js", "Python", "PostgreSQL", "MongoDB"]
   },
   {
     title: "AI & ML",
-    icon: Cpu,
-    skills: ["OpenAI API", "LangChain", "TensorFlow", "Claude API", "Custom Agents"]
-  },
-  {
-    title: "Database",
-    icon: Database,
-    skills: ["PostgreSQL", "MongoDB", "Redis", "Firebase", "Supabase"]
+    skills: ["OpenAI API", "LangChain", "TensorFlow", "Custom Agents"]
   },
   {
     title: "DevOps",
-    icon: Cloud,
-    skills: ["Docker", "AWS", "Vercel", "CI/CD", "Kubernetes"]
-  },
-  {
-    title: "Tools",
-    icon: GitBranch,
-    skills: ["Git", "VS Code", "Figma", "Postman", "Linux"]
+    skills: ["Docker", "AWS", "CI/CD", "Kubernetes"]
   }
-];
-
-const techLogos = [
-  { name: "React", icon: Code2 },
-  { name: "TypeScript", icon: Layers },
-  { name: "Node.js", icon: Server },
-  { name: "Python", icon: Cpu },
-  { name: "PostgreSQL", icon: Database },
-  { name: "Docker", icon: Cloud },
 ];
 
 export default function SkillsSection() {
   return (
     <section id="skills" className="py-24 lg:py-32 bg-background">
-      <div className="container mx-auto px-6 lg:px-12">
+      <div className="container mx-auto px-6 lg:px-20">
         {/* Header */}
-        <div className="text-center mb-16">
-          <span className="text-sm uppercase tracking-widest text-muted-foreground font-body">
-            Expertise
-          </span>
-          <h2 className="font-display text-4xl md:text-5xl font-medium text-foreground mt-4">
-            Technologies & Tools
-          </h2>
-          <p className="text-lg text-muted-foreground font-body mt-4 max-w-2xl mx-auto">
-            A comprehensive toolkit for building modern web applications and intelligent AI solutions
-          </p>
+        <div className="grid lg:grid-cols-2 gap-12 mb-16">
+          <div>
+            <div className="inline-flex items-center gap-2 mb-4">
+              <span className="w-2 h-2 rounded-full bg-foreground" />
+              <span className="text-sm text-muted-foreground font-body">Experiences</span>
+            </div>
+            <h2 className="font-display text-4xl md:text-5xl font-light tracking-tight text-foreground">
+              Explore My Development Journey
+            </h2>
+          </div>
+          <div className="lg:text-right">
+            <p className="text-base text-muted-foreground font-body leading-relaxed max-w-md lg:ml-auto mb-6">
+              Over the past 5+ years, I've had the opportunity to work on a wide range of projects, collaborating with diverse teams and clients to bring creative visions to life.
+            </p>
+            <a
+              href="#contact"
+              onClick={(e) => {
+                e.preventDefault();
+                document.querySelector("#contact")?.scrollIntoView({ behavior: "smooth" });
+              }}
+              className="inline-flex items-center gap-2 text-sm font-medium text-foreground underline-animation"
+            >
+              Book A Call
+              <ArrowUpRight size={16} />
+            </a>
+          </div>
         </div>
 
-        {/* Tech Icons Row */}
-        <div className="flex flex-wrap justify-center gap-8 mb-16">
-          {techLogos.map((tech) => (
+        {/* Experiences List */}
+        <div className="space-y-0 mb-20">
+          {experiences.map((exp, index) => (
             <div
-              key={tech.name}
-              className="group flex flex-col items-center gap-2 p-4 rounded-xl transition-all duration-300 hover:-translate-y-2"
+              key={index}
+              className="group py-8 border-t border-border last:border-b hover:bg-tertiary/50 transition-colors -mx-6 px-6 lg:-mx-20 lg:px-20"
             >
-              <div className="w-16 h-16 flex items-center justify-center bg-tertiary rounded-xl group-hover:bg-primary group-hover:text-primary-foreground transition-colors duration-300">
-                <tech.icon size={32} />
+              <div className="grid lg:grid-cols-12 gap-4 items-center">
+                {/* Company & Period */}
+                <div className="lg:col-span-4">
+                  <h3 className="font-display text-lg font-light text-foreground">
+                    {exp.company}
+                  </h3>
+                  <p className="text-sm text-muted-foreground font-body mt-1">
+                    • {exp.period}
+                  </p>
+                </div>
+
+                {/* Description */}
+                <div className="lg:col-span-5">
+                  <p className="text-sm text-muted-foreground font-body">
+                    {exp.description}
+                  </p>
+                </div>
+
+                {/* Tags */}
+                <div className="lg:col-span-3 flex justify-end gap-2">
+                  {exp.tags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="px-3 py-1.5 text-xs font-body border border-border rounded-full"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
               </div>
-              <span className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">
-                {tech.name}
-              </span>
             </div>
           ))}
         </div>
 
         {/* Skills Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {skillCategories.map((category) => (
-            <div
-              key={category.title}
-              className="group p-6 bg-tertiary rounded-2xl hover-lift transition-all duration-300"
-            >
-              <div className="flex items-center gap-4 mb-6">
-                <div className="p-3 bg-background rounded-xl group-hover:bg-primary group-hover:text-primary-foreground transition-colors duration-300">
-                  <category.icon size={24} />
-                </div>
-                <h3 className="font-display text-xl font-medium text-foreground">
+        <div>
+          <div className="inline-flex items-center gap-2 mb-8">
+            <span className="w-2 h-2 rounded-full bg-foreground" />
+            <span className="text-sm text-muted-foreground font-body">Tech Stack</span>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {skillCategories.map((category) => (
+              <div key={category.title}>
+                <h3 className="font-display text-base font-medium text-foreground mb-4">
                   {category.title}
                 </h3>
+                <div className="flex flex-wrap gap-2">
+                  {category.skills.map((skill) => (
+                    <span
+                      key={skill}
+                      className="px-3 py-1.5 bg-tertiary text-xs text-muted-foreground rounded-full font-body hover:text-foreground hover:bg-foreground hover:text-primary-foreground transition-colors cursor-default"
+                    >
+                      {skill}
+                    </span>
+                  ))}
+                </div>
               </div>
-              
-              <div className="flex flex-wrap gap-2">
-                {category.skills.map((skill) => (
-                  <span
-                    key={skill}
-                    className="px-3 py-1.5 bg-background text-sm text-muted-foreground rounded-full font-body hover:text-foreground hover:bg-primary hover:text-primary-foreground transition-colors cursor-default"
-                  >
-                    {skill}
-                  </span>
-                ))}
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     </section>

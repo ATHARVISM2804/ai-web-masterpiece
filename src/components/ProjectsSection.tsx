@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { ExternalLink, Github, ArrowRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { ExternalLink, Github, ArrowRight, ArrowUpRight } from "lucide-react";
 import project1 from "@/assets/project-1.jpg";
 import project2 from "@/assets/project-2.jpg";
 import project3 from "@/assets/project-3.jpg";
@@ -49,15 +48,16 @@ export default function ProjectsSection() {
 
   return (
     <section id="projects" className="py-24 lg:py-32 bg-tertiary">
-      <div className="container mx-auto px-6 lg:px-12">
+      <div className="container mx-auto px-6 lg:px-20">
         {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12">
+        <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-8 mb-12">
           <div>
-            <span className="text-sm uppercase tracking-widest text-muted-foreground font-body">
-              Portfolio
-            </span>
-            <h2 className="font-display text-4xl md:text-5xl font-medium text-foreground mt-4">
-              Featured Projects
+            <div className="inline-flex items-center gap-2 mb-4">
+              <span className="w-2 h-2 rounded-full bg-foreground" />
+              <span className="text-sm text-muted-foreground font-body">Portfolio</span>
+            </div>
+            <h2 className="font-display text-4xl md:text-5xl font-light tracking-tight text-foreground">
+              Latest Works
             </h2>
           </div>
           
@@ -67,10 +67,10 @@ export default function ProjectsSection() {
               <button
                 key={filter}
                 onClick={() => setActiveFilter(filter)}
-                className={`px-4 py-2 rounded-full text-sm font-body transition-all duration-300 ${
+                className={`px-4 py-2 rounded-full text-xs font-body border transition-all duration-200 ${
                   activeFilter === filter
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-background text-muted-foreground hover:text-foreground"
+                    ? "bg-foreground text-background border-foreground"
+                    : "bg-transparent text-muted-foreground border-border hover:border-foreground/50"
                 }`}
               >
                 {filter}
@@ -80,77 +80,62 @@ export default function ProjectsSection() {
         </div>
 
         {/* Projects Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredProjects.map((project, index) => (
             <article
               key={project.id}
-              className="group bg-background rounded-2xl overflow-hidden hover-lift card-shadow"
+              className="group"
               style={{ animationDelay: `${index * 0.1}s` }}
             >
               {/* Image */}
-              <div className="relative aspect-[16/10] overflow-hidden">
+              <div className="relative aspect-[4/3] overflow-hidden rounded-2xl mb-4">
                 <img
                   src={project.image}
                   alt={project.title}
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
-                <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/10 transition-colors duration-300" />
                 
+                {/* Hover Overlay with Arrow */}
+                <a
+                  href={project.liveUrl}
+                  className="absolute top-4 right-4 w-10 h-10 bg-card rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-foreground hover:text-primary-foreground"
+                >
+                  <ArrowUpRight size={18} />
+                </a>
+
                 {/* Category Badge */}
-                <span className="absolute top-4 left-4 px-3 py-1 bg-background/90 backdrop-blur-sm text-xs font-body rounded-full">
+                <span className="absolute bottom-4 left-4 px-3 py-1.5 bg-card/90 backdrop-blur-sm text-xs font-body rounded-full">
                   {project.category}
                 </span>
-
-                {/* Links Overlay */}
-                <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <a
-                    href={project.liveUrl}
-                    className="p-2 bg-background/90 backdrop-blur-sm rounded-full hover:bg-primary hover:text-primary-foreground transition-colors"
-                    aria-label="View live project"
-                  >
-                    <ExternalLink size={16} />
-                  </a>
-                  <a
-                    href={project.githubUrl}
-                    className="p-2 bg-background/90 backdrop-blur-sm rounded-full hover:bg-primary hover:text-primary-foreground transition-colors"
-                    aria-label="View source code"
-                  >
-                    <Github size={16} />
-                  </a>
-                </div>
               </div>
 
               {/* Content */}
-              <div className="p-6">
-                <h3 className="font-display text-xl font-medium text-foreground mb-2 group-hover:text-secondary transition-colors">
-                  {project.title}
-                </h3>
-                <p className="text-muted-foreground font-body text-sm mb-4 line-clamp-2">
-                  {project.description}
-                </p>
-
-                {/* Tech Stack */}
-                <div className="flex flex-wrap gap-2">
-                  {project.tech.map((tech) => (
-                    <span
-                      key={tech}
-                      className="px-2 py-1 bg-tertiary text-xs text-muted-foreground rounded font-mono"
-                    >
-                      {tech}
-                    </span>
-                  ))}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <h3 className="font-display text-lg font-light text-foreground">
+                    {project.title}
+                  </h3>
+                  <span className="text-xs text-muted-foreground font-body">
+                    {project.tech[0]}
+                  </span>
                 </div>
               </div>
             </article>
           ))}
         </div>
 
-        {/* View All Button */}
+        {/* View More Link */}
         <div className="text-center mt-12">
-          <Button variant="hero-outline" size="lg" className="group">
-            View All Projects
-            <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-          </Button>
+          <div className="inline-flex items-center gap-4">
+            <span className="text-sm text-muted-foreground font-body">Check out More</span>
+            <a
+              href="#"
+              className="inline-flex items-center gap-2 text-sm font-medium text-foreground hover:text-muted-foreground transition-colors"
+            >
+              <ArrowRight size={16} />
+              View More
+            </a>
+          </div>
         </div>
       </div>
     </section>
