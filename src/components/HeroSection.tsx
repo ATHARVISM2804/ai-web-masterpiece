@@ -22,10 +22,10 @@ export default function HeroSection() {
         <span className="text-xs tracking-widest text-muted-foreground font-body">2026</span>
       </div>
       
-      <div className="container mx-auto px-6 lg:px-16">
-        <div className="grid lg:grid-cols-2 gap-8 items-center min-h-screen py-24">
+      <div className="container mx-auto px-6 lg:px-16 relative z-10">
+        <div className="min-h-screen flex items-center py-24">
           {/* Left Content */}
-          <div className="order-2 lg:order-1 max-w-xl lg:pl-12">
+          <div className="max-w-xl lg:pl-12">
             {/* Stats */}
             <div className="flex gap-12 mb-16 animate-fade-up">
               <div className="text-left">
@@ -49,17 +49,27 @@ export default function HeroSection() {
             </p>
           </div>
 
-          {/* Right Content - Profile Image */}
-          <div className="order-1 lg:order-2 flex justify-center lg:justify-end">
-            <div className="relative w-full max-w-xs md:max-w-sm lg:max-w-md lg:-ml-12 lg:-mt-8">
-              <img
-                src="https://res.cloudinary.com/dinhcaf2c/image/upload/v1766874574/Atharv_no_bg_m6cmto.png"
-                alt="Atharv Golait - Full Stack & AI Developer"
-                className="w-full h-auto object-cover grayscale"
-              />
-            </div>
-          </div>
         </div>
+      </div>
+
+      {/* Profile Image - Positioned to the right edge */}
+      <div className="absolute right-0 top-1/2 -translate-y-1/2 hidden lg:block">
+        <div className="relative w-[45vw] h-[90vh]">
+          <img
+            src="https://res.cloudinary.com/dinhcaf2c/image/upload/v1766874574/Atharv_no_bg_m6cmto.png"
+            alt="Atharv Golait - Full Stack & AI Developer"
+            className="w-full h-full object-cover object-top grayscale"
+          />
+        </div>
+      </div>
+
+      {/* Mobile Image */}
+      <div className="lg:hidden absolute right-0 top-24 w-[60vw] h-[50vh]">
+        <img
+          src="https://res.cloudinary.com/dinhcaf2c/image/upload/v1766874574/Atharv_no_bg_m6cmto.png"
+          alt="Atharv Golait - Full Stack & AI Developer"
+          className="w-full h-full object-cover object-top grayscale"
+        />
       </div>
 
       {/* Scroll Indicator */}
