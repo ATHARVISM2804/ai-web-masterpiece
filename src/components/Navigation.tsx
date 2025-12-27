@@ -36,40 +36,41 @@ export default function Navigation() {
           : "bg-transparent"
       }`}
     >
-      <div className="container mx-auto px-6 lg:px-20">
-        <div className="flex items-center justify-between h-20">
+      <div className="container mx-auto px-6 lg:px-16">
+        <div className="flex items-center h-20">
           {/* Logo */}
-          <a
-            href="#"
-            className="flex items-center"
-          >
-            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" className="text-foreground">
-              <path d="M16 4L4 12V20L16 28L28 20V12L16 4Z" stroke="currentColor" strokeWidth="1.5" fill="none"/>
-              <path d="M16 12L10 16L16 20L22 16L16 12Z" stroke="currentColor" strokeWidth="1.5" fill="none"/>
+          <a href="#" className="flex items-center mr-12">
+            <svg width="36" height="36" viewBox="0 0 36 36" fill="none" className="text-foreground">
+              <path d="M18 4L6 10V18L12 22L18 18L24 22L30 18V10L18 4Z" stroke="currentColor" strokeWidth="1.5" fill="none"/>
+              <path d="M18 18V32" stroke="currentColor" strokeWidth="1.5"/>
+              <path d="M12 22V28L18 32L24 28V22" stroke="currentColor" strokeWidth="1.5" fill="none"/>
             </svg>
           </a>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-10">
+          {/* Desktop Navigation - Left aligned after logo */}
+          <div className="hidden md:flex items-center gap-8">
             {navItems.map((item) => (
               <button
                 key={item.name}
                 onClick={() => scrollToSection(item.href)}
-                className="font-body text-sm text-muted-foreground hover:text-foreground transition-colors underline-animation"
+                className="font-body text-sm text-muted-foreground hover:text-foreground transition-colors"
               >
                 {item.name}
               </button>
             ))}
           </div>
 
-          {/* CTA Button */}
+          {/* Spacer */}
+          <div className="flex-1" />
+
+          {/* CTA Button - Right aligned */}
           <a
             href="#contact"
             onClick={(e) => {
               e.preventDefault();
               scrollToSection("#contact");
             }}
-            className="hidden md:inline-flex items-center gap-1.5 text-sm font-medium text-foreground underline decoration-foreground underline-offset-4"
+            className="hidden md:inline-flex items-center gap-1.5 text-sm font-body text-foreground underline decoration-foreground underline-offset-4 hover:text-muted-foreground transition-colors"
           >
             Book A Call
             <ArrowUpRight size={14} />
@@ -110,7 +111,7 @@ export default function Navigation() {
               e.preventDefault();
               scrollToSection("#contact");
             }}
-            className="inline-flex items-center gap-1.5 text-sm font-medium text-foreground mt-4"
+            className="inline-flex items-center gap-1.5 text-sm font-body text-foreground mt-4"
           >
             Book A Call
             <ArrowUpRight size={14} />
