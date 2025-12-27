@@ -17,9 +17,9 @@ export default function HeroSection() {
         </span>
       </div>
 
-      {/* Year - left bottom */}
+      {/* Year - left bottom (vertical) */}
       <div className="hidden lg:flex absolute left-8 xl:left-12 bottom-28">
-        <span className="text-xs tracking-widest text-muted-foreground font-body">2026</span>
+        <span className="vertical-text text-xs tracking-[0.3em] text-muted-foreground uppercase font-body">2026</span>
       </div>
       
       <div className="container mx-auto px-6 lg:px-16 relative z-10">
