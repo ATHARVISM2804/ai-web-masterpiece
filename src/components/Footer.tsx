@@ -26,10 +26,9 @@ export default function Footer() {
   };
 
   return (
-    <footer className="bg-primary text-primary-foreground">
+    <footer className="bg-primary text-primary-foreground [&_*]:border-0">
       {/* CTA Banner */}
       <div className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-primary via-primary to-secondary/20" />
         <div className="container mx-auto px-6 lg:px-20 py-20 relative">
           <div className="max-w-3xl mx-auto text-center">
             <span className="text-sm text-primary-foreground/60 font-body mb-4 block">
@@ -57,7 +56,7 @@ export default function Footer() {
       </div>
 
       {/* Main Footer */}
-      <div className="border-t border-primary-foreground/10">
+      <div className="border-t !border-primary-foreground/10">
         <div className="container mx-auto px-6 lg:px-20 py-16">
           <div className="grid md:grid-cols-12 gap-12">
             {/* Brand Column */}
@@ -80,7 +79,7 @@ export default function Footer() {
                     href={social.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-10 h-10 rounded-full border border-primary-foreground/20 flex items-center justify-center hover:bg-primary-foreground/10 transition-colors"
+                    className="w-10 h-10 rounded-full !border !border-primary-foreground/20 flex items-center justify-center hover:bg-primary-foreground/10 transition-colors"
                     aria-label={social.name}
                   >
                     <social.icon size={18} />
@@ -129,7 +128,7 @@ export default function Footer() {
       </div>
 
       {/* Bottom Bar */}
-      <div className="border-t border-primary-foreground/10">
+      <div className="border-t !border-primary-foreground/10">
         <div className="container mx-auto px-6 lg:px-20 py-6">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <p className="text-xs text-primary-foreground/40 font-body">
@@ -147,7 +146,7 @@ export default function Footer() {
               aria-label="Back to top"
             >
               Back to top
-              <div className="w-8 h-8 rounded-full border border-primary-foreground/20 flex items-center justify-center hover:bg-primary-foreground/10 transition-colors">
+              <div className="w-8 h-8 rounded-full !border !border-primary-foreground/20 flex items-center justify-center hover:bg-primary-foreground/10 transition-colors">
                 <ArrowUp size={14} />
               </div>
             </button>
