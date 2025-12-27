@@ -46,7 +46,7 @@ export default function HeroSection() {
 
             {/* Subtitle */}
             <p className="text-lg text-muted-foreground font-body leading-relaxed animate-fade-up-delay-2">
-              — It's <span className="text-foreground">John Doe</span> a Full Stack Web Developer & AI Agent Developer
+              — It's <span className="text-foreground">Atharv Golait</span> a Full Stack Web Developer & AI Agent Developer
             </p>
           </div>
 
@@ -55,7 +55,7 @@ export default function HeroSection() {
             <div className="relative w-full max-w-md lg:max-w-lg xl:max-w-xl">
               <img
                 src={profilePhoto}
-                alt="John Doe - Full Stack & AI Developer"
+                alt="Atharv Golait - Full Stack & AI Developer"
                 className="w-full h-auto object-cover grayscale"
               />
             </div>
