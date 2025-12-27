@@ -53,7 +53,7 @@ export default function HeroSection() {
           <div className="order-1 lg:order-2 flex justify-center lg:justify-end">
             <div className="relative w-full max-w-xs md:max-w-sm lg:max-w-md lg:-ml-12 lg:-mt-8">
               <img
-                src="https://res.cloudinary.com/dinhcaf2c/image/upload/v1766858054/Atharv_no_bg_m6cmto.png"
+                src="https://res.cloudinary.com/dinhcaf2c/image/upload/v1766874574/Atharv_no_bg_m6cmto.png"
                 alt="Atharv Golait - Full Stack & AI Developer"
                 className="w-full h-auto object-cover grayscale"
               />

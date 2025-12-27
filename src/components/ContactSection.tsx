@@ -119,7 +119,7 @@ export default function ContactSection() {
                   onChange={handleChange}
                   required
                   className="w-full px-4 py-3 bg-card border border-border rounded-xl font-body text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-foreground transition-colors"
-                  placeholder="John Smith"
+                  placeholder="Atharv Golait"
                 />
               </div>
 
@@ -135,7 +135,7 @@ export default function ContactSection() {
                   onChange={handleChange}
                   required
                   className="w-full px-4 py-3 bg-card border border-border rounded-xl font-body text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-foreground transition-colors"
-                  placeholder="john@example.com"
+                  placeholder="atharv.golait@gmail.com"
                 />
               </div>
 
