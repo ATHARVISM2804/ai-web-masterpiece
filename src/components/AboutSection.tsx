@@ -1,4 +1,4 @@
-import { Plus, ArrowUpRight } from "lucide-react";
+import { Plus, ArrowUpRight, Download } from "lucide-react";
 
 const profilePhotoUrl = "https://res.cloudinary.com/dinhcaf2c/image/upload/v1766859539/ChatGPT_Image_Dec_27_2025_11_44_07_PM_uwdulb.jpg";
 
@@ -37,6 +37,16 @@ export default function AboutSection() {
 							that not only work great but scale seamlessly. Ready to start your next
 							project?
 						</p>
+
+						{/* Download CV Button */}
+						<a
+							href="/resume.pdf"
+							download
+							className="inline-flex items-center gap-3 mt-6 px-6 py-3 border border-foreground/20 rounded-full text-sm font-body text-foreground hover:bg-foreground hover:text-primary-foreground transition-all duration-300 group"
+						>
+							<Download size={16} className="group-hover:animate-bounce" />
+							Download CV
+						</a>
 
 						{/* Decorative Arrow */}
 						<div className="mt-8 hidden lg:block">
