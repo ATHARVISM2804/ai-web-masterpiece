@@ -112,11 +112,11 @@ export default function Footer() {
             {/* Contact Info */}
             <div className="md:col-span-4">
               <h3 className="font-display text-sm font-medium mb-6 tracking-wide">Get in Touch</h3>
-              <a
-                href="mailto:hello@johndoe.dev"
+            <a
+                href="mailto:hello@atharvgolait.dev"
                 className="text-xl md:text-2xl font-display font-light hover:text-primary-foreground/80 transition-colors block mb-4"
               >
-                hello@johndoe.dev
+                hello@atharvgolait.dev
               </a>
               <p className="text-sm text-primary-foreground/60 font-body">
                 Available for freelance projects<br />
@@ -132,7 +132,7 @@ export default function Footer() {
         <div className="container mx-auto px-6 lg:px-20 py-6">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <p className="text-xs text-primary-foreground/40 font-body">
-              © {new Date().getFullYear()} John Doe. All rights reserved.
+              © {new Date().getFullYear()} Atharv Golait. All rights reserved.
             </p>
             
             <p className="text-xs text-primary-foreground/40 font-body">

@@ -56,7 +56,7 @@ export default function AboutSection() {
             <div className="rounded-2xl overflow-hidden">
               <img
                 src={profilePhoto}
-                alt="About John Doe"
+                alt="About Atharv Golait"
                 className="w-full h-auto object-cover grayscale"
               />
             </div>
@@ -68,7 +68,7 @@ export default function AboutSection() {
             <div className="relative rounded-2xl overflow-hidden bg-muted">
               <img
                 src={profilePhoto}
-                alt="John Doe Profile"
+                alt="Atharv Golait Profile"
                 className="w-full h-48 object-cover object-top grayscale"
               />
               <a
