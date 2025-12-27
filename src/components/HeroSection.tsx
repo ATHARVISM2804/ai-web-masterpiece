@@ -1,5 +1,5 @@
 import { ArrowDown } from "lucide-react";
-import profilePhoto from "@/assets/profile-photo.jpg";
+import profilePhoto from "@/assets/profile-photo-nobg.png";
 
 export default function HeroSection() {
   const scrollToAbout = () => {
