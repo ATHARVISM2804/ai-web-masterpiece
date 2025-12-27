@@ -70,7 +70,9 @@ export default function Footer() {
             <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-light tracking-tight mb-8 animate-fade-up" style={{ animationDelay: '0.1s' }}>
               Ready to Build Something
               <br />
-              <span className="italic">Amazing Together?</span>
+              <span className="italic bg-gradient-to-r from-purple-400 via-pink-400 to-amber-300 bg-clip-text text-transparent">
+                Amazing Together?
+              </span>
             </h2>
             <p className="text-primary-foreground/60 font-body mb-10 max-w-xl mx-auto text-lg leading-relaxed animate-fade-up" style={{ animationDelay: '0.2s' }}>
               Take advantage of this opportunity to discuss your project needs with an experienced Full Stack & AI Developer.
