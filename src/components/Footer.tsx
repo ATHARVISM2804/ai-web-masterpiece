@@ -61,7 +61,7 @@ export default function Footer() {
       </div>
 
       {/* CTA Banner */}
-      <div className="relative bg-[#F8F8F8] text-foreground">
+      <div className="relative bg-[#EFEFEF] text-foreground">
         <div className="container mx-auto px-6 lg:px-20 py-24 relative">
           <div className="max-w-3xl mx-auto text-center">
             <span className="inline-block text-xs tracking-[0.2em] uppercase text-foreground/50 font-body mb-6 animate-fade-up">
