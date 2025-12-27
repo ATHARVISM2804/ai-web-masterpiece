@@ -1,9 +1,10 @@
-import { Github, Linkedin, Twitter, ArrowUp, ArrowUpRight } from "lucide-react";
+import { Github, Linkedin, Twitter, ArrowUp, ArrowUpRight, Instagram } from "lucide-react";
 
 const socialLinks = [
-  { name: "GitHub", icon: Github, href: "https://github.com" },
-  { name: "LinkedIn", icon: Linkedin, href: "https://linkedin.com" },
-  { name: "Twitter", icon: Twitter, href: "https://twitter.com" },
+  { name: "GitHub", icon: Github, href: "https://github.com/ATHARVISM2804" },
+  { name: "LinkedIn", icon: Linkedin, href: "https://www.linkedin.com/in/atharv-golait-9048772ab/" },
+  { name: "Twitter", icon: Twitter, href: "https://x.com/Atharv_Golait" },
+  { name: "Instagram", icon: Instagram, href: "https://www.instagram.com/_atharv.vv__/" },
 ];
 
 const quickLinks = [
@@ -160,7 +161,7 @@ export default function Footer() {
                 className="group block text-2xl md:text-3xl font-display font-light hover:text-primary-foreground/80 transition-colors mb-6"
               >
                 <span className="inline-block group-hover:-translate-y-0.5 transition-transform duration-300">
-                  hello@atharvgolait.dev
+                  atharv.golait@gmail.com
                 </span>
               </a>
               <p className="text-sm text-primary-foreground/50 font-body leading-relaxed">
