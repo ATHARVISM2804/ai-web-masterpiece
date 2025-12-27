@@ -53,7 +53,7 @@ export default function Navigation() {
               <button
                 key={item.name}
                 onClick={() => scrollToSection(item.href)}
-                className="font-body text-sm text-muted-foreground hover:text-foreground transition-colors"
+                className="font-body text-sm text-foreground/80 hover:text-foreground transition-colors"
               >
                 {item.name}
               </button>
@@ -100,7 +100,7 @@ export default function Navigation() {
             <button
               key={item.name}
               onClick={() => scrollToSection(item.href)}
-              className="font-body text-base text-foreground hover:text-muted-foreground transition-colors text-left py-2"
+              className="font-body text-base text-foreground/90 hover:text-muted-foreground transition-colors text-left py-2"
             >
               {item.name}
             </button>
