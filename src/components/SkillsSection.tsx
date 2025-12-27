@@ -8,43 +8,93 @@ import {
 
 const experiences = [
   {
-    company: "TechCorp Inc, San Francisco",
-    role: "Senior Full Stack Developer",
-    period: "January 2022 - Present",
-    description: "Leading development of AI-powered web applications, architecting scalable solutions",
-    fullDescription: "As a Senior Full Stack Developer, I lead a team of 5 developers in building AI-powered web applications. My responsibilities include designing system architecture, implementing scalable solutions, conducting code reviews, and mentoring junior developers. Successfully delivered 3 major projects that increased client revenue by 40%.",
+    company: "Goran AI (Co-Founder)",
+    role: "Co-Founder",
+    period: "July 2025 - Present",
+    website: "https://goran.in",
+    description: (
+      <>
+        Building digital solutions: AI agents, automations, workflows, modern websites and apps.
+        <br />
+        <span>
+          Visit website:{" "}
+          <a
+            href="https://goran.in"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-black text-sm hover:underline"
+          >
+            goran.in
+          </a>
+        </span>
+      </>
+    ),
+    fullDescription:
+      "Co-Founder of Goran AI agency, Hamirpur, Himachal — we design and build end-to-end digital products including agentic AI, workflow automations, integrations, and modern web & mobile applications. We help clients automate repetitive tasks, orchestrate multi-step agent workflows, and deploy production-ready websites with analytics and payment integrations. Services include product discovery, agent orchestration, custom automation pipelines, and post-launch monitoring.",
     achievements: [
-      "Architected microservices infrastructure handling 1M+ daily requests",
-      "Reduced application load time by 60% through optimization",
-      "Implemented CI/CD pipeline reducing deployment time by 75%"
+      "Designed and launched agent-driven automation solutions that reduced manual work by 70%",
+      "Delivered modern, conversion-optimized websites with integrated analytics and payments",
+      "Built composable workflows connecting APIs, CRMs, and third-party services",
+      "Defined product discovery and GTM technical strategy for new AI offerings"
     ],
-    tags: ["React", "Node.js"]
+    tags: ["AI Agents", "Automation", "Web"]
   },
   {
-    company: "AI Solutions Lab, New York",
-    role: "AI Agent Developer",
-    period: "March 2020 - December 2021",
-    description: "Built custom AI agents and automation tools for enterprise clients",
-    fullDescription: "Developed intelligent automation systems and AI agents for Fortune 500 companies. Worked closely with data scientists to integrate machine learning models into production applications. Specialized in natural language processing and conversational AI solutions.",
+    company: "E-CELL NIT Hamirpur",
+    role: "Web Coordination (Core member)",
+    period: "August 2024 - Present",
+    description: "Web coordination and front-end development for E-CELL events and platforms.",
+    fullDescription:
+      "Core member responsible for coordinating and developing web initiatives for E-CELL NIT Hamirpur. Worked closely with organizers and designers to deliver responsive, user-friendly web experiences.",
     achievements: [
-      "Built custom AI chatbot serving 100K+ users monthly",
-      "Developed automation tools saving 2000+ hours annually",
-      "Created LangChain-based document processing pipeline"
+      "Developed responsive web applications using React and Node.js",
+      "Collaborated with UX/UI designers to implement front-end designs",
+      "Optimized database queries resulting in 30% faster page load times",
+      "Participated in daily stand-ups and sprint planning meetings"
     ],
-    tags: ["Python", "LangChain"]
+    tags: ["React", "Node.js"],
   },
   {
-    company: "StartupHub, Austin",
-    role: "Full Stack Developer",
-    period: "June 2018 - February 2020",
-    description: "Developed MVPs for multiple startups, from concept to launch",
-    fullDescription: "Worked in a fast-paced startup environment, rapidly prototyping and shipping MVPs for early-stage companies. Collaborated directly with founders to translate business requirements into technical solutions. Experienced in the full product lifecycle from ideation to launch.",
+    company: "Sacred Basil",
+    role: "Technical & Brand Growth Advisor",
+    period: "Sep 2025 - Present",
+    description: "Advising on digital transformation, technical strategy, and brand growth (remote, Pune).",
+    fullDescription:
+      "As Technical & Brand Growth Advisor at Sacred Basil, I support the brand’s digital transformation, bridging creativity, technology, and strategy. Sacred Basil is a modern wellness brand offering handcrafted self-care essentials that blend Ayurvedic purity with modern luxury.",
     achievements: [
-      "Launched 5 MVPs within 3-month timelines each",
-      "Built real-time features using WebSockets and AWS Lambda",
-      "Implemented payment systems processing $500K+ in transactions"
+      "Advised on digital strategy and technical improvements for e‑commerce",
+      "Helped align brand messaging with technical capabilities and UX",
+      "Recommended analytics and growth experiments to increase conversions"
     ],
-    tags: ["TypeScript", "AWS"]
+    tags: ["Growth", "E‑commerce", "Strategy"]
+  },
+  {
+    company: "Unified Mentor Private Limited",
+    role: "Web Developer",
+    period: "May 2025 - Jul 2025",
+    description: "Full-time role building responsive web applications and UI components.",
+    fullDescription:
+      "Spearheaded design and development of responsive web applications using React.js, Tailwind CSS, and modern JavaScript frameworks, focusing on performance and maintainability.",
+    achievements: [
+      "Implemented responsive UI components and state management patterns",
+      "Integrated third-party services and APIs to extend product functionality",
+      "Delivered production-ready features within tight timelines"
+    ],
+    tags: ["React", "Tailwind", "JavaScript"]
+  },
+  {
+    company: "Freelance / Self-employed",
+    role: "Freelance Web Developer",
+    period: "January 2025 - Present",
+    description: "Design and development of custom websites and client projects (remote).",
+    fullDescription:
+      "Design and develop custom websites for small businesses and entrepreneurs. Create responsive layouts with React and Tailwind, implement RESTful APIs and CMS integrations, and provide ongoing maintenance and support.",
+    achievements: [
+      "Delivered custom websites and CMS integrations for multiple small businesses",
+      "Implemented RESTful APIs and third-party integrations",
+      "Provided ongoing maintenance and client training for site management"
+    ],
+    tags: ["React", "Tailwind", "API"]
   }
 ];
 
@@ -84,7 +134,7 @@ export default function SkillsSection() {
           </div>
           <div className="lg:text-right">
             <p className="text-base text-muted-foreground font-body leading-relaxed max-w-md lg:ml-auto mb-6">
-              Over the past 5+ years, I've had the opportunity to work on a wide range of projects, collaborating with diverse teams and clients to bring creative visions to life.
+              Over the past 2+ years, I've had the opportunity to work on a wide range of projects, collaborating with diverse teams and clients to bring creative visions to life.
             </p>
             <a
               href="#contact"
@@ -122,8 +172,18 @@ export default function SkillsSection() {
 
                   {/* Description */}
                   <div className="lg:col-span-5">
-                    <p className="text-sm text-muted-foreground font-body">
-                      {exp.description}
+                    <p className="text-sm text-muted-foreground font-body flex items-center gap-2">
+                      <span>{exp.description}</span>
+                      {exp.website && (
+                        <a
+                          href={exp.website}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-primary-foreground text-sm hover:underline"
+                        >
+                          {new URL(exp.website).hostname.replace("www.", "")}
+                        </a>
+                      )}
                     </p>
                   </div>
 
