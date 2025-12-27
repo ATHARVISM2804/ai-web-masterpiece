@@ -61,20 +61,18 @@ export default function Footer() {
       </div>
 
       {/* CTA Banner */}
-      <div className="relative bg-gradient-to-br from-primary via-[hsl(260,20%,18%)] to-[hsl(280,15%,12%)]">
-        {/* Gradient overlay for extra depth */}
-        <div className="absolute inset-0 bg-gradient-to-t from-primary/50 to-transparent pointer-events-none" />
+      <div className="relative bg-[#F8F8F8] text-foreground">
         <div className="container mx-auto px-6 lg:px-20 py-24 relative">
           <div className="max-w-3xl mx-auto text-center">
-            <span className="inline-block text-xs tracking-[0.2em] uppercase text-primary-foreground/50 font-body mb-6 animate-fade-up">
+            <span className="inline-block text-xs tracking-[0.2em] uppercase text-foreground/50 font-body mb-6 animate-fade-up">
               (Book Your Free Consultation Now!)
             </span>
-            <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-light tracking-tight mb-8 animate-fade-up" style={{ animationDelay: '0.1s' }}>
+            <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-light tracking-tight mb-8 text-foreground animate-fade-up" style={{ animationDelay: '0.1s' }}>
               Ready to Build Something
               <br />
               <span className="italic">Amazing Together?</span>
             </h2>
-            <p className="text-primary-foreground/60 font-body mb-10 max-w-xl mx-auto text-lg leading-relaxed animate-fade-up" style={{ animationDelay: '0.2s' }}>
+            <p className="text-foreground/60 font-body mb-10 max-w-xl mx-auto text-lg leading-relaxed animate-fade-up" style={{ animationDelay: '0.2s' }}>
               Take advantage of this opportunity to discuss your project needs with an experienced Full Stack & AI Developer.
             </p>
             <a
@@ -83,14 +81,14 @@ export default function Footer() {
                 e.preventDefault();
                 scrollToSection("#contact");
               }}
-              className="group inline-flex items-center gap-3 text-sm font-medium text-primary-foreground transition-all duration-300 animate-fade-up"
+              className="group inline-flex items-center gap-3 text-sm font-medium text-foreground transition-all duration-300 animate-fade-up"
               style={{ animationDelay: '0.3s' }}
             >
               <span className="relative">
                 Let's talk
-                <span className="absolute bottom-0 left-0 w-full h-px bg-primary-foreground/40 group-hover:bg-primary-foreground transition-colors" />
+                <span className="absolute bottom-0 left-0 w-full h-px bg-foreground/40 group-hover:bg-foreground transition-colors" />
               </span>
-              <span className="w-8 h-8 rounded-full border border-primary-foreground/30 flex items-center justify-center group-hover:bg-primary-foreground/10 group-hover:border-primary-foreground/50 transition-all duration-300">
+              <span className="w-8 h-8 rounded-full border border-foreground/30 flex items-center justify-center group-hover:bg-foreground/10 group-hover:border-foreground/50 transition-all duration-300">
                 <ArrowUpRight size={14} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
               </span>
             </a>
