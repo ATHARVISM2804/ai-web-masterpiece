@@ -28,7 +28,7 @@ export default function PromoSection() {
             </h2>
             
             <p className="text-sm text-primary-foreground/60 font-body mb-8 max-w-xl mx-auto">
-              Take advantage of this limited-time offer to discuss your design needs with an experienced UI/UX and product designer.
+              Take advantage of this limited-time offer to discuss your needs with an experienced Full Stack Developer and Agentic Ai Developer.
             </p>
             
             <a
