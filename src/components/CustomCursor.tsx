@@ -59,42 +59,66 @@ export default function CustomCursor() {
     <>
       {/* Main cursor dot */}
       <div
-        className="fixed pointer-events-none z-[9999] mix-blend-difference"
+        className="fixed pointer-events-none z-[9999]"
         style={{
           left: position.x,
           top: position.y,
           opacity: isHidden ? 0 : 1,
           transition: "opacity 0.3s ease, transform 0.15s ease",
-          transform: `translate(-50%, -50%) scale(${isClicking ? 0.8 : 1})`,
+          transform: `translate(-50%, -50%) scale(${isClicking ? 0.7 : 1})`,
         }}
       >
         <div
-          className="rounded-full bg-foreground"
+          className="rounded-full bg-neutral-900 dark:bg-neutral-100"
           style={{
-            width: isPointer ? "8px" : "6px",
-            height: isPointer ? "8px" : "6px",
+            width: isPointer ? "10px" : "8px",
+            height: isPointer ? "10px" : "8px",
             transition: "width 0.2s ease, height 0.2s ease",
+            boxShadow: "0 0 10px rgba(0, 0, 0, 0.3)",
           }}
         />
       </div>
 
       {/* Outer ring */}
       <div
-        className="fixed pointer-events-none z-[9998] mix-blend-difference"
+        className="fixed pointer-events-none z-[9998]"
         style={{
           left: position.x,
           top: position.y,
-          opacity: isHidden ? 0 : 1,
-          transition: "opacity 0.3s ease, transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), width 0.25s ease, height 0.25s ease",
-          transform: `translate(-50%, -50%) scale(${isClicking ? 0.9 : 1})`,
+          opacity: isHidden ? 0 : isPointer ? 0.9 : 0.6,
+          transition: "opacity 0.3s ease, transform 0.2s cubic-bezier(0.16, 1, 0.3, 1)",
+          transform: `translate(-50%, -50%) scale(${isClicking ? 0.85 : 1})`,
         }}
       >
         <div
-          className="rounded-full border border-foreground"
+          className="rounded-full border-[1.5px] border-neutral-800 dark:border-neutral-200"
           style={{
-            width: isPointer ? "48px" : "32px",
-            height: isPointer ? "48px" : "32px",
+            width: isPointer ? "52px" : "36px",
+            height: isPointer ? "52px" : "36px",
             transition: "width 0.25s cubic-bezier(0.16, 1, 0.3, 1), height 0.25s cubic-bezier(0.16, 1, 0.3, 1)",
+            background: isPointer 
+              ? "radial-gradient(circle, rgba(0,0,0,0.04) 0%, transparent 70%)" 
+              : "transparent",
+          }}
+        />
+      </div>
+
+      {/* Subtle trailing effect */}
+      <div
+        className="fixed pointer-events-none z-[9997]"
+        style={{
+          left: position.x,
+          top: position.y,
+          opacity: isHidden ? 0 : 0.15,
+          transition: "opacity 0.3s ease, left 0.08s ease-out, top 0.08s ease-out, transform 0.3s ease",
+          transform: `translate(-50%, -50%) scale(${isPointer ? 1.2 : 1})`,
+        }}
+      >
+        <div
+          className="rounded-full bg-neutral-700 dark:bg-neutral-300"
+          style={{
+            width: "4px",
+            height: "4px",
           }}
         />
       </div>
