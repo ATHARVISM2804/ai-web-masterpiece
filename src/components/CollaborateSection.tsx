@@ -17,12 +17,11 @@ const CollaborateSection = () => {
       <div className="container mx-auto px-6 relative z-10">
         <div className="max-w-3xl mx-auto text-center">
           {/* Heading */}
-          <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-6">
-            Let's Connect & Build{" "}
-            <span className="text-primary">Something Super</span>
+          <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-light tracking-tight text-foreground mb-6">
+            Let's Connect & Build Something Super
           </h2>
           
-          <p className="text-muted-foreground text-lg md:text-xl mb-10 max-w-2xl mx-auto">
+          <p className="text-base text-muted-foreground font-body leading-relaxed mb-10 max-w-2xl mx-auto">
             Open to collaborating on exciting open-source projects. 
             Let's create something amazing together!
           </p>
