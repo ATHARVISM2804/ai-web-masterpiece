@@ -1,4 +1,10 @@
-import { GraduationCap, MapPin, Calendar, Award, BookOpen } from "lucide-react";
+import { ChevronDown } from "lucide-react";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 interface Education {
   degree: string;
@@ -77,99 +83,106 @@ const educationData: Education[] = [
 
 const EducationSection = () => {
   return (
-    <section id="education" className="py-24 md:py-32 bg-muted/30">
-      <div className="container mx-auto px-6">
-        {/* Section Header */}
-        <div className="text-center mb-16">
-          <span className="pill-tag mb-4">Education</span>
-          <h2 className="font-display text-4xl md:text-5xl font-bold text-foreground">
-            Academic Journey
-          </h2>
+    <section id="education" className="py-24 lg:py-32 bg-background">
+      <div className="container mx-auto px-6 lg:px-20">
+        {/* Header */}
+        <div className="grid lg:grid-cols-2 gap-12 mb-16">
+          <div>
+            <div className="inline-flex items-center gap-2 mb-4">
+              <span className="w-2 h-2 rounded-full bg-foreground" />
+              <span className="text-sm text-muted-foreground font-body">Education</span>
+            </div>
+            <h2 className="font-display text-4xl md:text-5xl font-light tracking-tight text-foreground">
+              Academic Journey
+            </h2>
+          </div>
+          <div className="lg:text-right">
+            <p className="text-base text-muted-foreground font-body leading-relaxed max-w-md lg:ml-auto">
+              A strong academic foundation combined with hands-on experience in technology, leadership, and innovation.
+            </p>
+          </div>
         </div>
 
-        {/* Education Cards */}
-        <div className="max-w-4xl mx-auto space-y-8">
+        {/* Education List */}
+        <Accordion type="single" collapsible>
           {educationData.map((edu, index) => (
-            <div
+            <AccordionItem
               key={index}
-              className="bg-card rounded-2xl p-6 md:p-8 border border-border hover-lift card-shadow"
+              value={`edu-${index}`}
+              className="border-t border-border last:border-b hover:bg-tertiary/50 transition-colors -mx-6 px-6 lg:-mx-20 lg:px-20"
             >
-              {/* Header */}
-              <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-6">
-                <div className="flex-1">
-                  <div className="flex items-center gap-3 mb-2">
-                    <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                      <GraduationCap className="w-5 h-5 text-primary" />
-                    </div>
-                    <h3 className="font-display text-xl md:text-2xl font-semibold text-foreground">
+              <AccordionTrigger className="py-8 hover:no-underline [&[data-state=open]>div>.chevron]:rotate-180">
+                <div className="grid lg:grid-cols-12 gap-4 items-center w-full text-left">
+                  {/* Degree & Period */}
+                  <div className="lg:col-span-5">
+                    <h3 className="font-display text-lg font-light text-foreground">
                       {edu.degree}
                     </h3>
+                    <p className="text-sm text-muted-foreground font-body mt-1">
+                      • {edu.period}
+                    </p>
                   </div>
-                  <p className="text-muted-foreground text-lg ml-13 md:ml-[52px]">
-                    {edu.institution}
-                  </p>
-                </div>
-                <div className="flex flex-col items-start md:items-end gap-1 text-sm text-muted-foreground">
-                  <div className="flex items-center gap-2">
-                    <Calendar className="w-4 h-4" />
-                    <span>{edu.period}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <MapPin className="w-4 h-4" />
-                    <span>{edu.location}</span>
-                  </div>
-                </div>
-              </div>
 
-              {/* Score Badge */}
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary text-primary-foreground text-sm font-medium mb-6">
-                <Award className="w-4 h-4" />
-                {edu.scoreLabel}: {edu.score}
-              </div>
+                  {/* Institution */}
+                  <div className="lg:col-span-4">
+                    <p className="text-sm text-muted-foreground font-body">
+                      {edu.institution}
+                    </p>
+                  </div>
 
-              {/* Coursework */}
-              <div className="mb-6">
-                <div className="flex items-center gap-2 mb-3">
-                  <BookOpen className="w-4 h-4 text-muted-foreground" />
-                  <span className="text-sm font-medium text-foreground">
-                    Relevant Coursework
-                  </span>
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  {edu.coursework.map((course, i) => (
-                    <span
-                      key={i}
-                      className="px-3 py-1 rounded-full bg-muted text-muted-foreground text-xs"
-                    >
-                      {course}
+                  {/* Score & Location */}
+                  <div className="lg:col-span-3 flex justify-end gap-2 items-center">
+                    <span className="px-3 py-1.5 text-xs font-body border border-border rounded-full">
+                      {edu.scoreLabel}: {edu.score}
                     </span>
-                  ))}
+                    <span className="px-3 py-1.5 text-xs font-body border border-border rounded-full hidden md:inline-block">
+                      {edu.location}
+                    </span>
+                    <ChevronDown className="chevron h-5 w-5 shrink-0 text-muted-foreground transition-transform duration-200 ml-2" />
+                  </div>
                 </div>
-              </div>
+              </AccordionTrigger>
+              <AccordionContent className="pb-8">
+                <div className="lg:pl-[calc(41.666%+1rem)] space-y-6">
+                  {/* Coursework */}
+                  <div>
+                    <h4 className="text-sm font-medium text-foreground mb-3">
+                      Relevant Coursework
+                    </h4>
+                    <div className="flex flex-wrap gap-2">
+                      {edu.coursework.map((course, i) => (
+                        <span
+                          key={i}
+                          className="px-3 py-1.5 bg-tertiary text-xs text-muted-foreground rounded-full font-body hover:text-foreground hover:bg-foreground hover:text-primary-foreground transition-colors cursor-default"
+                        >
+                          {course}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
 
-              {/* Achievements */}
-              <div>
-                <div className="flex items-center gap-2 mb-3">
-                  <Award className="w-4 h-4 text-muted-foreground" />
-                  <span className="text-sm font-medium text-foreground">
-                    Achievements & Activities
-                  </span>
+                  {/* Achievements */}
+                  <div>
+                    <h4 className="text-sm font-medium text-foreground mb-3">
+                      Achievements & Activities
+                    </h4>
+                    <ul className="space-y-2">
+                      {edu.achievements.map((achievement, i) => (
+                        <li
+                          key={i}
+                          className="text-sm text-muted-foreground font-body flex items-start gap-2"
+                        >
+                          <span className="w-1.5 h-1.5 rounded-full bg-foreground mt-2 shrink-0" />
+                          {achievement}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 </div>
-                <ul className="space-y-2">
-                  {edu.achievements.map((achievement, i) => (
-                    <li
-                      key={i}
-                      className="flex items-start gap-2 text-muted-foreground text-sm"
-                    >
-                      <span className="w-1.5 h-1.5 rounded-full bg-primary mt-2 flex-shrink-0" />
-                      {achievement}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
+              </AccordionContent>
+            </AccordionItem>
           ))}
-        </div>
+        </Accordion>
       </div>
     </section>
   );
