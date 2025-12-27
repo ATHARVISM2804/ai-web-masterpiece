@@ -4,10 +4,19 @@ const profilePhotoUrl = "https://res.cloudinary.com/dinhcaf2c/image/upload/v1766
 
 const highlights = [
 	{
+		text: "3rd year student at NIT Hamirpur, building strong foundations in CS and hands-on experience with modern web and AI technologies.",
+	},
+	{
+		text: "Co-founder of Goran AI — we deliver AI agents, automations, and modern websites to help businesses scale efficiently.",
+	},
+	{
 		text: "With 2+ years of experience, I specialize in creating intuitive, user-focused applications that solve real-world problems and deliver seamless digital experiences.",
 	},
 	{
 		text: "I thrive on working closely with clients, blending creativity with strategy to bring their vision to life through thoughtful, impactful development solutions.",
+	},
+	{
+		text: "Focused on agentic AI and automation solutions that combine intelligent agents, workflows, and integrations to streamline complex tasks.",
 	},
 ];
 
@@ -100,13 +109,10 @@ export default function AboutSection() {
 								className="w-full h-48 object-cover object-center grayscale"
 							/>
 							<a
-								href="#contact"
-								onClick={(e) => {
-									e.preventDefault();
-									document
-										.querySelector("#contact")
-										?.scrollIntoView({ behavior: "smooth" });
-								}}
+								href="https://wa.me/918329310930?text=Hi%20Atharv%20its%20great%20connecting%20with%20you"
+								target="_blank"
+								rel="noopener noreferrer"
+								aria-label="Message Atharv on WhatsApp"
 								className="absolute top-4 right-4 w-10 h-10 bg-card rounded-full flex items-center justify-center hover:bg-foreground hover:text-primary-foreground transition-colors"
 							>
 								<ArrowUpRight size={18} />
