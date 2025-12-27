@@ -34,7 +34,7 @@ const educationData: Education[] = [
       "Kinematics of Machines (KOM)",
     ],
     achievements: [
-      "Executive Member at E-CELL NIT Hamirpur",
+      "Web Coordinator(Core Member) at E-CELL NIT Hamirpur",
       "Dean's List: Web Development and AI Integration",
       "Participated in various hackathons and coding competitions",
     ],
