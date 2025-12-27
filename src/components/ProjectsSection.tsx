@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ArrowRight, ArrowUpRight, ChevronUp } from "lucide-react";
+import { ArrowRight, ArrowUpRight, ChevronUp, Github, ExternalLink } from "lucide-react";
 import project1 from "@/assets/project-1.jpg";
 import project2 from "@/assets/project-2.jpg";
 import project3 from "@/assets/project-3.jpg";
@@ -220,14 +220,6 @@ export default function ProjectsSection() {
                   alt={project.title}
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
-                
-                {/* Hover Overlay with Arrow */}
-                <a
-                  href={project.liveUrl}
-                  className="absolute top-4 right-4 w-10 h-10 bg-card rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-foreground hover:text-primary-foreground"
-                >
-                  <ArrowUpRight size={18} />
-                </a>
 
                 {/* Category Badge */}
                 <span className="absolute bottom-4 left-4 px-3 py-1.5 bg-card/90 backdrop-blur-sm text-xs font-body rounded-full">
@@ -236,7 +228,7 @@ export default function ProjectsSection() {
               </div>
 
               {/* Content */}
-              <div className="space-y-2">
+              <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <h3 className="font-display text-lg font-light text-foreground">
                     {project.title}
@@ -244,6 +236,33 @@ export default function ProjectsSection() {
                   <span className="text-xs text-muted-foreground font-body">
                     {project.tech[0]}
                   </span>
+                </div>
+                
+                {/* Description */}
+                <p className="text-sm text-muted-foreground font-body leading-relaxed line-clamp-2">
+                  {project.description}
+                </p>
+
+                {/* Links */}
+                <div className="flex items-center gap-3 pt-2">
+                  <a
+                    href={project.liveUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 text-xs font-body text-foreground hover:text-primary transition-colors"
+                  >
+                    <ExternalLink size={14} />
+                    Live Demo
+                  </a>
+                  <a
+                    href={project.githubUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 text-xs font-body text-foreground hover:text-primary transition-colors"
+                  >
+                    <Github size={14} />
+                    GitHub
+                  </a>
                 </div>
               </div>
             </article>
