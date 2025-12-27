@@ -10,16 +10,15 @@ export default function HeroSection() {
 
   return (
     <section className="min-h-screen flex items-center relative overflow-hidden bg-background">
-      {/* Side vertical text - left */}
-      <div className="hidden lg:flex absolute left-8 top-1/2 -translate-y-1/2">
+      {/* Side vertical text with connecting line */}
+      <div className="hidden lg:flex flex-col items-center absolute left-8 top-1/2 -translate-y-1/2 gap-4">
         <span className="vertical-text text-xs tracking-[0.3em] text-muted-foreground uppercase font-body">
           Full Stack Developer
         </span>
-      </div>
-
-      {/* Year - left bottom (vertical) */}
-      <div className="hidden lg:flex absolute left-8 xl:left-12 bottom-28">
-        <span className="vertical-text text-xs tracking-[0.3em] text-muted-foreground uppercase font-body">2026</span>
+        <div className="w-px h-24 bg-border"></div>
+        <span className="vertical-text text-xs tracking-[0.3em] text-muted-foreground uppercase font-body">
+          2026
+        </span>
       </div>
       
       <div className="container mx-auto px-6 lg:px-16 relative z-10">
