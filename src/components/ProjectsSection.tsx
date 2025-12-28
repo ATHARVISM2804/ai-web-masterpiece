@@ -228,11 +228,11 @@ export default function ProjectsSection() {
               style={{ animationDelay: `${index * 0.1}s` }}
             >
               {/* Image */}
-              <div className="relative overflow-hidden rounded-xl mb-4 h-44 md:h-52 lg:h-56 bg-muted/30">
+              <div className="relative overflow-hidden rounded-xl mb-4 aspect-video bg-muted/30">
                 <img
                   src={project.image}
                   alt={project.title}
-                  className="w-full h-full object-cover rounded-xl transition-transform duration-300 group-hover:scale-105"
+                  className="w-full h-full object-contain rounded-xl transition-transform duration-300 group-hover:scale-105"
                 />
 
                 {/* Category Badge */}
