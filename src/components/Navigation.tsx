@@ -64,17 +64,17 @@ export default function Navigation() {
           <div className="flex-1" />
 
           {/* CTA Button - Right aligned */}
-          <a
-            href="#contact"
-            onClick={(e) => {
-              e.preventDefault();
-              scrollToSection("#contact");
+          <button
+            onClick={() => {
+              (window as any).Calendly?.initPopupWidget({
+                url: 'https://calendly.com/atharv-golait?background_color=fafafa&primary_color=9d9fa4'
+              });
             }}
             className="hidden md:inline-flex items-center gap-1.5 text-sm font-body text-foreground underline decoration-foreground underline-offset-4 hover:text-muted-foreground transition-colors"
           >
             Book A Call
             <ArrowUpRight size={14} />
-          </a>
+          </button>
 
           {/* Mobile Menu Button */}
           <button
@@ -105,17 +105,18 @@ export default function Navigation() {
               {item.name}
             </button>
           ))}
-          <a
-            href="#contact"
-            onClick={(e) => {
-              e.preventDefault();
-              scrollToSection("#contact");
+          <button
+            onClick={() => {
+              (window as any).Calendly?.initPopupWidget({
+                url: 'https://calendly.com/atharv-golait?background_color=fafafa&primary_color=9d9fa4'
+              });
+              setIsMobileMenuOpen(false);
             }}
             className="inline-flex items-center gap-1.5 text-sm font-body text-foreground mt-4"
           >
             Book A Call
             <ArrowUpRight size={14} />
-          </a>
+          </button>
         </div>
       </div>
     </nav>
