@@ -94,13 +94,17 @@ export default function ContactSection() {
 
             {/* Book a Call Link */}
             <div className="mt-8">
-              <a
-                href="#"
+              <button
+                onClick={() => {
+                  (window as any).Calendly?.initPopupWidget({
+                    url: 'https://calendly.com/atharv-golait?background_color=fafafa&primary_color=9d9fa4'
+                  });
+                }}
                 className="inline-flex items-center gap-2 text-sm font-medium text-foreground underline-animation"
               >
                 Book A Call
                 <ArrowUpRight size={16} />
-              </a>
+              </button>
             </div>
           </div>
 
