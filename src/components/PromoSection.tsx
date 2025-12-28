@@ -31,17 +31,13 @@ export default function PromoSection() {
               Take advantage of this limited-time offer to discuss your needs with an experienced Full Stack Developer and Agentic Ai Developer.
             </p>
             
-            <button
-              onClick={() => {
-                (window as any).Calendly?.initPopupWidget({
-                  url: 'https://calendly.com/atharv-golait?background_color=fafafa&primary_color=9d9fa4'
-                });
-              }}
+            <a
+              href="#contact"
               className="inline-flex items-center gap-2 text-sm font-body text-primary-foreground underline underline-offset-4 hover:text-primary-foreground/80 transition-colors group"
             >
               Let's talk
               <ArrowUpRight size={14} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-            </button>
+            </a>
           </div>
         </div>
       </div>
