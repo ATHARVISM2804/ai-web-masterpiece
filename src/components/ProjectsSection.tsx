@@ -224,19 +224,19 @@ export default function ProjectsSection() {
           {displayedProjects.map((project, index) => (
             <article
               key={project.id}
-              className="group animate-fade-up"
+              className="group animate-fade-up rounded-2xl border border-border bg-card p-4 transition-all duration-300 hover:border-primary/30 hover:shadow-lg"
               style={{ animationDelay: `${index * 0.1}s` }}
             >
               {/* Image */}
-              <div className="relative overflow-hidden rounded-2xl mb-4 h-44 md:h-52 lg:h-56">
+              <div className="relative overflow-hidden rounded-xl mb-4 h-44 md:h-52 lg:h-56 bg-muted/30">
                 <img
                   src={project.image}
                   alt={project.title}
-                  className="w-full h-full object-contain bg-transparent transition-opacity duration-300"
+                  className="w-full h-full object-cover rounded-xl transition-transform duration-300 group-hover:scale-105"
                 />
 
                 {/* Category Badge */}
-                <span className="absolute bottom-4 left-4 px-3 py-1.5 bg-card/90 backdrop-blur-sm text-xs font-body rounded-full">
+                <span className="absolute bottom-4 left-4 px-3 py-1.5 bg-card/90 backdrop-blur-sm text-xs font-body rounded-full border border-border">
                   {project.category}
                 </span>
               </div>
