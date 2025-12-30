@@ -75,7 +75,7 @@ export default function HeroSection() {
       {/* Scroll Indicator */}
       <button
         onClick={scrollToAbout}
-        className="absolute bottom-16 left-[40%] -translate-x-1/2 sm:bottom-20 sm:left-[40%] sm:-translate-x-1/2 md:bottom-20 md:left-28 md:translate-x-0 lg:bottom-28 lg:left-48 flex items-center justify-center gap-2 text-foreground/70 hover:text-foreground transition-all duration-300 animate-fade-up-delay-4 font-body z-30"
+        className="absolute bottom-8 left-[40%] -translate-x-1/2 sm:bottom-10 sm:left-[40%] sm:-translate-x-1/2 md:bottom-20 md:left-28 md:translate-x-0 lg:bottom-28 lg:left-48 flex items-center justify-center gap-2 text-foreground/70 hover:text-foreground transition-all duration-300 animate-fade-up-delay-4 font-body z-30"
         aria-label="Scroll to about section"
       >
         <span className="text-sm">Scroll down</span>
