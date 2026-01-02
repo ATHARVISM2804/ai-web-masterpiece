@@ -1,7 +1,11 @@
+import { useState } from "react";
 import { ArrowUpRight } from "lucide-react";
 import promoBg from "@/assets/promo-bg.jpg";
+import CalendlyModal from "./CalendlyModal";
 
 export default function PromoSection() {
+  const [isCalendlyOpen, setIsCalendlyOpen] = useState(false);
+
   return (
     <section className="py-12 lg:py-16 px-6 lg:px-20">
       <div className="relative py-24 lg:py-32 overflow-hidden rounded-3xl">
@@ -31,16 +35,19 @@ export default function PromoSection() {
               Take advantage of this limited-time offer to discuss your needs with an experienced Full Stack Developer and Agentic Ai Developer.
             </p>
             
-            <a
-              href="#contact"
+            <button
+              onClick={() => setIsCalendlyOpen(true)}
               className="inline-flex items-center gap-2 text-sm font-body text-primary-foreground underline underline-offset-4 hover:text-primary-foreground/80 transition-colors group"
             >
               Let's talk
               <ArrowUpRight size={14} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-            </a>
+            </button>
           </div>
         </div>
       </div>
+
+      {/* Calendly Modal */}
+      <CalendlyModal isOpen={isCalendlyOpen} onClose={() => setIsCalendlyOpen(false)} />
     </section>
   );
 }

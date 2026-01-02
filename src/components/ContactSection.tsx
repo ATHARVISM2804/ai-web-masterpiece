@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Send, Mail, MapPin, Phone, ArrowUpRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
+import CalendlyModal from "./CalendlyModal";
 
 export default function ContactSection() {
   const { toast } = useToast();
@@ -12,6 +13,7 @@ export default function ContactSection() {
     message: ""
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isCalendlyOpen, setIsCalendlyOpen] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -94,13 +96,13 @@ export default function ContactSection() {
 
             {/* Book a Call Link */}
             <div className="mt-8">
-              <a
-                href="#"
+              <button
+                onClick={() => setIsCalendlyOpen(true)}
                 className="inline-flex items-center gap-2 text-sm font-medium text-foreground underline-animation"
               >
                 Book A Call
                 <ArrowUpRight size={16} />
-              </a>
+              </button>
             </div>
           </div>
 
@@ -196,6 +198,9 @@ export default function ContactSection() {
           </div>
         </div>
       </div>
+
+      {/* Calendly Modal */}
+      <CalendlyModal isOpen={isCalendlyOpen} onClose={() => setIsCalendlyOpen(false)} />
     </section>
   );
 }

@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Menu, X, ArrowUpRight } from "lucide-react";
+import CalendlyModal from "./CalendlyModal";
 
 const navItems = [
   { name: "About Me", href: "#about" },
@@ -11,6 +12,7 @@ const navItems = [
 export default function Navigation() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isCalendlyOpen, setIsCalendlyOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -64,17 +66,13 @@ export default function Navigation() {
           <div className="flex-1" />
 
           {/* CTA Button - Right aligned */}
-          <a
-            href="#contact"
-            onClick={(e) => {
-              e.preventDefault();
-              scrollToSection("#contact");
-            }}
+          <button
+            onClick={() => setIsCalendlyOpen(true)}
             className="hidden md:inline-flex items-center gap-1.5 text-sm font-body text-foreground underline decoration-foreground underline-offset-4 hover:text-muted-foreground transition-colors"
           >
             Book A Call
             <ArrowUpRight size={14} />
-          </a>
+          </button>
 
           {/* Mobile Menu Button */}
           <button
@@ -105,19 +103,21 @@ export default function Navigation() {
               {item.name}
             </button>
           ))}
-          <a
-            href="#contact"
-            onClick={(e) => {
-              e.preventDefault();
-              scrollToSection("#contact");
+          <button
+            onClick={() => {
+              setIsMobileMenuOpen(false);
+              setIsCalendlyOpen(true);
             }}
             className="inline-flex items-center gap-1.5 text-sm font-body text-foreground mt-4"
           >
             Book A Call
             <ArrowUpRight size={14} />
-          </a>
+          </button>
         </div>
       </div>
+
+      {/* Calendly Modal */}
+      <CalendlyModal isOpen={isCalendlyOpen} onClose={() => setIsCalendlyOpen(false)} />
     </nav>
   );
 }
