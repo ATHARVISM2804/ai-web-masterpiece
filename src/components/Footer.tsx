@@ -77,11 +77,7 @@ export default function Footer() {
               Take advantage of this opportunity to discuss your project needs with an experienced Full Stack & AI Developer.
             </p>
             <a
-              href="#contact"
-              onClick={(e) => {
-                e.preventDefault();
-                scrollToSection("#contact");
-              }}
+              href="tel:+918329310930"
               className="group inline-flex items-center gap-3 text-sm font-medium text-foreground transition-all duration-300 animate-fade-up"
               style={{ animationDelay: '0.3s' }}
             >

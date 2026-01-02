@@ -60,7 +60,7 @@ const CollaborateSection = () => {
             className="group px-8 py-6 text-lg"
             asChild
           >
-            <a href="#contact">
+            <a href="https://wa.me/918329310930" target="_blank" rel="noopener noreferrer">
               Let's Connect
               <ArrowUpRight className="w-5 h-5 ml-2 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
             </a>
