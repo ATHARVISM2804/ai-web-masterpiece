@@ -1,4 +1,5 @@
 import { Plus, ArrowUpRight, Download } from "lucide-react";
+import cvPdf from "../assets/Atharv_s_Cv.pdf";
 
 const profilePhotoUrl = "https://res.cloudinary.com/dinhcaf2c/image/upload/v1766859539/ChatGPT_Image_Dec_27_2025_11_44_07_PM_uwdulb.jpg";
 
@@ -38,14 +39,15 @@ export default function AboutSection() {
 							project?
 						</p>
 
-						{/* Download CV Button */}
+							{/* Download CV Button */}
 						<a
-							href="/resume.pdf"
-							download
+							href={cvPdf}
+							target="_blank"
+							rel="noopener noreferrer"
 							className="inline-flex items-center gap-3 mt-6 px-6 py-3 border border-foreground/20 rounded-full text-sm font-body text-foreground hover:bg-foreground hover:text-primary-foreground transition-all duration-300 group"
 						>
 							<Download size={16} className="group-hover:animate-bounce" />
-							Download CV
+							View CV
 						</a>
 
 						{/* Decorative Arrow */}
