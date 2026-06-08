@@ -17,8 +17,96 @@ const IMG_CLAIM = "https://res.cloudinary.com/dinhcaf2c/image/upload/v1766935298
 const IMG_LANGCHAIN = "https://res.cloudinary.com/dinhcaf2c/image/upload/v1766935471/langchain_fdsnbh.png";
 const IMG_SELF_ADAPTING = "https://res.cloudinary.com/dinhcaf2c/image/upload/v1766935471/Self_Adapting_language_Model_by5cmb.jpg";
 const IMG_N8N_CALLING = "https://res.cloudinary.com/dinhcaf2c/image/upload/v1766935471/n8n_calling_agent_bapvv5.jpg";
+const IMG_VELAR = "https://res.cloudinary.com/dmhabztbf/image/upload/v1780920154/Velar_lukfaq.png";
+const IMG_WISA = "https://res.cloudinary.com/dmhabztbf/image/upload/v1780920402/WISA_-_Leagues_of_Legend_fc9u1e.png";
+const IMG_NEOREACH = "https://res.cloudinary.com/dmhabztbf/image/upload/v1780920594/NEOREACH_IMG_x63j9h.png";
+const IMG_ROXO = "https://res.cloudinary.com/dmhabztbf/image/upload/v1780920939/ROXO_Agency_m7m50q.png";
+const IMG_MOQO = "https://res.cloudinary.com/dmhabztbf/image/upload/v1780921405/MOQO_hcaicp.png";
+const IMG_NARAYAN = "https://res.cloudinary.com/dmhabztbf/image/upload/v1780921632/Narayan_Kripa_xv7a7v.png";
+const IMG_OVERSHOOT = "https://res.cloudinary.com/dmhabztbf/image/upload/v1780921833/Overshoot_img_s18umb.png";
+const IMG_GETCRED = "https://res.cloudinary.com/dmhabztbf/image/upload/v1780922037/GetCredentialing_Done_nzpipr.png";
 
 const projects = [
+  {
+    id: 101,
+    title: "Velar Real Estate",
+    category: "Full Stack",
+    description: "Modern real estate platform with seamless property exploration and listings.",
+    image: IMG_VELAR,
+    tech: ["React", "Tailwind", "Vite"],
+    liveUrl: "https://velarrealestate.vercel.app/",
+    githubUrl: "https://github.com/ATHARVISM2804/VeLar-"
+  },
+  {
+    id: 102,
+    title: "Wisa - Leagues of Legend",
+    category: "Web App",
+    description: "Interactive platform for League of Legends champions.",
+    image: IMG_WISA,
+    tech: ["React", "Tailwind", "API"],
+    liveUrl: "https://wise-eight-zeta.vercel.app/",
+    githubUrl: "https://github.com/ATHARVISM2804/WISE---Leagues-Champions-"
+  },
+  {
+    id: 103,
+    title: "NEOREACH",
+    category: "Web App",
+    description: "Consumer intelligence for international Brands.",
+    image: IMG_NEOREACH,
+    tech: ["React", "Tailwind", "Analytics"],
+    liveUrl: "https://noreach-kappa.vercel.app/",
+    githubUrl: "https://github.com/ATHARVISM2804/NOREACH"
+  },
+  {
+    id: 104,
+    title: "ROXO Agency",
+    category: "Web App",
+    description: "Modern design studio website with elegant portfolio showcase.",
+    image: IMG_ROXO,
+    tech: ["React", "Tailwind", "Design"],
+    liveUrl: "https://roxo-agency.vercel.app/",
+    githubUrl: "https://github.com/ATHARVISM2804/ROXO-AGENCY"
+  },
+  {
+    id: 105,
+    title: "MOQO",
+    category: "Web App",
+    description: "Creative branding agency website with bold typography and animations.",
+    image: IMG_MOQO,
+    tech: ["React", "Tailwind", "Animation"],
+    liveUrl: "https://moqo-demo-38it.vercel.app/",
+    githubUrl: "https://github.com/ATHARVISM2804/MOQO-DEMO"
+  },
+  {
+    id: 106,
+    title: "narayan Kripa",
+    category: "Web App",
+    description: "Experience in Divine Puja and spiritual services.",
+    image: IMG_NARAYAN,
+    tech: ["React", "Tailwind", "Services"],
+    liveUrl: "https://www.narayankripa.in/",
+    githubUrl: "https://github.com/ATHARVISM2804/narayan-divine-gateway"
+  },
+  {
+    id: 107,
+    title: "Overshoot",
+    category: "Web App",
+    description: "Editorial and media platform for modern storytelling.",
+    image: IMG_OVERSHOOT,
+    tech: ["React", "Tailwind", "Media"],
+    liveUrl: "https://www.overshoot.in/",
+    githubUrl: "https://github.com/ATHARVISM2804/overshoot-editorial"
+  },
+  {
+    id: 108,
+    title: "getCredentialingDone",
+    category: "Web App",
+    description: "Fast and easy insurance credentialing services for medical professionals.",
+    image: IMG_GETCRED,
+    tech: ["React", "Tailwind", "Healthcare"],
+    liveUrl: "https://getcredentialingdone.com/",
+    githubUrl: "https://github.com/ATHARVISM2804/Amol-Nagpur-GetCredentialingDone-"
+  },
   {
     id: 1,
     title: "Estatico",
