@@ -8,9 +8,40 @@ import {
 
 const experiences = [
   {
+    company: "VelyxLabs",
+    role: "CEO & Co-Founder",
+    period: "April 2026 - Present",
+    website: "https://velyxlabs.in/",
+    description: (
+      <>
+        Empowering founders to scale their businesses through agentic AI systems, custom MVPs, and SaaS automations.
+        <br />
+        <span>
+          Visit website:{" "}
+          <a
+            href="https://velyxlabs.in/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-black text-sm hover:underline"
+          >
+            velyxlabs.in
+          </a>
+        </span>
+      </>
+    ),
+    fullDescription:
+      "As the CEO and Co-Founder of VelyxLabs, I partner with founders to leverage artificial intelligence for rapid business growth. We specialize in building custom agentic systems, implementing intelligent workflow automations, and developing scalable MVPs and SaaS platforms from the ground up. By bridging the gap between cutting-edge AI technology and practical business needs, we deliver solutions that streamline operations, significantly reduce manual overhead, and drive sustainable scalability.",
+    achievements: [
+      "Architected and deployed custom agentic AI systems to automate complex business workflows",
+      "Partnered with early-stage founders to rapidly develop and launch scalable MVP and SaaS products",
+      "Streamlined operations by integrating intelligent automations across various business functions"
+    ],
+    tags: ["Agentic AI", "SaaS", "Automation", "MVP"]
+  },
+  {
     company: "Goran AI (Co-Founder)",
     role: "Co-Founder",
-    period: "July 2025 - Present",
+    period: "June 2025 - April 2026",
     website: "https://goran.in",
     description: (
       <>
@@ -188,11 +219,11 @@ export default function SkillsSection() {
                   </div>
 
                   {/* Tags */}
-                  <div className="lg:col-span-3 flex justify-end gap-2 items-center">
+                  <div className="lg:col-span-3 flex flex-wrap lg:flex-nowrap justify-end gap-2 items-center">
                     {exp.tags.map((tag) => (
                       <span
                         key={tag}
-                        className="px-3 py-1.5 text-xs font-body border border-border rounded-full"
+                        className="whitespace-nowrap px-3 py-1.5 text-xs font-body border border-border rounded-full"
                       >
                         {tag}
                       </span>

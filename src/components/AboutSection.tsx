@@ -8,7 +8,7 @@ const highlights = [
 		text: "3rd year student at NIT Hamirpur, building strong foundations in CS and hands-on experience with modern web and AI technologies.",
 	},
 	{
-		text: "Co-founder of Goran AI — we deliver AI agents, automations, and modern websites to help businesses scale efficiently.",
+		text: "CEO and Co-Founder of VelyxLabs — we deliver AI agents, automations, and modern websites to help businesses scale efficiently.",
 	},
 	{
 		text: "With 2+ years of experience, I specialize in creating intuitive, user-focused applications that solve real-world problems and deliver seamless digital experiences.",
