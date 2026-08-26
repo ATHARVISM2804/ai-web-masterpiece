@@ -1,42 +1,31 @@
-import { useState } from "react";
-import Navigation from "@/components/Navigation";
-import HeroSection from "@/components/HeroSection";
-import AboutSection from "@/components/AboutSection";
-import SkillsSection from "@/components/SkillsSection";
-import PromoSection from "@/components/PromoSection";
-import ProjectsSection from "@/components/ProjectsSection";
-import EducationSection from "@/components/EducationSection";
-import CollaborateSection from "@/components/CollaborateSection";
-import ContactSection from "@/components/ContactSection";
-import Footer from "@/components/Footer";
-import Preloader from "@/components/Preloader";
+import SiteNav from "@/components/SiteNav";
+import Hero from "@/components/sections/Hero";
+import TrustedBy from "@/components/sections/TrustedBy";
+import Process from "@/components/sections/Process";
+import Benefits from "@/components/sections/Benefits";
+import Work from "@/components/sections/Work";
+import Testimonials from "@/components/sections/Testimonials";
+import Pricing from "@/components/sections/Pricing";
+import Contact from "@/components/sections/Contact";
+import Faq from "@/components/sections/Faq";
+import SiteFooter from "@/components/sections/SiteFooter";
 
-const Index = () => {
-  const [isLoading, setIsLoading] = useState(true);
-
+export default function Index() {
   return (
-    <>
-      {isLoading && <Preloader onComplete={() => setIsLoading(false)} />}
-      <div
-        className={`min-h-screen bg-background transition-opacity duration-500 ${
-          isLoading ? "opacity-0" : "opacity-100"
-        }`}
-      >
-        <Navigation />
-        <main>
-          <HeroSection />
-          <AboutSection />
-          <SkillsSection />
-          <PromoSection />
-          <ProjectsSection />
-          <EducationSection />
-          <CollaborateSection />
-          <ContactSection />
-        </main>
-        <Footer />
-      </div>
-    </>
+    <div className="min-h-screen bg-background">
+      <SiteNav />
+      <main>
+        <Hero />
+        <TrustedBy />
+        <Process />
+        <Benefits />
+        <Work />
+        <Testimonials />
+        <Pricing />
+        <Contact />
+        <Faq />
+      </main>
+      <SiteFooter />
+    </div>
   );
-};
-
-export default Index;
+}

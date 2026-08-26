@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { X } from "lucide-react";
+import { profile } from "@/content/site";
 
 interface CalendlyModalProps {
   isOpen: boolean;
@@ -31,7 +32,7 @@ export default function CalendlyModal({ isOpen, onClose }: CalendlyModalProps) {
         if (container && window.Calendly) {
           container.innerHTML = ""; // Clear any existing widget
           window.Calendly.initInlineWidget({
-            url: "https://calendly.com/atharv-golait",
+            url: profile.calendly,
             parentElement: container,
           });
         }
@@ -66,20 +67,21 @@ export default function CalendlyModal({ isOpen, onClose }: CalendlyModalProps) {
     <div className="fixed inset-0 z-[100] flex items-center justify-center">
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-black/70 backdrop-blur-sm"
+        className="absolute inset-0 bg-foreground/60 backdrop-blur-sm"
         onClick={onClose}
       />
 
       {/* Modal */}
-      <div className="relative w-full max-w-4xl h-[85vh] mx-4 bg-background rounded-2xl overflow-hidden shadow-2xl animate-in fade-in zoom-in-95 duration-200">
+      <div className="relative w-full max-w-4xl h-[85vh] mx-4 bg-background rounded-[var(--radius)] border border-border overflow-hidden shadow-2xl animate-in fade-in zoom-in-95 duration-200">
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-border">
-          <h3 className="font-display text-xl font-light text-foreground">
-            Book a Call
-          </h3>
+          <div>
+            <p className="label">30 minutes · no pitch</p>
+            <h3 className="mt-1 text-lg font-semibold tracking-[-0.02em]">Book a scope call</h3>
+          </div>
           <button
             onClick={onClose}
-            className="p-2 rounded-full hover:bg-muted transition-colors"
+            className="rounded-full p-2 transition-colors hover:bg-muted"
             aria-label="Close modal"
           >
             <X size={20} className="text-foreground" />
@@ -89,7 +91,7 @@ export default function CalendlyModal({ isOpen, onClose }: CalendlyModalProps) {
         {/* Calendly Widget Container */}
         <div
           id="calendly-inline-container"
-          className="w-full h-[calc(100%-65px)]"
+          className="w-full h-[calc(100%-77px)]"
           style={{ minWidth: "320px" }}
         />
       </div>

@@ -1,0 +1,94 @@
+import { useEffect, useState } from "react";
+import { Menu, X } from "lucide-react";
+import { nav } from "@/content/site";
+import Logo from "./Logo";
+import CalendlyModal from "./CalendlyModal";
+
+export default function SiteNav() {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [callOpen, setCallOpen] = useState(false);
+
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [menuOpen]);
+
+  const go = (href: string) => {
+    setMenuOpen(false);
+    document.querySelector(href)?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  return (
+    <>
+      <header className="fixed inset-x-0 top-4 z-50 px-4 sm:top-6">
+        <div className="mx-auto flex h-[68px] w-full max-w-[900px] items-center justify-between rounded-[63px] bg-white/60 pl-6 pr-3 backdrop-blur-xl ring-1 ring-white/70">
+          <a href="#top" onClick={() => setMenuOpen(false)}>
+            <Logo />
+          </a>
+
+          <div className="flex items-center gap-2">
+            <nav className="hidden items-center gap-7 pr-3 md:flex">
+              {nav.map((item) => (
+                <button
+                  key={item.href}
+                  onClick={() => go(item.href)}
+                  className="text-[15px] text-foreground/80 transition-colors hover:text-foreground"
+                >
+                  {item.label}
+                </button>
+              ))}
+            </nav>
+
+            <button
+              onClick={() => setCallOpen(true)}
+              className="btn-dark hidden px-6 py-3 text-[15px] sm:inline-flex"
+            >
+              Book a Call
+            </button>
+
+            <button
+              className="p-2.5 md:hidden"
+              onClick={() => setMenuOpen((v) => !v)}
+              aria-label={menuOpen ? "Close menu" : "Open menu"}
+              aria-expanded={menuOpen}
+            >
+              {menuOpen ? <X size={22} /> : <Menu size={22} />}
+            </button>
+          </div>
+        </div>
+      </header>
+
+      {/* Mobile menu */}
+      <div
+        className={`fixed inset-0 z-40 bg-background transition-opacity duration-300 md:hidden ${
+          menuOpen ? "opacity-100" : "pointer-events-none opacity-0"
+        }`}
+      >
+        <div className="shell flex h-full flex-col justify-center gap-2">
+          {nav.map((item) => (
+            <button
+              key={item.href}
+              onClick={() => go(item.href)}
+              className="border-b border-border py-5 text-left text-3xl font-medium tracking-[-0.03em]"
+            >
+              {item.label}
+            </button>
+          ))}
+          <button
+            onClick={() => {
+              setMenuOpen(false);
+              setCallOpen(true);
+            }}
+            className="btn-dark mt-8 w-full"
+          >
+            Book a Call
+          </button>
+        </div>
+      </div>
+
+      <CalendlyModal isOpen={callOpen} onClose={() => setCallOpen(false)} />
+    </>
+  );
+}
