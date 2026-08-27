@@ -82,33 +82,51 @@ export const about = {
   },
   title: "Founder, builder,\npermanently in motion",
   lede: "I help founders and operators put AI to work — then make sure it holds up under real load.",
+  stats: [
+    { value: "50+", label: "Products shipped" },
+    { value: "30+", label: "Agents in production" },
+    { value: "2+ yrs", label: "Building for clients" },
+  ],
   body: [
     "I'm Co-founder and CEO of VelyxLabs, where we help founders leverage AI to scale their business, and build AI infrastructure for B2B and capital-intensive firms.",
     "Alongside that I'm Tech Lead at Getlandy AI, a Netherlands-based SaaS startup, and I previously co-founded GoRan AI agency. I'm also in my final year at NIT Hamirpur.",
   ],
+  /**
+   * Experience timeline. `mark` is the fallback monogram.
+   * Drop a real logo in by adding `logo: "<url>"` to any entry — a square
+   * PNG/SVG on a transparent or white background works best.
+   */
   roles: [
     {
       company: "VelyxLabs",
       role: "Co-founder & CEO",
       note: "AI infrastructure and agentic systems for B2B and capital-intensive firms",
+      mark: "VL",
+      logo: "",
       current: true,
     },
     {
       company: "Getlandy AI",
       role: "Tech Lead",
       note: "Netherlands-based SaaS startup",
+      mark: "GL",
+      logo: "",
       current: true,
     },
     {
       company: "GoRan AI",
       role: "Co-founder",
       note: "AI agency — previously",
+      mark: "GR",
+      logo: "",
       current: false,
     },
     {
       company: "NIT Hamirpur",
-      role: "Final year",
-      note: "Computer science",
+      role: "Final year, Mechanical Engineering",
+      note: "National Institute of Technology, Hamirpur",
+      mark: "NH",
+      logo: "",
       current: true,
     },
   ],

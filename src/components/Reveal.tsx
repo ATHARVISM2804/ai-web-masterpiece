@@ -5,6 +5,8 @@ interface RevealProps {
   delay?: number;
   className?: string;
   as?: ElementType;
+  /** Direction the content travels in from. Defaults to "up". */
+  from?: "up" | "left" | "right";
 }
 
 /**
@@ -15,7 +17,13 @@ interface RevealProps {
  * IntersectionObserver is unavailable. Elements already in view on mount skip
  * the animation entirely.
  */
-export default function Reveal({ children, delay = 0, className = "", as }: RevealProps) {
+export default function Reveal({
+  children,
+  delay = 0,
+  className = "",
+  as,
+  from = "up",
+}: RevealProps) {
   const Tag = (as ?? "div") as ElementType;
   const ref = useRef<HTMLElement>(null);
   const [state, setState] = useState<"idle" | "armed" | "shown">("idle");
@@ -51,7 +59,13 @@ export default function Reveal({ children, delay = 0, className = "", as }: Reve
     <Tag
       ref={ref}
       className={`${motion} ${className}`}
-      style={{ "--reveal-delay": `${delay}ms` } as React.CSSProperties}
+      style={
+        {
+          "--reveal-delay": `${delay}ms`,
+          "--reveal-x": from === "left" ? "-44px" : from === "right" ? "44px" : "0px",
+          "--reveal-y": from === "up" ? "24px" : "12px",
+        } as React.CSSProperties
+      }
     >
       {children}
     </Tag>
