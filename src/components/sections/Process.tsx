@@ -1,31 +1,16 @@
-import { PhoneCall, Compass, Boxes, Rocket, type LucideIcon } from "lucide-react";
+import { PhoneCall, PenTool, Gauge, Rocket, type LucideIcon } from "lucide-react";
 import { process } from "@/content/site";
 import SectionHead from "../SectionHead";
 import Reveal from "../Reveal";
+import StepGraphic from "./ProcessGraphics";
 
+/** Marker icon per step — mirrors the animation on that step's card. */
 const icons: Record<string, LucideIcon> = {
   call: PhoneCall,
-  blueprint: Compass,
-  build: Boxes,
+  blueprint: PenTool,
+  build: Gauge,
   launch: Rocket,
 };
-
-/** Concentric-ring graphic that sits at the top of each step card. */
-function StepGraphic({ Icon }: { Icon: LucideIcon }) {
-  return (
-    <div className="relative mx-auto flex h-44 w-44 items-center justify-center" aria-hidden>
-      {[176, 132, 88].map((size) => (
-        <span
-          key={size}
-          className="absolute rounded-full border border-foreground/[0.07]"
-          style={{ height: size, width: size }}
-        />
-      ))}
-      <span className="absolute h-44 w-44 rounded-full bg-[radial-gradient(circle_at_50%_45%,rgba(59,130,246,0.16),transparent_62%)]" />
-      <Icon size={30} strokeWidth={1.5} className="relative text-foreground/75" />
-    </div>
-  );
-}
 
 export default function Process() {
   return (
@@ -49,8 +34,8 @@ export default function Process() {
                 <div
                   className={`flex items-center gap-4 ${reverse ? "flex-row-reverse" : ""}`}
                 >
-                  <span className="relative z-10 flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-white ring-4 ring-[hsl(var(--page))]">
-                    <Icon size={20} strokeWidth={1.5} />
+                  <span className="relative z-10 flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-white shadow-[0_6px_18px_-8px_rgb(0_0_0/0.35)] ring-4 ring-[hsl(var(--page))]">
+                    <Icon size={20} strokeWidth={1.5} className="text-foreground" />
                   </span>
                   <span className="whitespace-nowrap text-lg text-muted-foreground">
                     Step {i + 1}
@@ -60,7 +45,7 @@ export default function Process() {
 
               const card = (
                 <div className="card-soft p-6 hover:bg-white lg:p-8">
-                  <StepGraphic Icon={Icon} />
+                  <StepGraphic name={step.icon} />
                   <h3 className="mt-4 text-lg font-semibold tracking-tight">{step.title}</h3>
                   <p className="mt-3 leading-relaxed text-muted-foreground">{step.body}</p>
                 </div>
