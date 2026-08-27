@@ -3,7 +3,7 @@ import { Check } from "lucide-react";
 import { pricing } from "@/content/site";
 import SectionHead from "../SectionHead";
 import Reveal from "../Reveal";
-import CalendlyModal from "../CalendlyModal";
+import BookingModal from "../BookingModal";
 
 export default function Pricing() {
   const [callOpen, setCallOpen] = useState(false);
@@ -61,7 +61,7 @@ export default function Pricing() {
         </div>
       </div>
 
-      <CalendlyModal isOpen={callOpen} onClose={() => setCallOpen(false)} />
+      <BookingModal isOpen={callOpen} onClose={() => setCallOpen(false)} />
     </section>
   );
 }

@@ -3,7 +3,7 @@ import { Plus } from "lucide-react";
 import { faq } from "@/content/site";
 import SectionHead from "../SectionHead";
 import Reveal from "../Reveal";
-import CalendlyModal from "../CalendlyModal";
+import BookingModal from "../BookingModal";
 
 export default function Faq() {
   const [open, setOpen] = useState<number | null>(null);
@@ -61,7 +61,7 @@ export default function Faq() {
         </Reveal>
       </div>
 
-      <CalendlyModal isOpen={callOpen} onClose={() => setCallOpen(false)} />
+      <BookingModal isOpen={callOpen} onClose={() => setCallOpen(false)} />
     </section>
   );
 }

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Play } from "lucide-react";
 import { hero, showcase } from "@/content/site";
-import CalendlyModal from "../CalendlyModal";
+import BookingModal from "../BookingModal";
 import { scrollToTarget } from "@/lib/smooth-scroll";
 
 export default function Hero() {
@@ -79,7 +79,7 @@ export default function Hero() {
         </div>
       </div>
 
-      <CalendlyModal isOpen={callOpen} onClose={() => setCallOpen(false)} />
+      <BookingModal isOpen={callOpen} onClose={() => setCallOpen(false)} />
     </section>
   );
 }

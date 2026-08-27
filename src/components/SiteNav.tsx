@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
 import { nav } from "@/content/site";
 import Logo from "./Logo";
-import CalendlyModal from "./CalendlyModal";
+import BookingModal from "./BookingModal";
 import { lockScroll, scrollToTarget, scrollToTop } from "@/lib/smooth-scroll";
 
 export default function SiteNav() {
@@ -98,7 +98,7 @@ export default function SiteNav() {
         </div>
       </div>
 
-      <CalendlyModal isOpen={callOpen} onClose={() => setCallOpen(false)} />
+      <BookingModal isOpen={callOpen} onClose={() => setCallOpen(false)} />
     </>
   );
 }

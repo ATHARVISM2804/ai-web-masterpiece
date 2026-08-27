@@ -18,7 +18,7 @@ export const profile = {
   phone: "+91 8329310930",
   whatsapp:
     "https://wa.me/918329310930?text=Hi%20Atharv%2C%20I'd%20like%20to%20talk%20about%20a%20project",
-  calendly: "https://calendly.com/atharv-golait",
+  booking: "https://cal.com/atharvgolait/30min",
   portrait:
     "https://res.cloudinary.com/dinhcaf2c/image/upload/v1766859539/ChatGPT_Image_Dec_27_2025_11_44_07_PM_uwdulb.jpg",
   /**
@@ -393,7 +393,7 @@ export const pricing = {
     {
       name: "Automation Pilot",
       pitch: "Perfect for teams who want to validate fast",
-      price: "$3,500",
+      price: "$2,500",
       timeline: "2–3 weeks",
       featured: false,
       includes: [
@@ -409,7 +409,7 @@ export const pricing = {
     {
       name: "Agentic System",
       pitch: "For teams ready to automate a whole function",
-      price: "$9,000",
+      price: "$6,000",
       timeline: "4–8 weeks",
       featured: true,
       includes: [
@@ -426,7 +426,7 @@ export const pricing = {
     {
       name: "Product Partner",
       pitch: "For operators building serious platforms",
-      price: "$18,000",
+      price: "$9,000",
       timeline: "8+ weeks",
       featured: false,
       includes: [

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { footer, profile } from "@/content/site";
 import Logo, { LogoMark } from "../Logo";
 import SocialLinks from "../SocialLinks";
-import CalendlyModal from "../CalendlyModal";
+import BookingModal from "../BookingModal";
 
 export default function SiteFooter() {
   const [callOpen, setCallOpen] = useState(false);
@@ -59,7 +59,7 @@ export default function SiteFooter() {
         </p>
       </div>
 
-      <CalendlyModal isOpen={callOpen} onClose={() => setCallOpen(false)} />
+      <BookingModal isOpen={callOpen} onClose={() => setCallOpen(false)} />
     </footer>
   );
 }
