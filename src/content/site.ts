@@ -16,11 +16,23 @@ export const profile = {
   calendly: "https://calendly.com/atharv-golait",
   portrait:
     "https://res.cloudinary.com/dinhcaf2c/image/upload/v1766859539/ChatGPT_Image_Dec_27_2025_11_44_07_PM_uwdulb.jpg",
+  /**
+   * Social row. `icon` picks the glyph in components/SocialIcon.tsx.
+   * An entry with an empty `href` is skipped — fill in Discord and Reddit
+   * to make those show up.
+   */
   socials: [
-    { label: "LinkedIn", href: "https://www.linkedin.com/in/atharv-golait-9048772ab/" },
-    { label: "GitHub", href: "https://github.com/ATHARVISM2804" },
-    { label: "X", href: "https://x.com/Atharv_Golait" },
-    { label: "Instagram", href: "https://www.instagram.com/_atharv.vv__/" },
+    {
+      label: "LinkedIn",
+      icon: "linkedin",
+      href: "https://www.linkedin.com/in/atharv-golait-9048772ab/",
+    },
+    { label: "X", icon: "x", href: "https://x.com/Atharv_Golait" },
+    { label: "Instagram", icon: "instagram", href: "https://www.instagram.com/_atharv.vv__/" },
+    { label: "Email", icon: "gmail", href: "mailto:atharv.golait@gmail.com" },
+    { label: "Discord", icon: "discord", href: "" },
+    { label: "Reddit", icon: "reddit", href: "" },
+    { label: "GitHub", icon: "github", href: "https://github.com/ATHARVISM2804" },
   ],
 };
 
@@ -84,7 +96,7 @@ export const about = {
   lede: "I help founders and operators put AI to work — then make sure it holds up under real load.",
   greeting: "Hi, I'm Atharv",
   /** Small status line in the top band of the bio card. Set to "" to hide it. */
-  status: "Available for new projects",
+  status: "Scale with me",
   cta: "Book a call",
   /** Real VelyxLabs logo file. Leave empty to use the built-in SVG mark. */
   velyxLogo: "",

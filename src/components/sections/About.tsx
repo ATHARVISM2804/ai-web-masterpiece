@@ -3,6 +3,7 @@ import { ArrowRight, Dumbbell, Footprints, Play, Zap, type LucideIcon } from "lu
 import { about, profile } from "@/content/site";
 import { LogoMark } from "../Logo";
 import velyxLogoLight from "@/assets/velyxlabs-logo-light.png";
+import SocialIcon from "../SocialIcon";
 import SectionHead from "../SectionHead";
 import Reveal from "../Reveal";
 import { scrollToTarget } from "@/lib/smooth-scroll";
@@ -205,19 +206,23 @@ export default function About() {
                   <ArrowRight size={16} />
                 </a>
 
-                <ul className="flex flex-wrap items-center gap-5">
-                  {profile.socials.map((social) => (
-                    <li key={social.label}>
-                      <a
-                        href={social.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-[13.5px] text-muted-foreground transition-colors hover:text-foreground"
-                      >
-                        {social.label}
-                      </a>
-                    </li>
-                  ))}
+                <ul className="flex flex-wrap items-center gap-2">
+                  {profile.socials
+                    .filter((social) => social.href)
+                    .map((social) => (
+                      <li key={social.label}>
+                        <a
+                          href={social.href}
+                          target={social.href.startsWith("mailto:") ? undefined : "_blank"}
+                          rel="noopener noreferrer"
+                          aria-label={social.label}
+                          title={social.label}
+                          className="flex h-10 w-10 items-center justify-center rounded-full bg-[hsl(var(--page))] text-muted-foreground transition-colors hover:bg-foreground hover:text-white"
+                        >
+                          <SocialIcon name={social.icon} />
+                        </a>
+                      </li>
+                    ))}
                 </ul>
               </div>
             </div>

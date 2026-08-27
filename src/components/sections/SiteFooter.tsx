@@ -46,7 +46,7 @@ export default function SiteFooter() {
             <p>© Copyright {new Date().getFullYear()} {profile.company}. All Rights Reserved.</p>
 
             <ul className="flex flex-wrap justify-center gap-5">
-              {profile.socials.map((social) => (
+              {profile.socials.filter((social) => social.href).map((social) => (
                 <li key={social.label}>
                   <a
                     href={social.href}
