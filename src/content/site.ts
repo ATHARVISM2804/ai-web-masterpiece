@@ -25,6 +25,7 @@ export const profile = {
 };
 
 export const nav = [
+  { label: "About", href: "#about" },
   { label: "Work", href: "#work" },
   { label: "Contact", href: "#contact" },
   { label: "Pricing", href: "#pricing" },
@@ -61,6 +62,73 @@ export const clients = [
   "Skipit Cloud",
   "Pahadicraft",
 ];
+
+/**
+ * Intro video.
+ *
+ * ⚠️ ADD YOUR VIDEO HERE. Set ONE of these:
+ *   youtubeId — the id from the URL, e.g. "dQw4w9WgXcQ" for
+ *               youtube.com/watch?v=dQw4w9WgXcQ  (recommended: nothing loads
+ *               from YouTube until someone clicks play)
+ *   src       — a direct .mp4 URL (Cloudinary, S3, etc.)
+ *
+ * Leave both empty and the section shows the poster with a "coming soon"
+ * label instead of a play button.
+ */
+export const intro = {
+  badge: "Meet Me",
+  title: "Hi, I'm Atharv",
+  lede: "Ninety seconds on what I build, who I build it for, and how I work.",
+  youtubeId: "",
+  src: "",
+  poster:
+    "https://res.cloudinary.com/dinhcaf2c/image/upload/v1766859539/ChatGPT_Image_Dec_27_2025_11_44_07_PM_uwdulb.jpg",
+};
+
+export const about = {
+  badge: "About Me",
+  title: "Founder, builder,\npermanently in motion",
+  lede: "I help founders and operators put AI to work — then make sure it holds up under real load.",
+  body: [
+    "I'm Co-founder and CEO of VelyxLabs, where we help founders leverage AI to scale their business, and build AI infrastructure for B2B and capital-intensive firms.",
+    "Alongside that I'm Tech Lead at Getlandy AI, a Netherlands-based SaaS startup, and I previously co-founded GoRan AI agency. I'm also in my final year at NIT Hamirpur.",
+  ],
+  roles: [
+    {
+      company: "VelyxLabs",
+      role: "Co-founder & CEO",
+      note: "AI infrastructure and agentic systems for B2B and capital-intensive firms",
+      current: true,
+    },
+    {
+      company: "Getlandy AI",
+      role: "Tech Lead",
+      note: "Netherlands-based SaaS startup",
+      current: true,
+    },
+    {
+      company: "GoRan AI",
+      role: "Co-founder",
+      note: "AI agency — previously",
+      current: false,
+    },
+    {
+      company: "NIT Hamirpur",
+      role: "Final year",
+      note: "Computer science",
+      current: true,
+    },
+  ],
+  hobbies: {
+    heading: "Outside the work",
+    lede: "Same thing, different reps.",
+    items: [
+      { icon: "lift", label: "Weightlifting", note: "Heavy, consistently" },
+      { icon: "calisthenics", label: "Calisthenics", note: "Bodyweight, everywhere" },
+      { icon: "run", label: "Marathons", note: "Long distance running" },
+    ],
+  },
+};
 
 export const process = {
   badge: "Process",
