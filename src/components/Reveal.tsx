@@ -1,4 +1,18 @@
-import { useLayoutEffect, useRef, useState, type ReactNode, type ElementType } from "react";
+import {
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type ElementType,
+  type ReactNode,
+} from "react";
+
+/**
+ * useLayoutEffect warns during prerendering because it cannot run there.
+ * On the server the plain effect is equivalent — neither runs — so this keeps
+ * the build output clean without changing browser behaviour.
+ */
+const useIsomorphicLayoutEffect = typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
 interface RevealProps {
   children: ReactNode;
@@ -28,7 +42,7 @@ export default function Reveal({
   const ref = useRef<HTMLElement>(null);
   const [state, setState] = useState<"idle" | "armed" | "shown">("idle");
 
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     const node = ref.current;
     if (!node || typeof IntersectionObserver === "undefined") return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
