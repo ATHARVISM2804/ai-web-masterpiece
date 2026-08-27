@@ -111,9 +111,10 @@ export const about = {
     { value: "30+", label: "Agents in production" },
     { value: "2+ yrs", label: "Building for clients" },
   ],
+  /** [label](url) inside a paragraph renders as a link. */
   body: [
-    "I'm Co-founder and CEO of VelyxLabs, where we help founders leverage AI to scale their business, and build AI infrastructure for B2B and capital-intensive firms.",
-    "Alongside that I'm Tech Lead at Getlandy AI, a Netherlands-based SaaS startup, and I previously co-founded GoRan AI agency. I'm also in my final year at NIT Hamirpur.",
+    "I'm Co-founder and CEO of VelyxLabs, where we help founders leverage AI to scale their business, and build AI infrastructure for B2B and capital-intensive firms — from real estate to healthcare.",
+    "Alongside that I'm Tech Lead at Getlandy AI, a Netherlands-based SaaS startup, and I build products of my own: [Estatico](https://estatico.app/), AI automation that handles the follow-ups, tasks, and reminders so you can focus on closing deals, and [Eavesdrop](https://www.eavesdrop.co.in/), buyer-intent infrastructure that listens where your buyers talk.",
   ],
   /**
    * Experience timeline. `mark` is the fallback monogram.

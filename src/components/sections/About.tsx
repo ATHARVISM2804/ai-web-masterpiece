@@ -73,6 +73,32 @@ function useTimelineProgress() {
   return { ref, progress };
 }
 
+/** Renders a bio paragraph, turning [label](url) into a link. */
+function BioText({ text }: { text: string }) {
+  const parts = text.split(/(\[[^\]]+\]\([^)]+\))/g);
+
+  return (
+    <>
+      {parts.map((part, i) => {
+        const link = part.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
+        if (!link) return <span key={i}>{part}</span>;
+
+        return (
+          <a
+            key={i}
+            href={link[2]}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-medium text-foreground underline decoration-border underline-offset-4 transition-colors hover:decoration-foreground"
+          >
+            {link[1]}
+          </a>
+        );
+      })}
+    </>
+  );
+}
+
 /** Vertical 9:16 intro video. Loads nothing third-party until pressed. */
 function IntroVideo() {
   const [playing, setPlaying] = useState(false);
@@ -191,7 +217,7 @@ export default function About() {
                 <div className="mt-5 space-y-4">
                   {about.body.map((para) => (
                     <p key={para} className="text-[16.5px] leading-relaxed text-muted-foreground">
-                      {para}
+                      <BioText text={para} />
                     </p>
                   ))}
                 </div>
