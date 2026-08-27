@@ -82,6 +82,9 @@ export const about = {
   },
   title: "Founder, builder,\npermanently in motion",
   lede: "I help founders and operators put AI to work — then make sure it holds up under real load.",
+  greeting: "Hi, I'm Atharv",
+  /** Real VelyxLabs logo file. Leave empty to use the built-in SVG mark. */
+  velyxLogo: "",
   stats: [
     { value: "50+", label: "Products shipped" },
     { value: "30+", label: "Agents in production" },
@@ -102,6 +105,8 @@ export const about = {
       role: "Co-founder & CEO",
       note: "AI infrastructure and agentic systems for B2B and capital-intensive firms",
       mark: "VL",
+      /** Uses the built-in VelyxLabs SVG mark unless `logo` is set. */
+      brandMark: "velyx",
       logo: "",
       current: true,
     },

@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Dumbbell, Footprints, Play, Zap, type LucideIcon } from "lucide-react";
 import { about, profile } from "@/content/site";
+import { LogoMark } from "../Logo";
+import VelyxMark from "../VelyxMark";
 import SectionHead from "../SectionHead";
 import Reveal from "../Reveal";
 
@@ -11,11 +13,29 @@ const hobbyIcons: Record<string, LucideIcon> = {
 };
 
 /** Company logo, or its monogram until a real logo URL is set. */
-function CompanyMark({ mark, logo, company }: { mark: string; logo?: string; company: string }) {
+function CompanyMark({
+  mark,
+  logo,
+  company,
+  brandMark,
+}: {
+  mark: string;
+  logo?: string;
+  company: string;
+  brandMark?: string;
+}) {
   if (logo) {
     return (
       <span className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-white ring-1 ring-border">
         <img src={logo} alt={company} loading="lazy" className="h-8 w-8 object-contain" />
+      </span>
+    );
+  }
+
+  if (brandMark === "velyx") {
+    return (
+      <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#141210]">
+        <VelyxMark size={30} />
       </span>
     );
   }
@@ -114,6 +134,35 @@ export default function About() {
 
           <Reveal from="right" delay={80}>
               <div className="card-solid flex h-full flex-col justify-center p-7 sm:p-9">
+                {/* Who you're dealing with, before a word is read */}
+                <div className="mb-7 flex items-center gap-2.5">
+                  <span className="pill-dark flex h-12 w-12 items-center justify-center rounded-2xl">
+                    <LogoMark size={19} className="text-white" />
+                  </span>
+
+                  <span className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-2xl bg-[#141210]">
+                    {about.velyxLogo ? (
+                      <img
+                        src={about.velyxLogo}
+                        alt="VelyxLabs"
+                        loading="lazy"
+                        className="h-8 w-8 object-contain"
+                      />
+                    ) : (
+                      <VelyxMark size={30} />
+                    )}
+                  </span>
+
+                  <span className="ml-1.5 text-[13px] leading-snug text-muted-foreground">
+                    Atharv Golait
+                    <span className="block">× VelyxLabs</span>
+                  </span>
+                </div>
+
+                <h3 className="mb-5 text-[2rem] font-medium tracking-[-0.035em] sm:text-[2.35rem]">
+                  {about.greeting}
+                </h3>
+
                 {about.body.map((para) => (
                   <p
                     key={para}
@@ -154,7 +203,12 @@ export default function About() {
               const card = (
                 <div className="card-solid p-6 transition-transform duration-300 hover:-translate-y-1 sm:p-7">
                   <div className="flex items-start gap-4">
-                    <CompanyMark mark={role.mark} logo={role.logo} company={role.company} />
+                    <CompanyMark
+                      mark={role.mark}
+                      logo={role.logo}
+                      company={role.company}
+                      brandMark={"brandMark" in role ? role.brandMark : undefined}
+                    />
 
                     <div className="min-w-0">
                       <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1">
