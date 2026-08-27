@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { footer, profile } from "@/content/site";
 import Logo, { LogoMark } from "../Logo";
+import SocialLinks from "../SocialLinks";
 import CalendlyModal from "../CalendlyModal";
 
 export default function SiteFooter() {
@@ -45,20 +46,7 @@ export default function SiteFooter() {
           <div className="flex flex-col items-center justify-between gap-4 text-sm text-muted-foreground sm:flex-row">
             <p>© Copyright {new Date().getFullYear()} {profile.company}. All Rights Reserved.</p>
 
-            <ul className="flex flex-wrap justify-center gap-5">
-              {profile.socials.filter((social) => social.href).map((social) => (
-                <li key={social.label}>
-                  <a
-                    href={social.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="transition-colors hover:text-foreground"
-                  >
-                    {social.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
+            <SocialLinks variant="text" />
           </div>
         </div>
       </div>

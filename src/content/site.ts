@@ -23,8 +23,8 @@ export const profile = {
     "https://res.cloudinary.com/dinhcaf2c/image/upload/v1766859539/ChatGPT_Image_Dec_27_2025_11_44_07_PM_uwdulb.jpg",
   /**
    * Social row. `icon` picks the glyph in components/SocialIcon.tsx.
-   * An entry with an empty `href` is skipped — fill in Discord and Reddit
-   * to make those show up.
+   * An entry needs either an `href` to link to or a `copy` value to put on
+   * the clipboard; one with neither is skipped.
    */
   socials: [
     {
@@ -35,8 +35,9 @@ export const profile = {
     { label: "X", icon: "x", href: "https://x.com/Atharv_Golait" },
     { label: "Instagram", icon: "instagram", href: "https://www.instagram.com/_atharv.vv__/" },
     { label: "Email", icon: "gmail", href: "mailto:atharv.golait@gmail.com" },
-    { label: "Discord", icon: "discord", href: "" },
-    { label: "Reddit", icon: "reddit", href: "" },
+    /* Discord usernames have no public profile URL, so this copies instead. */
+    { label: "Discord", icon: "discord", href: "", copy: "atharv_2804" },
+    { label: "Reddit", icon: "reddit", href: "https://www.reddit.com/user/Atharvism/" },
     { label: "GitHub", icon: "github", href: "https://github.com/ATHARVISM2804" },
   ],
 };
