@@ -63,30 +63,23 @@ export const clients = [
   "Pahadicraft",
 ];
 
-/**
- * Intro video.
- *
- * ⚠️ ADD YOUR VIDEO HERE. Set ONE of these:
- *   youtubeId — the id from the URL, e.g. "dQw4w9WgXcQ" for
- *               youtube.com/watch?v=dQw4w9WgXcQ  (recommended: nothing loads
- *               from YouTube until someone clicks play)
- *   src       — a direct .mp4 URL (Cloudinary, S3, etc.)
- *
- * Leave both empty and the section shows the poster with a "coming soon"
- * label instead of a play button.
- */
-export const intro = {
-  badge: "Meet Me",
-  title: "Hi, I'm Atharv",
-  lede: "Ninety seconds on what I build, who I build it for, and how I work.",
-  youtubeId: "",
-  src: "",
-  poster:
-    "https://res.cloudinary.com/dinhcaf2c/image/upload/v1766859539/ChatGPT_Image_Dec_27_2025_11_44_07_PM_uwdulb.jpg",
-};
-
 export const about = {
   badge: "About Me",
+  /**
+   * Vertical intro video (9:16). Set ONE of these:
+   *   youtubeId — a YouTube Short / vertical video id, e.g. "dQw4w9WgXcQ"
+   *   src       — a direct .mp4 URL (Cloudinary, S3, etc.)
+   * Nothing loads from YouTube until someone presses play.
+   * While both are empty the poster shows with a "coming soon" label.
+   */
+  video: {
+    youtubeId: "",
+    src: "",
+    poster:
+      "https://res.cloudinary.com/dinhcaf2c/image/upload/v1766859539/ChatGPT_Image_Dec_27_2025_11_44_07_PM_uwdulb.jpg",
+    caption: "Atharv Golait",
+    captionNote: "Founder & CEO, VelyxLabs",
+  },
   title: "Founder, builder,\npermanently in motion",
   lede: "I help founders and operators put AI to work — then make sure it holds up under real load.",
   body: [

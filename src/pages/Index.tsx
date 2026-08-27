@@ -1,7 +1,6 @@
 import SiteNav from "@/components/SiteNav";
 import Hero from "@/components/sections/Hero";
 import TrustedBy from "@/components/sections/TrustedBy";
-import VideoIntro from "@/components/sections/VideoIntro";
 import About from "@/components/sections/About";
 import Process from "@/components/sections/Process";
 import Benefits from "@/components/sections/Benefits";
@@ -19,7 +18,6 @@ export default function Index() {
       <main>
         <Hero />
         <TrustedBy />
-        <VideoIntro />
         <About />
         <Process />
         <Benefits />
