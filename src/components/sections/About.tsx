@@ -135,16 +135,16 @@ export default function About() {
           <Reveal from="right" delay={80}>
               <div className="card-solid flex h-full flex-col justify-center p-7 sm:p-9">
                 {/* Who you're dealing with, before a word is read */}
-                <div className="mb-8 flex items-center gap-5">
-                  <LogoMark size={30} />
+                <div className="mb-8 flex items-center gap-6">
+                  <LogoMark size={42} />
 
-                  <span aria-hidden className="h-9 w-px bg-border" />
+                  <span aria-hidden className="h-12 w-px bg-border" />
 
                   <img
                     src={about.velyxLogo || velyxLogoLight}
                     alt="VelyxLabs"
                     loading="lazy"
-                    className="h-11 w-auto"
+                    className="h-16 w-auto"
                   />
                 </div>
 

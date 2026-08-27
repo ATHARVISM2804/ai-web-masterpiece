@@ -168,8 +168,18 @@ export const process = {
     },
     {
       icon: "build",
-      title: "BUILD & EVALUATE",
-      body: "You see working software every week. Agents ship with evals, tracing, and a human gate before anything consequential happens.",
+      title: "BUILD IN THE OPEN",
+      body: "You see working software every week, not a status update. Every build is deployed to a staging URL you can click through the same day.",
+    },
+    {
+      icon: "integrate",
+      title: "INTEGRATE & CONNECT",
+      body: "Your CRM, warehouse, documents, and internal APIs wired in properly — with retries, rate limits, and an audit trail around every call.",
+    },
+    {
+      icon: "evaluate",
+      title: "EVALUATE & HARDEN",
+      body: "Agents ship with evals, tracing, and a human gate before anything consequential happens. Accuracy is measured, not assumed.",
     },
     {
       icon: "launch",
