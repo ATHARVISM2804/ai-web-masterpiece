@@ -13,6 +13,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { about, profile } from "@/content/site";
+import { cld } from "@/lib/cloudinary";
 import { LogoMark } from "../Logo";
 import velyxLogoLight from "@/assets/velyxlabs-logo-light.png";
 import SocialLinks from "../SocialLinks";
@@ -131,7 +132,7 @@ function IntroVideo() {
       {!playing && (
         <>
           <img
-            src={poster}
+            src={cld(poster, 800)}
             alt={profile.name}
             loading="lazy"
             className="absolute inset-0 h-full w-full object-cover object-center"
@@ -397,7 +398,7 @@ export default function About() {
                     {hobby.image ? (
                       <>
                         <img
-                          src={hobby.image}
+                          src={cld(hobby.image, 900)}
                           alt={hobby.label}
                           loading="lazy"
                           className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"

@@ -1,4 +1,5 @@
 import { testimonials, testimonialsMeta, profile } from "@/content/site";
+import { cld } from "@/lib/cloudinary";
 import SectionHead from "../SectionHead";
 import Reveal from "../Reveal";
 
@@ -7,7 +8,7 @@ function Avatar({ name, src }: { name: string; src?: string }) {
   if (src) {
     return (
       <img
-        src={src}
+        src={cld(src, 120)}
         alt=""
         loading="lazy"
         className="h-11 w-11 shrink-0 rounded-full object-cover"
@@ -78,7 +79,7 @@ export default function Testimonials() {
           <Reveal className="lg:order-2" delay={80}>
             <div className="overflow-hidden rounded-4xl ring-4 ring-white">
               <img
-                src={profile.portrait}
+                src={cld(profile.portrait, 900)}
                 alt={profile.name}
                 loading="lazy"
                 className="aspect-[3/4] w-full object-cover object-center"

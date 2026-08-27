@@ -1,4 +1,5 @@
 import { work, alsoShipped } from "@/content/site";
+import { cld } from "@/lib/cloudinary";
 import SectionHead from "../SectionHead";
 import Reveal from "../Reveal";
 
@@ -19,7 +20,7 @@ export default function Work() {
               <div className="card-solid grid overflow-hidden md:grid-cols-[57%_43%]">
                 <div className="aspect-[16/11] overflow-hidden bg-muted md:aspect-auto md:min-h-[420px]">
                   <img
-                    src={item.image}
+                    src={cld(item.image, 1400)}
                     alt={item.name}
                     loading="lazy"
                     className="h-full w-full object-cover object-top"

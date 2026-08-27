@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Play } from "lucide-react";
 import { hero, showcase } from "@/content/site";
+import { cld } from "@/lib/cloudinary";
 import BookingModal from "../BookingModal";
 import { scrollToTarget } from "@/lib/smooth-scroll";
 
@@ -69,7 +70,7 @@ export default function Hero() {
               className="h-[220px] w-[340px] shrink-0 overflow-hidden rounded-4xl bg-white ring-4 ring-white sm:h-[300px] sm:w-[460px]"
             >
               <img
-                src={src}
+                src={cld(src, 900)}
                 alt=""
                 loading={i < 3 ? "eager" : "lazy"}
                 className="h-full w-full object-cover object-top"
