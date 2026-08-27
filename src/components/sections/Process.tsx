@@ -1,4 +1,4 @@
-import { PhoneCall, PenTool, Gauge, Rocket, type LucideIcon } from "lucide-react";
+import { PhoneCall, PenTool, CodeXml, Workflow, Gauge, Rocket, type LucideIcon } from "lucide-react";
 import { process } from "@/content/site";
 import SectionHead from "../SectionHead";
 import Reveal from "../Reveal";
@@ -8,7 +8,9 @@ import StepGraphic from "./ProcessGraphics";
 const icons: Record<string, LucideIcon> = {
   call: PhoneCall,
   blueprint: PenTool,
-  build: Gauge,
+  build: CodeXml,
+  integrate: Workflow,
+  evaluate: Gauge,
   launch: Rocket,
 };
 
@@ -38,15 +40,15 @@ export default function Process() {
                     <Icon size={20} strokeWidth={1.5} className="text-foreground" />
                   </span>
                   <span className="whitespace-nowrap text-lg text-muted-foreground">
-                    Step {i + 1}
+                    Step {String(i + 1).padStart(2, "0")}
                   </span>
                 </div>
               );
 
               const card = (
-                <div className="card-soft p-6 hover:bg-white lg:p-8">
+                <div className="card-soft p-6 transition-all duration-300 hover:-translate-y-1 hover:bg-white hover:shadow-[0_28px_60px_-34px_rgb(0_0_0/0.4)] lg:p-8">
                   <StepGraphic name={step.icon} />
-                  <h3 className="mt-4 text-lg font-semibold tracking-tight">{step.title}</h3>
+                  <h3 className="mt-5 text-lg font-semibold tracking-tight">{step.title}</h3>
                   <p className="mt-3 leading-relaxed text-muted-foreground">{step.body}</p>
                 </div>
               );

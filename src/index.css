@@ -233,3 +233,58 @@
   0%, 100% { opacity: 0.35; transform: scale(0.97); }
   50%      { opacity: 0.75; transform: scale(1.03); }
 }
+
+/* new-step + enhanced-step keyframes */
+@keyframes radar-contact {
+  0%   { opacity: 1;    transform: translate(-50%, -50%) scale(1.8); }
+  10%  { opacity: 0.9;  transform: translate(-50%, -50%) scale(1); }
+  50%  { opacity: 0.14; transform: translate(-50%, -50%) scale(1); }
+  100% { opacity: 0.06; transform: translate(-50%, -50%) scale(1); }
+}
+
+@keyframes blueprint-draw {
+  0%   { stroke-dashoffset: 1; }
+  22%  { stroke-dashoffset: 0; }
+  86%  { stroke-dashoffset: 0; }
+  100% { stroke-dashoffset: 1; }
+}
+
+@keyframes blueprint-fill {
+  0%, 16% { opacity: 0; }
+  30%     { opacity: 1; }
+  86%     { opacity: 1; }
+  100%    { opacity: 0; }
+}
+
+@keyframes code-deploy {
+  0%, 58% { opacity: 0; transform: translateY(5px); }
+  68%     { opacity: 1; transform: translateY(0); }
+  92%     { opacity: 1; transform: translateY(0); }
+  100%    { opacity: 0; transform: translateY(0); }
+}
+
+@keyframes wire-flow {
+  to { stroke-dashoffset: -24; }
+}
+
+@keyframes node-pulse {
+  0%, 100% { opacity: 0.6; }
+  50%      { opacity: 1; }
+}
+
+@keyframes hub-halo {
+  0%   { opacity: 0.5; transform: scale(1); }
+  100% { opacity: 0;   transform: scale(1.32); }
+}
+
+@keyframes check-draw {
+  0%   { stroke-dashoffset: 1; }
+  30%  { stroke-dashoffset: 0; }
+  85%  { stroke-dashoffset: 0; }
+  100% { stroke-dashoffset: 1; }
+}
+
+@keyframes star-twinkle {
+  0%, 100% { opacity: 0.18; }
+  50%      { opacity: 0.85; }
+}
