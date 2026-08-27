@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://atharvgolait.dev/sitemap.xml
+Sitemap: https://www.atharvgolait.dev/sitemap.xml
