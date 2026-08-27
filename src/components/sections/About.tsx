@@ -7,6 +7,7 @@ import {
   Footprints,
   GraduationCap,
   Play,
+  ArrowUpRight,
   Rocket,
   Zap,
   type LucideIcon,
@@ -270,8 +271,10 @@ export default function About() {
               const NodeIcon = nodeIcons[role.nodeIcon] ?? Briefcase;
               const reached = timeline.progress >= (i + 0.55) / about.roles.length;
 
-              const card = (
-                <div className="group/card card-solid p-6 transition-[transform,box-shadow] duration-300 hover:-translate-y-1.5 hover:shadow-[0_24px_50px_-30px_rgb(0_0_0/0.45)] sm:p-7">
+              const domain = role.href ? role.href.replace(/^https?:\/\//, "").replace(/\/$/, "") : "";
+
+              const cardBody = (
+                <>
                   <div className="flex items-start gap-4">
                     <span className="flex h-12 w-12 shrink-0 items-center justify-center transition-transform duration-300 group-hover/card:scale-110">
                       <img
@@ -282,7 +285,7 @@ export default function About() {
                       />
                     </span>
 
-                    <div className="min-w-0">
+                    <div className="min-w-0 flex-1">
                       <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1">
                         <h3 className="text-[17px] font-semibold tracking-[-0.02em]">
                           {role.company}
@@ -300,8 +303,38 @@ export default function About() {
                         {role.note}
                       </p>
                     </div>
+
+                    {domain && (
+                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[hsl(var(--page))] text-muted-foreground transition-[background-color,color,transform] duration-300 group-hover/card:-translate-y-0.5 group-hover/card:translate-x-0.5 group-hover/card:bg-foreground group-hover/card:text-white">
+                        <ArrowUpRight size={16} />
+                      </span>
+                    )}
                   </div>
-                </div>
+
+                  {domain && (
+                    <span className="mt-5 flex items-center gap-2 border-t border-border pt-4 text-[12.5px] text-muted-foreground transition-colors duration-300 group-hover/card:text-foreground">
+                      <span className="h-1 w-1 rounded-full bg-current" />
+                      {domain}
+                    </span>
+                  )}
+                </>
+              );
+
+              const cardClass =
+                "group/card card-solid block p-6 transition-[transform,box-shadow] duration-300 hover:-translate-y-1.5 hover:shadow-[0_24px_50px_-30px_rgb(0_0_0/0.45)] sm:p-7";
+
+              const card = role.href ? (
+                <a
+                  href={role.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`${role.company} — open ${domain}`}
+                  className={cardClass}
+                >
+                  {cardBody}
+                </a>
+              ) : (
+                <div className={cardClass}>{cardBody}</div>
               );
 
               const node = (
@@ -318,30 +351,20 @@ export default function About() {
               );
 
               return (
-                <li key={role.company} className="group relative">
+                <li
+                  key={role.company}
+                  className="group relative pl-14 md:grid md:grid-cols-2 md:gap-16 md:pl-0"
+                >
                   {node}
 
-                  {/* Mobile: one column beside the spine */}
-                  <div className="pl-14 md:hidden">
-                    <Reveal from="left" delay={40}>
-                      {card}
-                    </Reveal>
-                  </div>
-
-                  {/* Desktop: alternating sides */}
-                  <div className="hidden md:grid md:grid-cols-2 md:gap-16">
-                    {left ? (
-                      <>
-                        <Reveal from="left">{card}</Reveal>
-                        <span />
-                      </>
-                    ) : (
-                      <>
-                        <span />
-                        <Reveal from="right">{card}</Reveal>
-                      </>
-                    )}
-                  </div>
+                  {/* One card, placed by column rather than duplicated per breakpoint */}
+                  <Reveal
+                    from={left ? "left" : "right"}
+                    delay={40}
+                    className={left ? "" : "md:col-start-2"}
+                  >
+                    {card}
+                  </Reveal>
                 </li>
               );
             })}

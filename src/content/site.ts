@@ -119,13 +119,17 @@ export const about = {
    * Drop a real logo in by adding `logo: "<url>"` to any entry — a square
    * PNG/SVG on a transparent or white background works best.
    */
-  /** Experience timeline. `nodeIcon` marks the spine; `logo` sits on the card. */
+  /**
+   * Experience timeline. `nodeIcon` marks the spine, `logo` sits on the card.
+   * Give an entry an `href` and its card becomes a link to that site.
+   */
   roles: [
     {
       company: "VelyxLabs",
       role: "Co-founder & CEO",
       note: "AI infrastructure and agentic systems for B2B and capital-intensive firms",
       logo: velyxLogo,
+      href: "https://velyxlabs.in/",
       nodeIcon: "briefcase",
       current: true,
     },
@@ -134,6 +138,7 @@ export const about = {
       role: "Tech Lead",
       note: "Netherlands-based SaaS startup",
       logo: getlandyLogo,
+      href: "https://getlandy.ai/",
       nodeIcon: "code",
       current: true,
     },
@@ -142,6 +147,7 @@ export const about = {
       role: "Co-founder",
       note: "AI agency — previously",
       logo: goranLogo,
+      href: "",
       nodeIcon: "rocket",
       current: false,
     },
@@ -150,6 +156,7 @@ export const about = {
       role: "Final year, Mechanical Engineering",
       note: "National Institute of Technology, Hamirpur",
       logo: nitLogo,
+      href: "",
       nodeIcon: "study",
       current: true,
     },

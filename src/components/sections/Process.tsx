@@ -32,9 +32,11 @@ export default function Process() {
               const Icon = icons[step.icon] ?? PhoneCall;
               const cardFirst = i % 2 === 0;
 
-              const markerNode = (reverse: boolean) => (
+              const markerNode = () => (
                 <div
-                  className={`flex items-center gap-4 ${reverse ? "flex-row-reverse" : ""}`}
+                  className={`flex items-center gap-4 ${
+                    cardFirst ? "md:-ml-[27px]" : "md:-mr-[27px] md:flex-row-reverse md:justify-start"
+                  }`}
                 >
                   <span className="relative z-10 flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-white shadow-[0_6px_18px_-8px_rgb(0_0_0/0.35)] ring-4 ring-[hsl(var(--page))]">
                     <Icon size={20} strokeWidth={1.5} className="text-foreground" />
@@ -54,25 +56,23 @@ export default function Process() {
               );
 
               return (
-                <Reveal key={step.title} as="li" delay={60}>
-                  {/* Mobile: marker above card. Desktop: alternating sides. */}
-                  <div className="md:hidden">
-                    <div>{markerNode(false)}</div>
-                    <div className="mt-5 pl-[52px]">{card}</div>
+                <Reveal
+                  key={step.title}
+                  as="li"
+                  delay={60}
+                  className="md:grid md:grid-cols-2 md:items-center md:gap-12"
+                >
+                  {/* One card, placed by column. Mobile stacks marker over card. */}
+                  <div className={cardFirst ? "md:order-2" : "md:order-1"}>
+                    {markerNode()}
                   </div>
 
-                  <div className="hidden items-center gap-12 md:grid md:grid-cols-2">
-                    {cardFirst ? (
-                      <>
-                        {card}
-                        <div className="-ml-[27px] flex justify-start">{markerNode(false)}</div>
-                      </>
-                    ) : (
-                      <>
-                        <div className="-mr-[27px] flex justify-end">{markerNode(true)}</div>
-                        {card}
-                      </>
-                    )}
+                  <div
+                    className={`mt-5 pl-[52px] md:mt-0 md:pl-0 ${
+                      cardFirst ? "md:order-1" : "md:order-2"
+                    }`}
+                  >
+                    {card}
                   </div>
                 </Reveal>
               );
