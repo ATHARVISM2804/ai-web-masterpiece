@@ -46,7 +46,7 @@ export default function SiteFooter() {
           <div className="flex flex-col items-center justify-between gap-4 text-sm text-muted-foreground sm:flex-row">
             <p>© Copyright {new Date().getFullYear()} {profile.company}. All Rights Reserved.</p>
 
-            <SocialLinks variant="text" />
+            <SocialLinks />
           </div>
         </div>
       </div>
