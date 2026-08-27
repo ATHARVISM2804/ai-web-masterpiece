@@ -1,3 +1,8 @@
+import velyxLogo from "@/assets/velyxlabs-logo-light.png";
+import getlandyLogo from "@/assets/getlandy-logo.png";
+import goranLogo from "@/assets/goran-logo.png";
+import nitLogo from "@/assets/nit-logo.png";
+
 /**
  * Single source of truth for everything the site says.
  * Edit here — no copy lives inside components.
@@ -114,39 +119,38 @@ export const about = {
    * Drop a real logo in by adding `logo: "<url>"` to any entry — a square
    * PNG/SVG on a transparent or white background works best.
    */
+  /** Experience timeline. `nodeIcon` marks the spine; `logo` sits on the card. */
   roles: [
     {
       company: "VelyxLabs",
       role: "Co-founder & CEO",
       note: "AI infrastructure and agentic systems for B2B and capital-intensive firms",
-      mark: "VL",
-      /** Uses the built-in VelyxLabs SVG mark unless `logo` is set. */
-      brandMark: "velyx",
-      logo: "",
+      logo: velyxLogo,
+      nodeIcon: "briefcase",
       current: true,
     },
     {
       company: "Getlandy AI",
       role: "Tech Lead",
       note: "Netherlands-based SaaS startup",
-      mark: "GL",
-      logo: "",
+      logo: getlandyLogo,
+      nodeIcon: "code",
       current: true,
     },
     {
       company: "GoRan AI",
       role: "Co-founder",
       note: "AI agency — previously",
-      mark: "GR",
-      logo: "",
+      logo: goranLogo,
+      nodeIcon: "rocket",
       current: false,
     },
     {
       company: "NIT Hamirpur",
       role: "Final year, Mechanical Engineering",
       note: "National Institute of Technology, Hamirpur",
-      mark: "NH",
-      logo: "",
+      logo: nitLogo,
+      nodeIcon: "study",
       current: true,
     },
   ],

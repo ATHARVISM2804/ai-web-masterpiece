@@ -1,5 +1,16 @@
-import { useState } from "react";
-import { ArrowRight, Dumbbell, Footprints, Play, Zap, type LucideIcon } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import {
+  ArrowRight,
+  Briefcase,
+  Code2,
+  Dumbbell,
+  Footprints,
+  GraduationCap,
+  Play,
+  Rocket,
+  Zap,
+  type LucideIcon,
+} from "lucide-react";
 import { about, profile } from "@/content/site";
 import { LogoMark } from "../Logo";
 import velyxLogoLight from "@/assets/velyxlabs-logo-light.png";
@@ -14,42 +25,51 @@ const hobbyIcons: Record<string, LucideIcon> = {
   run: Footprints,
 };
 
-/** Company logo, or its monogram until a real logo URL is set. */
-function CompanyMark({
-  mark,
-  logo,
-  company,
-  brandMark,
-}: {
-  mark: string;
-  logo?: string;
-  company: string;
-  brandMark?: string;
-}) {
-  if (logo) {
-    return (
-      <span className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-white ring-1 ring-border">
-        <img src={logo} alt={company} loading="lazy" className="h-8 w-8 object-contain" />
-      </span>
-    );
-  }
+const nodeIcons: Record<string, LucideIcon> = {
+  briefcase: Briefcase,
+  code: Code2,
+  rocket: Rocket,
+  study: GraduationCap,
+};
 
-  if (brandMark === "velyx") {
-    return (
-      <span className="flex h-12 w-12 shrink-0 items-center justify-center">
-        <img src={velyxLogoLight} alt={company} loading="lazy" className="h-10 w-auto" />
-      </span>
-    );
-  }
+/**
+ * How far the reader has travelled through the timeline, 0..1.
+ * Drives the spine fill and lights each node as it is passed.
+ */
+function useTimelineProgress() {
+  const ref = useRef<HTMLDivElement>(null);
+  const [progress, setProgress] = useState(0);
 
-  return (
-    <span
-      aria-hidden
-      className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[hsl(var(--page))] text-[13px] font-semibold tracking-[0.02em]"
-    >
-      {mark}
-    </span>
-  );
+  useEffect(() => {
+    const node = ref.current;
+    if (!node) return;
+
+    let frame = 0;
+    const measure = () => {
+      frame = 0;
+      const rect = node.getBoundingClientRect();
+      const enter = window.innerHeight * 0.78;
+      const exit = window.innerHeight * 0.4;
+      const travelled = enter - rect.top;
+      const total = rect.height + (enter - exit);
+      setProgress(Math.min(Math.max(travelled / total, 0), 1));
+    };
+
+    const onScroll = () => {
+      if (!frame) frame = requestAnimationFrame(measure);
+    };
+
+    measure();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      if (frame) cancelAnimationFrame(frame);
+    };
+  }, []);
+
+  return { ref, progress };
 }
 
 /** Vertical 9:16 intro video. Loads nothing third-party until pressed. */
@@ -123,6 +143,8 @@ function IntroVideo() {
 }
 
 export default function About() {
+  const timeline = useTimelineProgress();
+
   return (
     <section id="about" className="section">
       <div className="shell">
@@ -230,25 +252,35 @@ export default function About() {
         </div>
 
         {/* Experience — alternating timeline */}
-        <div className="relative mt-16 sm:mt-20">
-          <span
+        <div ref={timeline.ref} className="relative mt-16 sm:mt-20">
+          {/* Spine: a hairline that fills as you travel down it */}
+          <div
             aria-hidden
-            className="absolute inset-y-0 left-[23px] w-px bg-border md:left-1/2 md:-translate-x-1/2"
-          />
+            className="absolute inset-y-0 left-[27px] w-px bg-border md:left-1/2 md:-translate-x-1/2"
+          >
+            <span
+              className="block w-px bg-foreground transition-[height] duration-150 ease-out"
+              style={{ height: `${timeline.progress * 100}%` }}
+            />
+          </div>
 
-          <ol className="flex flex-col gap-5 md:gap-8">
+          <ol className="flex flex-col gap-5 md:gap-10">
             {about.roles.map((role, i) => {
               const left = i % 2 === 0;
+              const NodeIcon = nodeIcons[role.nodeIcon] ?? Briefcase;
+              const reached = timeline.progress >= (i + 0.55) / about.roles.length;
 
               const card = (
-                <div className="card-solid p-6 transition-transform duration-300 hover:-translate-y-1 sm:p-7">
+                <div className="group/card card-solid p-6 transition-[transform,box-shadow] duration-300 hover:-translate-y-1.5 hover:shadow-[0_24px_50px_-30px_rgb(0_0_0/0.45)] sm:p-7">
                   <div className="flex items-start gap-4">
-                    <CompanyMark
-                      mark={role.mark}
-                      logo={role.logo}
-                      company={role.company}
-                      brandMark={"brandMark" in role ? role.brandMark : undefined}
-                    />
+                    <span className="flex h-12 w-12 shrink-0 items-center justify-center transition-transform duration-300 group-hover/card:scale-110">
+                      <img
+                        src={role.logo}
+                        alt={role.company}
+                        loading="lazy"
+                        className="h-11 w-11 object-contain"
+                      />
+                    </span>
 
                     <div className="min-w-0">
                       <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1">
@@ -275,23 +307,29 @@ export default function About() {
               const node = (
                 <span
                   aria-hidden
-                  className="absolute left-[23px] top-8 z-10 h-3.5 w-3.5 -translate-x-1/2 rounded-full bg-foreground ring-4 ring-[hsl(var(--page))] md:left-1/2"
-                />
+                  className={`absolute left-[27px] top-9 z-10 flex h-[38px] w-[38px] -translate-x-1/2 items-center justify-center rounded-full ring-4 ring-[hsl(var(--page))] transition-[background-color,color,transform] duration-500 md:left-1/2 ${
+                    reached
+                      ? "scale-110 bg-foreground text-white"
+                      : "bg-white text-muted-foreground"
+                  }`}
+                >
+                  <NodeIcon size={17} strokeWidth={1.7} />
+                </span>
               );
 
               return (
-                <li key={role.company} className="relative">
+                <li key={role.company} className="group relative">
                   {node}
 
-                  {/* Mobile: single column beside the spine */}
-                  <div className="pl-12 md:hidden">
+                  {/* Mobile: one column beside the spine */}
+                  <div className="pl-14 md:hidden">
                     <Reveal from="left" delay={40}>
                       {card}
                     </Reveal>
                   </div>
 
                   {/* Desktop: alternating sides */}
-                  <div className="hidden md:grid md:grid-cols-2 md:gap-14">
+                  <div className="hidden md:grid md:grid-cols-2 md:gap-16">
                     {left ? (
                       <>
                         <Reveal from="left">{card}</Reveal>
