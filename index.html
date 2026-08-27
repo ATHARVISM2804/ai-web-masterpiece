@@ -13,9 +13,17 @@
   <link rel="alternate icon" href="/favicon.png" type="image/png" />
   <link rel="shortcut icon" href="/favicon.ico" sizes="any" />
   <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="manifest" href="/site.webmanifest" />
+  <meta name="apple-mobile-web-app-title" content="Atharv Golait" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="msapplication-TileColor" content="#f7f7f5" />
+  <meta name="format-detection" content="telephone=no" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="dns-prefetch" href="https://assets.calendly.com" />
+  <link rel="dns-prefetch" href="https://res.cloudinary.com" />
 
   <title>Atharv Golait — Agentic Systems &amp; AI Infrastructure for B2B</title>
   <meta name="description"
@@ -36,6 +44,7 @@
   <meta property="og:image" content="https://www.atharvgolait.dev/og-image.png" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
+  <meta property="og:image:type" content="image/png" />
   <meta property="og:image:alt" content="Atharv Golait — agentic systems that run real operations" />
   <meta property="og:locale" content="en_US" />
 
@@ -58,27 +67,35 @@
         "@type": "Person",
         "@id": "https://www.atharvgolait.dev/#atharv",
         "name": "Atharv Golait",
+        "givenName": "Atharv",
+        "familyName": "Golait",
         "url": "https://www.atharvgolait.dev/",
-        "jobTitle": "Co-founder & CEO",
-        "description": "Builds agentic automation, AI infrastructure, and production SaaS for B2B and capital-intensive teams.",
-        "worksFor": { "@id": "https://www.atharvgolait.dev/#velyxlabs" },
-        "alumniOf": {
-          "@type": "CollegeOrUniversity",
-          "name": "National Institute of Technology, Hamirpur"
+        "image": {
+          "@type": "ImageObject",
+          "url": "https://res.cloudinary.com/dinhcaf2c/image/upload/v1766859539/ChatGPT_Image_Dec_27_2025_11_44_07_PM_uwdulb.jpg",
+          "caption": "Atharv Golait"
         },
+        "jobTitle": "Co-founder & CEO",
+        "description": "Builds agentic automation, AI infrastructure, and production SaaS for B2B and capital-intensive teams, from real estate to healthcare.",
+        "email": "mailto:atharv.golait@gmail.com",
+        "worksFor": { "@id": "https://www.atharvgolait.dev/#velyxlabs" },
+        "address": { "@type": "PostalAddress", "addressCountry": "IN" },
+        "knowsLanguage": ["en", "hi"],
         "knowsAbout": [
           "Agentic AI systems",
           "AI infrastructure",
           "Workflow automation",
+          "Retrieval-augmented generation",
           "SaaS development",
-          "MVP development"
+          "MVP development",
+          "Systems integration"
         ],
         "sameAs": [
           "https://www.linkedin.com/in/atharv-golait-9048772ab/",
           "https://x.com/Atharv_Golait",
-          "https://github.com/ATHARVISM2804",
           "https://www.instagram.com/_atharv.vv__/",
-          "https://www.reddit.com/user/Atharvism/"
+          "https://www.reddit.com/user/Atharvism/",
+          "https://github.com/ATHARVISM2804"
         ]
       },
       {
@@ -87,14 +104,97 @@
         "name": "VelyxLabs",
         "url": "https://velyxlabs.in/",
         "description": "AI infrastructure and agentic systems for B2B and capital-intensive firms.",
-        "founder": { "@id": "https://www.atharvgolait.dev/#atharv" }
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://www.atharvgolait.dev/favicon-192x192.png",
+          "width": 192,
+          "height": 192
+        },
+        "founder": { "@id": "https://www.atharvgolait.dev/#atharv" },
+        "employee": { "@id": "https://www.atharvgolait.dev/#atharv" },
+        "areaServed": "Worldwide",
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "contactType": "sales",
+          "email": "atharv.golait@gmail.com",
+          "availableLanguage": ["English", "Hindi"]
+        }
+      },
+      {
+        "@type": "ProfessionalService",
+        "@id": "https://www.atharvgolait.dev/#service",
+        "name": "Agentic systems and AI infrastructure",
+        "url": "https://www.atharvgolait.dev/",
+        "description": "Agentic automation, AI infrastructure, SaaS platforms, and MVPs for B2B and capital-intensive teams.",
+        "provider": { "@id": "https://www.atharvgolait.dev/#atharv" },
+        "parentOrganization": { "@id": "https://www.atharvgolait.dev/#velyxlabs" },
+        "areaServed": "Worldwide",
+        "priceRange": "$3,500 - $18,000+",
+        "serviceType": [
+          "Agentic automation",
+          "AI infrastructure",
+          "SaaS development",
+          "MVP development"
+        ],
+        "hasOfferCatalog": {
+          "@type": "OfferCatalog",
+          "name": "Engagements",
+          "itemListElement": [
+            {
+              "@type": "Offer",
+              "name": "Automation Pilot",
+              "description": "One agent or automation in production, integrated with up to three of your tools.",
+              "priceSpecification": {
+                "@type": "PriceSpecification",
+                "minPrice": 3500,
+                "priceCurrency": "USD"
+              }
+            },
+            {
+              "@type": "Offer",
+              "name": "Agentic System",
+              "description": "A multi-agent workflow with retrieval, an admin dashboard, tracing and cost controls.",
+              "priceSpecification": {
+                "@type": "PriceSpecification",
+                "minPrice": 9000,
+                "priceCurrency": "USD"
+              }
+            },
+            {
+              "@type": "Offer",
+              "name": "Product Partner",
+              "description": "A full SaaS product with AI infrastructure, deployed to your cloud.",
+              "priceSpecification": {
+                "@type": "PriceSpecification",
+                "minPrice": 18000,
+                "priceCurrency": "USD"
+              }
+            }
+          ]
+        }
       },
       {
         "@type": "WebSite",
         "@id": "https://www.atharvgolait.dev/#website",
         "url": "https://www.atharvgolait.dev/",
         "name": "Atharv Golait",
+        "description": "Agentic automation, AI infrastructure, and production SaaS for B2B and capital-intensive teams.",
         "publisher": { "@id": "https://www.atharvgolait.dev/#atharv" },
+        "inLanguage": "en"
+      },
+      {
+        "@type": "WebPage",
+        "@id": "https://www.atharvgolait.dev/#webpage",
+        "url": "https://www.atharvgolait.dev/",
+        "name": "Atharv Golait — Agentic Systems & AI Infrastructure for B2B",
+        "isPartOf": { "@id": "https://www.atharvgolait.dev/#website" },
+        "about": { "@id": "https://www.atharvgolait.dev/#atharv" },
+        "primaryImageOfPage": {
+          "@type": "ImageObject",
+          "url": "https://www.atharvgolait.dev/og-image.png",
+          "width": 1200,
+          "height": 630
+        },
         "inLanguage": "en"
       }
     ]

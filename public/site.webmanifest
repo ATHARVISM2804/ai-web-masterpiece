@@ -1,0 +1,16 @@
+{
+  "name": "Atharv Golait — Agentic Systems & AI Infrastructure",
+  "short_name": "Atharv Golait",
+  "description": "Agentic automation, AI infrastructure, and production SaaS for B2B and capital-intensive teams.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f7f7f5",
+  "theme_color": "#f7f7f5",
+  "icons": [
+    { "src": "/favicon-96x96.png", "sizes": "96x96", "type": "image/png" },
+    { "src": "/favicon-192x192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/apple-touch-icon.png", "sizes": "180x180", "type": "image/png" },
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}
