@@ -133,10 +133,15 @@ export const about = {
   hobbies: {
     heading: "Outside the work",
     lede: "Same thing, different reps.",
+    /**
+     * Add your own photos here — `image: "<url>"` on each entry.
+     * Portrait shots work best (they render 4:5). Until an image is set the
+     * card falls back to an icon tile.
+     */
     items: [
-      { icon: "lift", label: "Weightlifting", note: "Heavy, consistently" },
-      { icon: "calisthenics", label: "Calisthenics", note: "Bodyweight, everywhere" },
-      { icon: "run", label: "Marathons", note: "Long distance running" },
+      { icon: "lift", label: "Weightlifting", note: "Heavy, consistently", image: "" },
+      { icon: "calisthenics", label: "Calisthenics", note: "Bodyweight, everywhere", image: "" },
+      { icon: "run", label: "Marathons", note: "Long distance running", image: "" },
     ],
   },
 };

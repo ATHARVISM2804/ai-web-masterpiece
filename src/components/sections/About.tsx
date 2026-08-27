@@ -106,14 +106,13 @@ export default function About() {
       <div className="shell">
         <SectionHead badge={about.badge} title={about.title} lede={about.lede} />
 
-        {/* Video + bio + hobbies */}
+        {/* Video + bio */}
         <div className="mt-14 grid gap-5 sm:mt-20 lg:grid-cols-[minmax(0,330px)_minmax(0,1fr)]">
           <Reveal from="left">
             <IntroVideo />
           </Reveal>
 
-          <div className="flex flex-col gap-5">
-            <Reveal from="right" delay={80} className="flex-1">
+          <Reveal from="right" delay={80}>
               <div className="card-solid flex h-full flex-col justify-center p-7 sm:p-9">
                 {about.body.map((para) => (
                   <p
@@ -137,38 +136,8 @@ export default function About() {
                     </div>
                   ))}
                 </dl>
-              </div>
-            </Reveal>
-
-            <Reveal from="right" delay={150}>
-              <div className="card-solid p-7 sm:p-9">
-                <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                  <h3 className="text-lg font-semibold tracking-tight">{about.hobbies.heading}</h3>
-                  <p className="text-muted-foreground">{about.hobbies.lede}</p>
-                </div>
-
-                <ul className="mt-6 grid gap-5 sm:grid-cols-3">
-                  {about.hobbies.items.map((hobby) => {
-                    const Icon = hobbyIcons[hobby.icon] ?? Dumbbell;
-
-                    return (
-                      <li key={hobby.label} className="flex items-center gap-3.5">
-                        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[hsl(var(--page))]">
-                          <Icon size={19} strokeWidth={1.6} />
-                        </span>
-                        <span>
-                          <span className="block font-medium tracking-tight">{hobby.label}</span>
-                          <span className="block text-[12.5px] text-muted-foreground">
-                            {hobby.note}
-                          </span>
-                        </span>
-                      </li>
-                    );
-                  })}
-                </ul>
-              </div>
-            </Reveal>
-          </div>
+            </div>
+          </Reveal>
         </div>
 
         {/* Experience — alternating timeline */}
@@ -245,6 +214,69 @@ export default function About() {
               );
             })}
           </ol>
+        </div>
+
+        {/* Outside the work */}
+        <div className="mt-16 sm:mt-20">
+          <Reveal className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+            <h3 className="text-2xl font-medium tracking-[-0.03em]">{about.hobbies.heading}</h3>
+            <p className="text-muted-foreground">{about.hobbies.lede}</p>
+          </Reveal>
+
+          <ul className="mt-8 grid gap-5 sm:grid-cols-3">
+            {about.hobbies.items.map((hobby, i) => {
+              const Icon = hobbyIcons[hobby.icon] ?? Dumbbell;
+
+              return (
+                <Reveal key={hobby.label} as="li" delay={i * 90}>
+                  <div className="group relative aspect-[4/5] overflow-hidden rounded-4xl bg-[hsl(var(--page))] ring-4 ring-white">
+                    {hobby.image ? (
+                      <>
+                        <img
+                          src={hobby.image}
+                          alt={hobby.label}
+                          loading="lazy"
+                          className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
+                        />
+                        <span
+                          aria-hidden
+                          className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/75 via-black/25 to-transparent"
+                        />
+                        <div className="absolute inset-x-0 bottom-0 p-6">
+                          <p className="text-[17px] font-semibold tracking-[-0.02em] text-white">
+                            {hobby.label}
+                          </p>
+                          <p className="mt-0.5 text-[13px] text-white/70">{hobby.note}</p>
+                        </div>
+                      </>
+                    ) : (
+                      <div className="flex h-full flex-col items-center justify-center gap-6 p-6 text-center">
+                        <span className="relative flex h-24 w-24 items-center justify-center">
+                          <span
+                            aria-hidden
+                            className="absolute inset-0 rounded-full bg-white"
+                          />
+                          <span
+                            aria-hidden
+                            className="absolute inset-[-14px] rounded-full border border-foreground/[0.07]"
+                          />
+                          <Icon size={34} strokeWidth={1.3} className="relative" />
+                        </span>
+                        <span>
+                          <span className="block text-[17px] font-semibold tracking-[-0.02em]">
+                            {hobby.label}
+                          </span>
+                          <span className="mt-1 block text-[13px] text-muted-foreground">
+                            {hobby.note}
+                          </span>
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                </Reveal>
+              );
+            })}
+          </ul>
         </div>
       </div>
     </section>
