@@ -1,24 +1,46 @@
-import { useLocation } from "react-router-dom";
-import { useEffect } from "react";
+import { ArrowLeft } from "lucide-react";
+import { LogoMark } from "@/components/Logo";
+import { nav } from "@/content/site";
 
-const NotFound = () => {
-  const location = useLocation();
-
-  useEffect(() => {
-    console.error("404 Error: User attempted to access non-existent route:", location.pathname);
-  }, [location.pathname]);
-
+export default function NotFound() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-muted">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">404</h1>
-        <p className="mb-4 text-xl text-muted-foreground">Oops! Page not found</p>
-        <a href="/" className="text-primary underline hover:text-primary/90">
-          Return to Home
-        </a>
-      </div>
-    </div>
-  );
-};
+    <main className="flex min-h-screen items-center justify-center bg-background px-5 py-20">
+      <div className="w-full max-w-lg text-center">
+        <LogoMark size={44} className="mx-auto" />
 
-export default NotFound;
+        <p className="mt-10 text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
+          Error 404
+        </p>
+
+        <h1 className="mt-4 text-[2.25rem] font-medium leading-[1.1] tracking-[-0.035em] sm:text-[3rem]">
+          This page doesn't exist.
+        </h1>
+
+        <p className="mt-5 text-[16px] leading-relaxed text-muted-foreground">
+          The link may be out of date, or the address slightly off. Everything lives on the
+          home page.
+        </p>
+
+        <a href="/" className="btn-dark mt-9 inline-flex">
+          <ArrowLeft size={16} />
+          Back to the home page
+        </a>
+
+        <nav className="mt-12 border-t border-border pt-8" aria-label="Site sections">
+          <ul className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3">
+            {nav.map((item) => (
+              <li key={item.href}>
+                <a
+                  href={`/${item.href}`}
+                  className="text-[14px] text-muted-foreground transition-colors hover:text-foreground"
+                >
+                  {item.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </div>
+    </main>
+  );
+}
