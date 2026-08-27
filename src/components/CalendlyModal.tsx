@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { X } from "lucide-react";
 import { profile } from "@/content/site";
+import { lockScroll } from "@/lib/smooth-scroll";
 
 interface CalendlyModalProps {
   isOpen: boolean;
@@ -25,6 +26,7 @@ export default function CalendlyModal({ isOpen, onClose }: CalendlyModalProps) {
     if (isOpen) {
       // Prevent body scroll when modal is open
       document.body.style.overflow = "hidden";
+      lockScroll(true);
       
       // Initialize Calendly widget
       const timer = setTimeout(() => {
@@ -41,9 +43,11 @@ export default function CalendlyModal({ isOpen, onClose }: CalendlyModalProps) {
       return () => {
         clearTimeout(timer);
         document.body.style.overflow = "unset";
+        lockScroll(false);
       };
     } else {
       document.body.style.overflow = "unset";
+      lockScroll(false);
     }
   }, [isOpen]);
 

@@ -83,6 +83,9 @@ export const about = {
   title: "Founder, builder,\npermanently in motion",
   lede: "I help founders and operators put AI to work — then make sure it holds up under real load.",
   greeting: "Hi, I'm Atharv",
+  /** Small status line in the top band of the bio card. Set to "" to hide it. */
+  status: "Available for new projects",
+  cta: "Book a call",
   /** Real VelyxLabs logo file. Leave empty to use the built-in SVG mark. */
   velyxLogo: "",
   stats: [

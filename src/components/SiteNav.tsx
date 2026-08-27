@@ -3,6 +3,7 @@ import { Menu, X } from "lucide-react";
 import { nav } from "@/content/site";
 import Logo from "./Logo";
 import CalendlyModal from "./CalendlyModal";
+import { lockScroll, scrollToTarget, scrollToTop } from "@/lib/smooth-scroll";
 
 export default function SiteNav() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -10,21 +11,30 @@ export default function SiteNav() {
 
   useEffect(() => {
     document.body.style.overflow = menuOpen ? "hidden" : "";
+    lockScroll(menuOpen);
     return () => {
       document.body.style.overflow = "";
+      lockScroll(false);
     };
   }, [menuOpen]);
 
   const go = (href: string) => {
     setMenuOpen(false);
-    document.querySelector(href)?.scrollIntoView({ behavior: "smooth" });
+    scrollToTarget(href);
   };
 
   return (
     <>
       <header className="fixed inset-x-0 top-4 z-50 px-4 sm:top-6">
         <div className="mx-auto flex h-[68px] w-full max-w-[900px] items-center justify-between rounded-[63px] bg-white/60 pl-6 pr-3 backdrop-blur-xl ring-1 ring-white/70">
-          <a href="#top" onClick={() => setMenuOpen(false)}>
+          <a
+            href="#top"
+            onClick={(e) => {
+              e.preventDefault();
+              setMenuOpen(false);
+              scrollToTop();
+            }}
+          >
             <Logo />
           </a>
 

@@ -43,8 +43,27 @@
   }
 
   html {
-    scroll-behavior: smooth;
+    /* Lenis owns scrolling; native smooth fights it. */
+    scroll-behavior: auto;
     -webkit-text-size-adjust: 100%;
+  }
+
+  /* Lenis housekeeping */
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+
+  .lenis.lenis-stopped {
+    overflow: hidden;
+  }
+
+  .lenis.lenis-smooth [data-lenis-prevent] {
+    overscroll-behavior: contain;
   }
 
   body {

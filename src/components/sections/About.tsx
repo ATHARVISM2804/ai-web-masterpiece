@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { Dumbbell, Footprints, Play, Zap, type LucideIcon } from "lucide-react";
+import { ArrowRight, Dumbbell, Footprints, Play, Zap, type LucideIcon } from "lucide-react";
 import { about, profile } from "@/content/site";
 import { LogoMark } from "../Logo";
 import velyxLogoLight from "@/assets/velyxlabs-logo-light.png";
 import SectionHead from "../SectionHead";
 import Reveal from "../Reveal";
+import { scrollToTarget } from "@/lib/smooth-scroll";
 
 const hobbyIcons: Record<string, LucideIcon> = {
   lift: Dumbbell,
@@ -57,7 +58,7 @@ function IntroVideo() {
   const hasVideo = Boolean(youtubeId || src);
 
   return (
-    <div className="relative aspect-[9/16] overflow-hidden rounded-4xl bg-muted ring-4 ring-white">
+    <div className="relative aspect-[9/16] overflow-hidden rounded-4xl bg-muted ring-4 ring-white lg:aspect-auto lg:h-full">
       {playing && youtubeId && (
         <iframe
           src={`https://www.youtube-nocookie.com/embed/${youtubeId}?autoplay=1&rel=0`}
@@ -128,52 +129,97 @@ export default function About() {
 
         {/* Video + bio */}
         <div className="mt-14 grid gap-5 sm:mt-20 lg:grid-cols-[minmax(0,330px)_minmax(0,1fr)]">
-          <Reveal from="left">
+          <Reveal from="left" className="lg:h-full">
             <IntroVideo />
           </Reveal>
 
           <Reveal from="right" delay={80}>
-              <div className="card-solid flex h-full flex-col justify-center p-7 sm:p-9">
-                {/* Who you're dealing with, before a word is read */}
-                <div className="mb-8 flex items-center gap-6">
-                  <LogoMark size={42} />
-
-                  <span aria-hidden className="h-12 w-px bg-border" />
-
+            <div className="card-solid flex h-full flex-col p-7 sm:p-9">
+              {/* Letterhead band — who you're dealing with, before a word is read */}
+              <div className="flex flex-wrap items-center justify-between gap-4 border-b border-border pb-7">
+                <div className="flex items-center gap-6">
+                  <LogoMark size={40} />
+                  <span aria-hidden className="h-11 w-px bg-border" />
                   <img
                     src={about.velyxLogo || velyxLogoLight}
                     alt="VelyxLabs"
                     loading="lazy"
-                    className="h-16 w-auto"
+                    className="h-14 w-auto"
                   />
                 </div>
 
-                <h3 className="mb-5 text-[2rem] font-medium tracking-[-0.035em] sm:text-[2.35rem]">
+                {about.status && (
+                  <span className="flex items-center gap-2 rounded-[50px] bg-[hsl(var(--page))] px-3.5 py-2 text-[12.5px] text-muted-foreground">
+                    <span className="relative flex h-2 w-2">
+                      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-500 opacity-60" />
+                      <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
+                    </span>
+                    {about.status}
+                  </span>
+                )}
+              </div>
+
+              <div className="flex flex-1 flex-col justify-center py-8">
+                <h3 className="text-[2.1rem] font-medium tracking-[-0.035em] sm:text-[2.5rem]">
                   {about.greeting}
                 </h3>
 
-                {about.body.map((para) => (
-                  <p
-                    key={para}
-                    className="mb-4 text-[16.5px] leading-relaxed text-muted-foreground last:mb-0"
-                  >
-                    {para}
-                  </p>
-                ))}
-
-                <dl className="mt-9 grid grid-cols-3 gap-4 border-t border-border pt-7">
-                  {about.stats.map((stat) => (
-                    <div key={stat.label}>
-                      <dt className="sr-only">{stat.label}</dt>
-                      <dd className="text-[2rem] font-medium leading-none tracking-[-0.03em]">
-                        {stat.value}
-                      </dd>
-                      <p className="mt-2 text-[12.5px] leading-snug text-muted-foreground">
-                        {stat.label}
-                      </p>
-                    </div>
+                <div className="mt-5 space-y-4">
+                  {about.body.map((para) => (
+                    <p key={para} className="text-[16.5px] leading-relaxed text-muted-foreground">
+                      {para}
+                    </p>
                   ))}
-                </dl>
+                </div>
+              </div>
+
+              {/* Proof, as tiles rather than numbers floating on a rule */}
+              <dl className="grid grid-cols-3 gap-3">
+                {about.stats.map((stat) => (
+                  <div
+                    key={stat.label}
+                    className="rounded-2xl bg-[hsl(var(--page))] px-2 py-4 text-center sm:px-5 sm:py-5"
+                  >
+                    <dt className="sr-only">{stat.label}</dt>
+                    <dd className="whitespace-nowrap text-[1.4rem] font-medium leading-none tracking-[-0.03em] sm:text-[2.1rem]">
+                      {stat.value}
+                    </dd>
+                    <p className="mt-2 text-[11px] leading-snug text-muted-foreground sm:text-[12px]">
+                      {stat.label}
+                    </p>
+                  </div>
+                ))}
+              </dl>
+
+              {/* Anchor the card with somewhere to go */}
+              <div className="mt-7 flex flex-wrap items-center justify-between gap-4 border-t border-border pt-7">
+                <a
+                  href="#contact"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    scrollToTarget("#contact");
+                  }}
+                  className="btn-dark px-6 py-3.5 text-[15px]"
+                >
+                  {about.cta}
+                  <ArrowRight size={16} />
+                </a>
+
+                <ul className="flex flex-wrap items-center gap-5">
+                  {profile.socials.map((social) => (
+                    <li key={social.label}>
+                      <a
+                        href={social.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-[13.5px] text-muted-foreground transition-colors hover:text-foreground"
+                      >
+                        {social.label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
           </Reveal>
         </div>

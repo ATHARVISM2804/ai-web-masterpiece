@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Play } from "lucide-react";
 import { hero, showcase } from "@/content/site";
 import CalendlyModal from "../CalendlyModal";
+import { scrollToTarget } from "@/lib/smooth-scroll";
 
 export default function Hero() {
   const [callOpen, setCallOpen] = useState(false);
@@ -36,7 +37,14 @@ export default function Hero() {
               {hero.primaryCta}
             </button>
 
-            <a href="#work" className="btn-light w-full sm:w-auto">
+            <a
+              href="#work"
+              onClick={(e) => {
+                e.preventDefault();
+                scrollToTarget("#work");
+              }}
+              className="btn-light w-full sm:w-auto"
+            >
               <span className="flex h-7 w-7 items-center justify-center rounded-full bg-foreground text-white">
                 <Play size={11} fill="currentColor" />
               </span>
