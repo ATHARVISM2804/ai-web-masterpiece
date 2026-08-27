@@ -1,6 +1,6 @@
 import velyxLogo from "@/assets/velyxlabs-logo-light.png";
 import getlandyLogo from "@/assets/getlandy-logo.png";
-import goranLogo from "@/assets/goran-logo.png";
+import estaticoLogo from "@/assets/estatico-logo.png";
 import nitLogo from "@/assets/nit-logo.png";
 
 /**
@@ -144,13 +144,14 @@ export const about = {
       current: true,
     },
     {
-      company: "GoRan AI",
-      role: "Co-founder",
-      note: "AI agency — previously",
-      logo: goranLogo,
-      href: "",
+      company: "Estatico",
+      /* TODO: your title here — shows above the description when set. */
+      role: "",
+      note: "AI-powered automation handles your follow-ups, tasks, and reminders — so you can focus on what matters most: closing deals.",
+      logo: estaticoLogo,
+      href: "https://estatico.app/",
       nodeIcon: "rocket",
-      current: false,
+      current: true,
     },
     {
       company: "NIT Hamirpur",

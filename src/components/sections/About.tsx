@@ -281,7 +281,7 @@ export default function About() {
                         )}
                       </div>
 
-                      <p className="mt-1 text-[14.5px]">{role.role}</p>
+                      {role.role && <p className="mt-1 text-[14.5px]">{role.role}</p>}
                       <p className="mt-1.5 text-[13px] leading-relaxed text-muted-foreground">
                         {role.note}
                       </p>
