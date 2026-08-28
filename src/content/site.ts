@@ -52,7 +52,7 @@ export const nav = [
 export const hero = {
   headline: "I Build Agentic Systems That Run Real Operations",
   sub: "Agentic automation, AI infrastructure, SaaS platforms, and MVPs for B2B and capital-intensive teams — from scope call to launch.",
-  primaryCta: "Book a Free Scope Call",
+  primaryCta: "Book a Free MVP Call",
   secondaryCta: "View My Work",
 };
 
