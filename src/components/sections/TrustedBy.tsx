@@ -10,10 +10,10 @@ export default function TrustedBy() {
         <span className="badge-pill">Trusted By</span>
 
         <div className="edge-fade w-full max-w-5xl overflow-hidden">
-          <div className="marquee-track flex w-max items-center">
+          <div className="marquee-track marquee-reverse flex w-max items-center">
             {row.map((name, i) => (
               <span key={`${name}-${i}`} className="flex items-center">
-                <span className="whitespace-nowrap px-8 text-xl font-semibold tracking-[-0.025em] text-[#a1a1a1] transition-opacity duration-500 hover:opacity-70">
+                <span className="whitespace-nowrap px-14 text-xl font-semibold tracking-[-0.025em] text-[#a1a1a1] transition-opacity duration-500 hover:opacity-70">
                   {name}
                 </span>
                 <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-[#d4d4d4]" />

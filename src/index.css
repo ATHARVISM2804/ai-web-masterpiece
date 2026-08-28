@@ -179,6 +179,11 @@
     animation: marquee var(--marquee-duration, 40s) linear infinite;
   }
 
+  /* Same loop, travelling left to right instead. */
+  .marquee-reverse {
+    animation-direction: reverse;
+  }
+
   .edge-fade {
     mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
   }
