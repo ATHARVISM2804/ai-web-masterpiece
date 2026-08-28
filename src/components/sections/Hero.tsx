@@ -10,11 +10,11 @@ export default function Hero() {
   const strip = [...showcase, ...showcase];
 
   return (
-    <section id="top" className="overflow-hidden pt-36 sm:pt-44">
+    <section id="top" className="overflow-hidden pt-36 sm:pt-40">
       <div className="shell">
-        <div className="mx-auto flex max-w-3xl flex-col items-center gap-7 text-center sm:gap-9">
+        <div className="mx-auto flex max-w-[1100px] flex-col items-center gap-7 text-center sm:gap-9">
           <h1
-            className="animate-fade-up text-[2.5rem] font-medium leading-[1.05] tracking-[-0.035em] opacity-0 sm:text-[4.75rem]"
+            className="animate-fade-up text-[2.5rem] font-medium leading-[1.12] tracking-[-0.05em] opacity-0 sm:text-[4.75rem] sm:leading-[1.2]"
             style={{ animationDelay: "80ms", textWrap: "balance" }}
           >
             {hero.headline}
@@ -57,17 +57,17 @@ export default function Hero() {
 
       {/* Screenshot strip drifting past under the hero */}
       <div
-        className="edge-fade mt-14 overflow-hidden sm:mt-20"
+        className="edge-fade mt-12 overflow-hidden sm:mt-10"
         aria-hidden
       >
         <div
-          className="marquee-track flex w-max gap-5"
+          className="marquee-track flex w-max gap-3"
           style={{ "--marquee-duration": "60s" } as React.CSSProperties}
         >
           {strip.map((src, i) => (
             <div
               key={`${src}-${i}`}
-              className="h-[220px] w-[340px] shrink-0 overflow-hidden rounded-4xl bg-white ring-4 ring-white sm:h-[300px] sm:w-[460px]"
+              className="h-[230px] w-[350px] shrink-0 overflow-hidden rounded-[26px] bg-white ring-4 ring-white sm:h-[327px] sm:w-[480px]"
             >
               <img
                 src={cld(src, 900)}

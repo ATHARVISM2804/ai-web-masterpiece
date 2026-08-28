@@ -104,15 +104,17 @@
 
   .btn-dark {
     @apply pill-dark inline-flex items-center justify-center gap-2 whitespace-nowrap
-           rounded-[50px] px-7 py-4 text-base font-medium
-           transition-transform duration-200 hover:-translate-y-0.5;
+           rounded-[50px] px-7 py-4 text-base font-medium tracking-tight
+           transition-all duration-300
+           hover:-translate-y-px hover:-rotate-3 hover:scale-110;
     box-shadow: 0 10px 20px 1px rgb(0 0 0 / 0.5);
   }
 
   .btn-light {
     @apply inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-[50px]
-           bg-white px-7 py-4 text-base font-medium text-foreground
-           transition-transform duration-200 hover:-translate-y-0.5;
+           bg-white px-7 py-4 text-base font-medium tracking-tight text-foreground
+           transition-all duration-300
+           hover:-translate-y-px hover:-rotate-3 hover:scale-110;
     box-shadow: 0 10px 20px 1px rgb(0 0 0 / 0.08);
   }
 
