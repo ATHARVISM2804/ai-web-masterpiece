@@ -26,7 +26,7 @@ export default function SiteNav() {
   return (
     <>
       <header className="fixed inset-x-0 top-4 z-50 px-4 sm:top-6">
-        <div className="mx-auto flex h-[68px] w-full max-w-[900px] items-center justify-between rounded-[63px] bg-white/60 pl-6 pr-3 backdrop-blur-xl ring-1 ring-white/70">
+        <div className="mx-auto flex h-[68px] w-full max-w-[900px] items-center justify-between rounded-[63px] border-2 border-white/[0.44] bg-white/[0.46] pl-6 pr-3 backdrop-blur-[11px]">
           <a
             href="#top"
             onClick={(e) => {
