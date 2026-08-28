@@ -61,7 +61,7 @@ export default function Hero() {
         aria-hidden
       >
         <div
-          className="marquee-track flex w-max gap-3"
+          className="marquee-track flex w-max gap-5 sm:gap-10"
           style={{ "--marquee-duration": "120s" } as React.CSSProperties}
         >
           {strip.map((src, i) => (
