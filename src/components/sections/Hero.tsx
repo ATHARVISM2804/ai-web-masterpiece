@@ -33,7 +33,7 @@ export default function Hero() {
           >
             <button
               onClick={() => setCallOpen(true)}
-              className="btn-dark w-full sm:w-auto"
+              className="btn-dark w-full sm:w-[278px]"
             >
               {hero.primaryCta}
             </button>
