@@ -176,7 +176,14 @@
   }
 
   .marquee-track {
-    animation: marquee var(--marquee-duration, 40s) linear infinite;
+    animation: marquee var(--marquee-duration, 80s) linear infinite;
+    /*
+     * Promote to its own compositor layer. Without this the browser may
+     * rasterise the strip on the main thread each frame, which is what makes
+     * a slow marquee look like it is stepping rather than gliding.
+     */
+    will-change: transform;
+    backface-visibility: hidden;
   }
 
   /* Same loop, travelling left to right instead. */
@@ -208,8 +215,9 @@
 }
 
 @keyframes marquee {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
+  /* translate3d keeps the animation on the GPU */
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(-50%, 0, 0); }
 }
 
 /* ---------------------------------------------------------------------------

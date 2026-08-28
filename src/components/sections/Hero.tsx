@@ -62,7 +62,7 @@ export default function Hero() {
       >
         <div
           className="marquee-track flex w-max gap-3"
-          style={{ "--marquee-duration": "60s" } as React.CSSProperties}
+          style={{ "--marquee-duration": "120s" } as React.CSSProperties}
         >
           {strip.map((src, i) => (
             <div
