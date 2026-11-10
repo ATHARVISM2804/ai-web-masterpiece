@@ -22,3 +22,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Blender build inputs: downloaded models, textures and MakeHuman data (blender/ph_get.py fetches them)
+blender/assets/
+__pycache__/
