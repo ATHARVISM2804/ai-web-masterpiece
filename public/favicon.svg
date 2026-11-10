@@ -1,4 +1,19 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="-6 -18 224 224">
-  <path fill="#0c0a09" fill-rule="evenodd" d="M8 8 L208 4 L77 188 L67 154 L67 144 L52 144 L52 130 L33 130 L33 113 L13 113 L13 96 Z M31 28 L176 22 L94 124 Z"/>
-  <path fill="#0c0a09" d="M34 38 L116 46 L76 62 Z"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ff7e57"/>
+      <stop offset="1" stop-color="#ffc56e"/>
+    </linearGradient>
+    <clipPath id="tile"><rect width="64" height="64" rx="15"/></clipPath>
+  </defs>
+  <g clip-path="url(#tile)">
+    <rect width="64" height="64" fill="url(#sky)"/>
+    <circle cx="44" cy="20" r="9" fill="#fff4dc"/>
+    <path d="M7 35 L32 18 L57 35 Z" fill="#1d1b1a"/>
+    <rect x="15" y="34" width="34" height="15" fill="#1d1b1a"/>
+    <rect x="21" y="38" width="8" height="7" rx="1" fill="#ffd38a"/>
+    <rect x="35" y="38" width="8" height="7" rx="1" fill="#ffd38a"/>
+    <rect x="0" y="49" width="64" height="15" fill="#2fa9a6"/>
+    <rect x="9" y="54" width="18" height="2.5" rx="1.25" fill="#9fe7df"/>
+  </g>
 </svg>

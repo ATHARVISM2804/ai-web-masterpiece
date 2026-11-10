@@ -34,8 +34,8 @@ export interface Frame {
   /** Pointer, -0.5..0.5 on each axis. */
   mx: number;
   my: number;
-  /** Depth of field, 0..1: how much the shot falls off away from what it looks at. */
-  dof?: number;
+  /** The dive into the laptop, 0..1: a rush into the screen that burns to white. */
+  warp?: number;
 }
 
 const F = 3.5; // first floor
@@ -360,13 +360,14 @@ export async function createWorld(canvas: HTMLCanvasElement, onProgress: (k: num
   world.add(riceField);
 
   /* screens, signs and the small things three.js animates */
-  const alu = new THREE.MeshStandardMaterial({ color: "#7d8086", metalness: 0.7, roughness: 0.38 });
+  // MacBook Pro in Midnight, like the one the page dives into
+  const alu = new THREE.MeshStandardMaterial({ color: "#2b313c", metalness: 0.7, roughness: 0.36 });
   const laptop = group(rbox(0.52, 0.018, 0.36, 0.012, alu));
   // keyboard and trackpad; the top of the canvas is the edge nearest the chair
   const deck = new THREE.Mesh(new THREE.PlaneGeometry(0.5, 0.34), new THREE.MeshStandardMaterial({ color: "#ffffff", metalness: 0.5, roughness: 0.45, map: paint(500, 340, (c, w, h) => {
-    c.fillStyle = "#7d8086";
+    c.fillStyle = "#2b313c";
     c.fillRect(0, 0, w, h);
-    c.fillStyle = "#6f7277";
+    c.fillStyle = "#252a34";
     roundRect(c, w * 0.32, 14, w * 0.36, 110, 10);
     c.fill();
     c.fillStyle = "#1d1e21";
@@ -393,11 +394,11 @@ export async function createWorld(canvas: HTMLCanvasElement, onProgress: (k: num
   lid.add(rbox(0.52, 0.34, 0.012, 0.01, alu));
   // the screen, facing the chair: the Atharv OS desktop the camera dives into
   const lcdMat = new THREE.MeshBasicMaterial({ color: "#20242a", toneMapped: false });
-  new THREE.TextureLoader().load("/life/bali-diamond-beach.webp", (t) => {
+  new THREE.TextureLoader().load("/life/wallpaper-aventador.webp", (t) => {
     t.colorSpace = THREE.SRGBColorSpace;
-    // the photo is square: crop it to the screen like the desktop does
-    t.repeat.set(1, 0.31 / 0.49);
-    t.offset.set(0, (1 - t.repeat.y) * 0.58);
+    // the photo is 3:2: crop it to the screen like the desktop does
+    t.repeat.set(1, (0.31 / 0.49) * 1.5);
+    t.offset.set(0, (1 - t.repeat.y) * 0.45);
     lcdMat.map = t;
     lcdMat.color.set("#ffffff");
     lcdMat.needsUpdate = true;
@@ -818,7 +819,7 @@ export async function createWorld(canvas: HTMLCanvasElement, onProgress: (k: num
   const extras = [...pool, buddy, sauna, ...friends, rider];
 
   /* screen content */
-  new THREE.TextureLoader().load("/life/northloop.webp", (t) => {
+  new THREE.TextureLoader().load("/life/velyx-hero.webp", (t) => {
     t.colorSpace = THREE.SRGBColorSpace;
     (shot.material as THREE.MeshBasicMaterial).map = t;
     (shot.material as THREE.MeshBasicMaterial).needsUpdate = true;
@@ -849,31 +850,48 @@ export async function createWorld(canvas: HTMLCanvasElement, onProgress: (k: num
   const bloom = new UnrealBloomPass(new THREE.Vector2(256, 256), 0.32, 0.55, 0.92);
   if (!low) composer.addPass(bloom);
   composer.addPass(new OutputPass());
-  // the grade: warm highlights, teal shadows, a soft vignette
+  // the grade: warm highlights, teal shadows, a soft vignette; and the warp into the laptop
   const grade = new ShaderPass({
-    uniforms: { tDiffuse: { value: null }, uNight: { value: 0 }, uDof: { value: 0 }, uFocus: { value: 0.5 }, uAspect: { value: 1 } },
+    uniforms: { tDiffuse: { value: null }, uNight: { value: 0 }, uWarp: { value: 0 }, uCenter: { value: new THREE.Vector2(0.5, 0.5) }, uAspect: { value: 1 }, uTime: { value: 0 } },
     vertexShader: "varying vec2 vUv; void main() { vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }",
     fragmentShader: `
-      uniform sampler2D tDiffuse; uniform float uNight, uDof, uFocus, uAspect; varying vec2 vUv;
+      uniform sampler2D tDiffuse; uniform float uNight, uWarp, uAspect, uTime; uniform vec2 uCenter; varying vec2 vUv;
       void main() {
         vec4 c = texture2D(tDiffuse, vUv);
-        // a lens: sharp across the band the camera looks at, softer above and below
-        float r = uDof * smoothstep(0.1, 0.55, abs(vUv.y - uFocus)) * 0.0075;
-        if (r > 0.0002) {
-          vec4 acc = c;
-          for (int i = 0; i < 12; i++) {
-            float a = float(i) * 2.39996;
-            float k = sqrt((float(i) + 0.5) / 12.0);
-            acc += texture2D(tDiffuse, vUv + vec2(cos(a) / uAspect, sin(a)) * r * k);
-          }
-          c = acc / 13.0;
-        }
         float l = dot(c.rgb, vec3(0.299, 0.587, 0.114));
         vec3 warm = vec3(1.04, 1.0, 0.94), cool = mix(vec3(0.95, 1.0, 1.03), vec3(0.92, 0.95, 1.08), uNight);
         c.rgb *= mix(cool, warm, smoothstep(0.2, 0.8, l));
         c.rgb = mix(vec3(l), c.rgb, 1.06);
         vec2 d = vUv - 0.5;
         c.rgb *= 1.0 - dot(d, d) * (0.42 + uNight * 0.3);
+        if (uWarp > 0.001) {
+          // pulled into the screen: everything smears towards it, the colours tear apart
+          vec2 v = vUv - uCenter;
+          float s = uWarp * uWarp * 0.55;
+          vec3 acc = vec3(0.0);
+          for (int i = 0; i < 16; i++) {
+            float k = 1.0 - s * float(i) / 15.0;
+            acc.r += texture2D(tDiffuse, uCenter + v * k * (1.0 + 0.03 * uWarp)).r;
+            acc.g += texture2D(tDiffuse, uCenter + v * k).g;
+            acc.b += texture2D(tDiffuse, uCenter + v * k * (1.0 - 0.03 * uWarp)).b;
+          }
+          c.rgb = mix(c.rgb, acc / 16.0, smoothstep(0.0, 0.25, uWarp));
+          // light-speed streaks rushing in from the edges
+          vec2 q = v * vec2(uAspect, 1.0);
+          float r = length(q);
+          // thin radial lanes; each carries one long dash racing outwards past the camera
+          float ang = (atan(q.y, q.x) + 3.1416) * 72.0;
+          float lane = floor(ang);
+          float across = abs(fract(ang) - 0.5) * 2.0;
+          float h = fract(sin(lane * 91.7) * 437.5);
+          float run = fract(r * (0.6 + h * 0.8) - uTime * (0.8 + h * 1.6) * (0.4 + uWarp * 1.6) + h * 7.0);
+          float dash = smoothstep(0.0, 0.08, run) * (1.0 - smoothstep(0.35, 0.55, run));
+          float streak = dash * (1.0 - smoothstep(0.12, 0.45, across)) * step(1.0 - uWarp * 1.3, h) * smoothstep(0.08, 0.5, r);
+          c.rgb += mix(vec3(0.75, 0.85, 1.0), vec3(1.0, 0.8, 0.55), h) * streak * uWarp * 1.8;
+          // the core of the tunnel glows, then everything burns to white
+          c.rgb += vec3(1.0, 0.95, 0.85) * exp(-r * 6.0) * uWarp * uWarp * 1.5;
+          c.rgb = mix(c.rgb, vec3(1.0, 0.98, 0.95), smoothstep(0.72, 1.0, uWarp));
+        }
         gl_FragColor = c;
       }`,
   });
@@ -889,6 +907,8 @@ export async function createWorld(canvas: HTMLCanvasElement, onProgress: (k: num
     resize();
   }
 
+  let baseFov = 32;
+  let lastWarp = 0;
   function resize() {
     const w = canvas.clientWidth;
     const h = canvas.clientHeight;
@@ -897,7 +917,8 @@ export async function createWorld(canvas: HTMLCanvasElement, onProgress: (k: num
     composer.setSize(w, h);
     camera.aspect = w / h;
     // narrow screens pull back so the shot still fits
-    camera.fov = w / h < 0.8 ? 44 : w / h < 1.2 ? 38 : 32;
+    baseFov = w / h < 0.8 ? 44 : w / h < 1.2 ? 38 : 32;
+    camera.fov = baseFov;
     // on phones the chapter card covers the lower part, so the shot sits higher
     if (w / h < 0.8) camera.setViewOffset(w, h, 0, h * 0.13, w, h);
     else camera.clearViewOffset();
@@ -1444,11 +1465,19 @@ export async function createWorld(canvas: HTMLCanvasElement, onProgress: (k: num
       camFadeA.value.copy(camera.position);
       camFadeB.value.set(look.x, look.y, look.z, 1.6);
     } else camFadeB.value.w = 0;
-    // focus where the shot looks
+    // the warp: the camera lunges at the screen and the lens flares wide
+    const warp = f.warp ?? 0;
+    if (warp > 0 || lastWarp > 0) {
+      camera.position.lerp(look, warp * 0.6);
+      camera.fov = baseFov + warp * warp * 40;
+      camera.updateProjectionMatrix();
+      lastWarp = warp;
+    }
     projV.copy(look).project(camera);
-    grade.uniforms.uFocus.value = THREE.MathUtils.clamp(projV.y * 0.5 + 0.5, 0.2, 0.8);
-    grade.uniforms.uDof.value = low ? 0 : (f.dof ?? 0);
+    grade.uniforms.uWarp.value = warp;
+    grade.uniforms.uCenter.value.set(projV.x * 0.5 + 0.5, projV.y * 0.5 + 0.5);
     grade.uniforms.uAspect.value = camera.aspect;
+    grade.uniforms.uTime.value = t;
     // the sun's shadow box travels with the shot, so the beach gets shadows too
     sun.target.position.copy(look);
     sun.position.copy(look).add(sunDir);

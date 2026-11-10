@@ -28,7 +28,7 @@ interface Win {
 
 const APPS: Record<AppId, { title: string; w: number; h: number; icon: IconId; dark?: boolean; bar?: boolean }> = {
   finder: { title: "Finder", w: 820, h: 520, icon: "finder" },
-  notes: { title: "Notes", w: 820, h: 440, icon: "notes" },
+  notes: { title: "Notes", w: 720, h: 420, icon: "notes" },
   safari: { title: "Safari", w: 1000, h: 640, icon: "safari" },
   messages: { title: "Messages", w: 720, h: 500, icon: "messages" },
   terminal: { title: "atharv — -zsh — 80×24", w: 620, h: 380, icon: "terminal", dark: true, bar: true },
@@ -36,6 +36,9 @@ const APPS: Record<AppId, { title: string; w: number; h: number; icon: IconId; d
   about: { title: "About Atharv OS", w: 300, h: 470, icon: "settings", bar: true },
   trash: { title: "Trash", w: 720, h: 440, icon: "trash" },
 };
+
+// apps whose content needs the width (pages, grids) keep their size; the rest shrink into the clear space
+const WIDE: AppId[] = ["safari", "photos", "finder"];
 
 const DOCK: (AppId | "mail")[] = ["finder", "safari", "messages", "mail", "photos", "notes", "terminal", "about"];
 const DOCK_NAME: Record<string, string> = { finder: "Finder", safari: "Safari", messages: "Messages", mail: "Mail", photos: "Photos", notes: "Notes", terminal: "Terminal", about: "System Settings", trash: "Trash" };
@@ -99,13 +102,14 @@ export default function AtharvOS({ onExit, active = true }: { onExit?: () => voi
       const W = desk?.clientWidth ?? 1280;
       const H = desk?.clientHeight ?? 760;
       const a = APPS[app];
-      const w = Math.min(a.w, W - 24);
-      const h = Math.min(a.h, H - 110);
-      const n = seq.current++;
-      // centre in the clear space between the widgets (left) and the desktop
-      // icons (right) when the window fits there, then cascade like macOS
+      // the clear space between the widgets (left) and the desktop icons (right)
       const L = 390;
       const R = W - 120;
+      const room = R - L - 32;
+      const w = Math.min(a.w, W - 24, !WIDE.includes(app) && room >= 480 ? room : Infinity);
+      const h = Math.min(a.h, H - 110);
+      const n = seq.current++;
+      // centre there when the window fits, then cascade like macOS
       const step = ws.filter((x) => !x.min).length * 24;
       const cx = (w <= R - L ? L + (R - L - w) / 2 : (W - w) / 2) + step;
       // the boot window sits low so the bridge stays in view

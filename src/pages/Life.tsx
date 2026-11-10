@@ -42,6 +42,8 @@ const smooth = (a: number, b: number, x: number) => {
 const inOut = (k: number) => (k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2);
 const ease = (k: number) => (k < 0.5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2);
 
+const REDUCED = typeof matchMedia !== "undefined" && matchMedia("(prefers-reduced-motion: reduce)").matches;
+
 // private windows can refuse storage outright
 const storage = () => {
   try {
@@ -109,6 +111,8 @@ export default function Life() {
     wasWading: false,
     /** The work wall's card is open. */
     work: false,
+    /** When the laptop was opened in the game: the warp into it runs from here. */
+    warpAt: 0,
     /** Photo mode: the HUD is away and the player holds still while you frame the shot. */
     photo: false,
     /** The beach run, made on first use; `armed` once you're clear of the start arch. */
@@ -364,7 +368,10 @@ export default function Life() {
           chase.cam.lerp(cam, k);
           chase.look.lerp(look, k);
           chase.fresh = false;
-          world.render({ cam: chase.cam, look: chase.look, hour: c.hour, zone: "ride", mx: 0, my: 0, dof: shot ? 0.9 : 0 });
+          // opening the laptop: the warp plays out over a second, then the desktop is there
+          const warpK = c.laptop ? Math.min(1, (now - c.warpAt) / 900) : 0;
+          const warp = REDUCED ? 0 : warpK * warpK;
+          world.render({ cam: chase.cam, look: chase.look, hour: c.hour, zone: "ride", mx: 0, my: 0, warp });
           // markers over the stations and the rides
           const box = markersRef.current;
           if (box) {
@@ -401,8 +408,8 @@ export default function Life() {
             c.audio.tick(dt);
           }
           if (osRef.current) {
-            osRef.current.style.opacity = c.laptop ? "1" : "0";
-            osRef.current.style.pointerEvents = c.laptop ? "auto" : "none";
+            osRef.current.style.opacity = String(REDUCED ? warpK : smooth(0.8, 1, warpK));
+            osRef.current.style.pointerEvents = warpK > 0.9 ? "auto" : "none";
           }
           if (now - mapT > 66) {
             mapT = now;
@@ -449,9 +456,9 @@ export default function Life() {
         const cur = e < 0.5 ? i : i + 1;
         pointer.x += (pointer.tx - pointer.x) * 0.05;
         pointer.y += (pointer.ty - pointer.y) * 0.05;
-        // the lens softens the edges while a shot holds, and opens up in flight
-        const dof = Math.max(smooth(0.4, 0.95, Math.abs(e - 0.5) * 2) * 0.85, titleK * 0.7);
-        world.render({ cam, look, hour: h, zone: CHAPTERS[cur].zone, mx: pointer.x, my: pointer.y, dof });
+        // the last stretch warps into the laptop; scrolling back runs it in reverse
+        const dive = i === N - 2 ? smooth(0.4, 0.97, p - i) : 0;
+        world.render({ cam, look, hour: h, zone: CHAPTERS[cur].zone, mx: pointer.x, my: pointer.y, warp: REDUCED ? 0 : dive * dive });
 
         if (cur !== shown) {
           shown = cur;
@@ -462,8 +469,8 @@ export default function Life() {
           shownHour = h;
           setHour(h);
         }
-        // the last stretch dives into the laptop: the desktop takes over the page
-        const os = i === N - 2 ? smooth(0.78, 0.97, p - i) : 0;
+        // out of the white, the desktop takes over the page
+        const os = i === N - 2 ? smooth(REDUCED ? 0.78 : 0.88, 0.99, p - i) : 0;
         if (osRef.current) {
           osRef.current.style.opacity = String(os);
           osRef.current.style.pointerEvents = os > 0.9 ? "auto" : "none";
@@ -612,6 +619,7 @@ export default function Life() {
       did(st.id);
       c.busy = c.laptop = true;
       setLaptop(true);
+      c.warpAt = performance.now();
     } else if (st.book) {
       did(st.id);
       window.open(profile.booking, "_blank", "noopener");

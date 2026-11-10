@@ -149,9 +149,9 @@ export const Mark = () => (
 );
 
 /**
- * The desktop picture: Diamond Beach on Nusa Penida, off Bali, chosen by
- * Atharv.
+ * The desktop picture: a matte black Lamborghini Aventador S at dusk. Photo by
+ * Eric Soubeyrand de Saint Prix on Unsplash (Unsplash License).
  */
 export function Wallpaper() {
-  return <img className="mac-wall" src="/life/bali-diamond-beach.webp" alt="" aria-hidden="true" decoding="async" />;
+  return <img className="mac-wall" src="/life/wallpaper-aventador.webp" alt="" aria-hidden="true" decoding="async" />;
 }
