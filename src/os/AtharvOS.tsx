@@ -90,6 +90,17 @@ export default function AtharvOS({ onExit, active = true }: { onExit?: () => voi
   const deskRef = useRef<HTMLDivElement>(null);
   const dockRef = useRef<HTMLDivElement>(null);
   const now = useNow();
+  // the desktop is laid out for a ~1440 px screen and scaled to the one it's on,
+  // so a small laptop screen shows everything smaller rather than cramped
+  const hostRef = useRef<HTMLDivElement>(null);
+  const [scale, setScale] = useState(1);
+  useEffect(() => {
+    const el = hostRef.current;
+    if (!el) return;
+    const ro = new ResizeObserver(([e]) => setScale(window.innerWidth < 760 ? 1 : Math.min(1, Math.max(0.7, e.contentRect.width / 1440))));
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
   const tz = { timeZone: "Asia/Kolkata" } as const;
   const stamp = `${now.toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short", ...tz })}  ${now.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", ...tz })}`;
 
@@ -154,7 +165,8 @@ export default function AtharvOS({ onExit, active = true }: { onExit?: () => voi
     const sy = e.clientY;
     const el = e.currentTarget;
     el.setPointerCapture(e.pointerId);
-    const move = (ev: PointerEvent) => set(id, { x: w0.x + ev.clientX - sx, y: Math.max(0, w0.y + ev.clientY - sy) });
+    // pointer moves are in screen pixels; the desktop is scaled
+    const move = (ev: PointerEvent) => set(id, { x: w0.x + (ev.clientX - sx) / scale, y: Math.max(0, w0.y + (ev.clientY - sy) / scale) });
     const up = () => {
       el.removeEventListener("pointermove", move);
       el.removeEventListener("pointerup", up);
@@ -201,7 +213,12 @@ export default function AtharvOS({ onExit, active = true }: { onExit?: () => voi
   const running = new Set(wins.map((w) => w.app));
 
   return (
-    <div className="mac" data-lenis-prevent onPointerDown={(e) => !(e.target as HTMLElement).closest(".mac-menu, .mac-bar__mark") && setMenu(false)}>
+    <div className="mac-host" ref={hostRef}>
+    <div
+      className="mac"
+      style={scale < 1 ? { width: `${100 / scale}%`, height: `${100 / scale}%`, right: "auto", bottom: "auto", transform: `scale(${scale})`, transformOrigin: "0 0" } : undefined}
+      data-lenis-prevent
+      onPointerDown={(e) => !(e.target as HTMLElement).closest(".mac-menu, .mac-bar__mark") && setMenu(false)}>
       <Wallpaper />
 
       <div className={`mac-boot${booted ? " is-done" : ""}`} aria-hidden={booted}>
@@ -363,6 +380,7 @@ export default function AtharvOS({ onExit, active = true }: { onExit?: () => voi
           <span className="mac-dock__tip">Trash</span>
         </button>
       </nav>
+    </div>
     </div>
   );
 }

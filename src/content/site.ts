@@ -260,6 +260,30 @@ export const work = {
   lede: "Live products and automations built for operators in real estate, insurance, healthcare, and industry.",
   items: [
     {
+      name: "Getlandy AI – Personal Brand Studio and Career OS",
+      blurb:
+        "An AI-powered personal brand studio and career operating system for high-signal professionals: agents for identity, content and outreach in your own voice, a verified profile where every claim traces back to evidence, and a job tracker with long-term memory.",
+      metric: "",
+      image: "/work/getlandy-landing-wide.webp",
+      href: "https://www.velyxlabs.in/work/getlandy",
+    },
+    {
+      name: "Audi Service System – A Dealership's Service Day on One Screen",
+      blurb:
+        "A concept service operating system for an Audi dealership, from booking to handover: a command centre with live readings, a workshop floor board with job cards and approvals, an AI-first customer inbox and a six-month demand forecast.",
+      metric: "",
+      image: "/work/audi-command.webp",
+      href: "https://www.velyxlabs.in/work/audi-service-system",
+    },
+    {
+      name: "Plainstate – Owner Statements in Under an Hour",
+      blurb:
+        "Month-end owner statements in under an hour instead of three to five days, for residential property managers. Drafts every statement from the PMS exports, reconciles to the cent or refuses to send, and cites the source cell behind every figure.",
+      metric: "",
+      image: "/work/plainstate-top.webp",
+      href: "https://www.velyxlabs.in/work/plainstate",
+    },
+    {
       name: "Estatico – Automate the Real Estate Deal Workflow",
       blurb:
         "Estatico automates the deal pipeline for real estate teams — intake, qualification, and follow-up handled by agents so brokers spend their time closing instead of copying data between tools. Built with a document-parsing layer, routing logic, and a review gate before anything reaches the CRM.",
@@ -294,24 +318,6 @@ export const work = {
       image:
         "https://res.cloudinary.com/dmhabztbf/image/upload/v1780920594/NEOREACH_IMG_x63j9h.png",
       href: "https://noreach-kappa.vercel.app/",
-    },
-    {
-      name: "Vyomira – Cloud Infrastructure Platform",
-      blurb:
-        "Positioning, product site, and inbound pipeline for a cloud infrastructure company — services, solutions, and a qualification flow built to bring enterprise enquiries in rather than just look good.",
-      metric: "", // TODO
-      image:
-        "https://res.cloudinary.com/dinhcaf2c/image/upload/v1766935300/Vyomira_azh3oy.png",
-      href: "https://www.vyomiratech.com/",
-    },
-    {
-      name: "Greenwrench – Vehicle Recycling Marketplace",
-      blurb:
-        "A marketplace connecting vehicle owners with certified scrap and recycling processors. Instant valuation, inquiry routing to the right processor, and listing management for an industry that ran on phone calls.",
-      metric: "", // TODO
-      image:
-        "https://res.cloudinary.com/dinhcaf2c/image/upload/v1766935302/Green_Wrench_mxogv2.png",
-      href: "https://www.greenwrenchsolutions.in/",
     },
   ],
 };

@@ -111,6 +111,7 @@ export function Finder({ open, tab = "clients" }: { open: Open; tab?: string }) 
 
 const NOTES = [
   { id: "about", title: "about me", date: "Today", preview: "hey, I'm Atharv 👋" },
+  { id: "wins", title: "achievements 🏅", date: "Today", preview: "6 marathons, 6 gold medals…" },
   { id: "story", title: "my story", date: "Yesterday", preview: "2023: got into NIT Hamirpur…" },
   { id: "work", title: "how I work", date: "Monday", preview: "fixed price, you own everything…" },
   { id: "contact", title: "say hi", date: "Sunday", preview: "the fastest way to reach me" },
@@ -165,6 +166,20 @@ export function Notes({ open }: { open: Open }) {
               <button type="button" onClick={() => setId("story")}>read my story →</button>
               <button type="button" onClick={() => open("finder")}>see the work →</button>
             </p>
+          </>
+        )}
+        {id === "wins" && (
+          <>
+            <h2>achievements 🏅</h2>
+            <p><b>6 marathons run, all 6 with a gold medal.</b></p>
+            <p className="mac-note__medals" aria-label="6 gold medals">🥇🥇🥇🥇🥇🥇</p>
+            <h3>next up: HYROX 2027 🔥</h3>
+            <ul className="mac-note__todo">
+              <li>☐ HYROX Bangalore</li>
+              <li>☐ HYROX Mumbai</li>
+              <li>☐ HYROX Delhi</li>
+            </ul>
+            <p>Same discipline as the business: show up every morning, and the results take care of themselves. Let's go.</p>
           </>
         )}
         {id === "story" && (

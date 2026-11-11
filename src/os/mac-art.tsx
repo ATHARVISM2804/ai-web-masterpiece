@@ -141,17 +141,17 @@ export function Icon({ id }: { id: IconId }) {
   }
 }
 
-/** The menu-bar mark: a rounded "A" monogram where a Mac shows its logo. */
+/** The menu-bar mark: the VelyxLabs "V" where a Mac shows its logo. */
 export const Mark = () => (
-  <svg viewBox="0 0 24 24" className="mac-mark" aria-hidden="true">
-    <path d="M12 3.2 4.4 20.8h3.4l1.7-4.1h5l1.7 4.1h3.4zM10.6 14l1.4-3.5 1.4 3.5z" fill="currentColor" />
+  <svg viewBox="166 384 925 522" className="mac-mark" aria-hidden="true">
+    <path transform="translate(0 1254) scale(0.1 -0.1)" fill="currentColor" d="M1897 8619 c-119 -28 -180 -119 -145 -214 8 -22 89 -155 179 -295 91 -140 202 -313 248 -385 46 -71 156 -245 245 -385 90 -140 253 -397 363 -570 110 -173 325 -511 478 -750 153 -239 377 -590 498 -780 299 -470 323 -505 392 -567 67 -60 188 -125 280 -148 77 -20 221 -19 299 1 33 9 95 33 136 55 127 66 182 119 599 579 102 113 287 315 411 450 372 406 508 570 535 649 20 60 19 137 -4 186 -25 56 -1248 1885 -1318 1972 -79 99 -238 182 -386 202 -97 14 -2753 13 -2810 0z M9175 8530 c-64 -13 -138 -44 -197 -84 -57 -38 -142 -126 -458 -475 -102 -113 -277 -306 -390 -430 -113 -124 -347 -383 -520 -576 -173 -192 -488 -541 -700 -775 -212 -234 -608 -672 -880 -975 -272 -302 -531 -586 -575 -630 -203 -202 -471 -336 -735 -367 -80 -9 -111 -8 -199 6 -62 11 -107 14 -112 9 -9 -9 92 -177 187 -310 144 -202 330 -326 555 -368 75 -14 222 -15 1295 -13 l1209 3 70 24 c146 49 221 105 384 291 518 589 674 767 885 1005 132 149 365 414 520 590 154 176 379 433 500 570 778 886 751 852 776 983 15 76 1 163 -37 233 -16 31 -217 238 -606 626 -489 486 -592 584 -643 611 -104 54 -224 73 -329 52z" />
   </svg>
 );
 
 /**
- * The desktop picture: a matte black Lamborghini Aventador S at dusk. Photo by
- * Eric Soubeyrand de Saint Prix on Unsplash (Unsplash License).
+ * The desktop picture, chosen by Atharv: a black Lamborghini Huracán on the
+ * driveway of a black villa at dusk.
  */
 export function Wallpaper() {
-  return <img className="mac-wall" src="/life/wallpaper-aventador.webp" alt="" aria-hidden="true" decoding="async" />;
+  return <img className="mac-wall" src="/life/wallpaper-black-villa.webp" alt="" aria-hidden="true" decoding="async" />;
 }

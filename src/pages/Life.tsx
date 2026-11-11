@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, type CSSProperties } from "react";
 import { CHAPTERS, clock } from "@/life/chapters";
 import { profile, work } from "@/content/site";
 import { lockScroll } from "@/lib/smooth-scroll";
@@ -6,7 +6,10 @@ import AtharvOS from "@/os/AtharvOS";
 import MiniMap, { type Player } from "@/life/Hud";
 import { STATIONS, options, startState, step, swap, type PlayInput, type PlayState, type Station } from "@/life/play";
 import { createAudio, type Audio } from "@/life/audio";
+import type { SceneId } from "@/life/scenes";
 import { postcard } from "@/life/photo";
+import LoaderArt from "@/life/LoaderArt";
+import { createTone } from "@/life/tone";
 import type { World } from "@/life/world";
 import { TRIAL_GATES, TRIAL_START, clockText, createTrial, type Trial } from "@/life/trial";
 import "@/life/life.css";
@@ -33,6 +36,7 @@ const DAY = 17.3; // golden hour
 const NIGHT = 20.6;
 const TOP: Record<PlayState["mode"], number> = { walk: 5.2, scooter: 11, jetski: 22 };
 const angleTo = (from: number, to: number) => Math.atan2(Math.sin(to - from), Math.cos(to - from));
+const LOADER_NAME = "ATHARV GOLAIT";
 const MODE_LABEL: Record<PlayState["mode"], string> = { walk: "On foot", scooter: "Scooter", jetski: "Jet ski" };
 
 const smooth = (a: number, b: number, x: number) => {
@@ -41,6 +45,11 @@ const smooth = (a: number, b: number, x: number) => {
 };
 const inOut = (k: number) => (k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2);
 const ease = (k: number) => (k < 0.5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2);
+
+// the last chapter's flight lands on the desk shot first, and Atharv's head marks where he leaves it
+const DESK = CHAPTERS.find((c) => c.zone === "build")!;
+const HEAD = [-3, 4.75, -3.2] as const;
+const SHOULDER = [-1.3, 5.25, -3.55] as const;
 
 const REDUCED = typeof matchMedia !== "undefined" && matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -64,6 +73,23 @@ export default function Life() {
   const [atLaptop, setAtLaptop] = useState(false);
   const [loaded, setLoaded] = useState(0);
   const [ready, setReady] = useState(false);
+  // the loader's name is its progress bar: one letter shoots up per step of loading, never faster than a beat apart
+  const [lit, setLit] = useState(0);
+  const [fontIn, setFontIn] = useState(false);
+  useEffect(() => {
+    let live = true;
+    const done = () => live && setFontIn(true);
+    document.fonts.load("1em Anton").then(done, done);
+    setTimeout(done, 1500);
+    return () => void (live = false);
+  }, []);
+  useEffect(() => {
+    if (!fontIn) return;
+    const want = Math.max(1, Math.ceil((loaded / 100) * LOADER_NAME.length));
+    if (lit >= want) return;
+    const t = setTimeout(() => setLit((l) => l + 1), lit ? 85 : 120);
+    return () => clearTimeout(t);
+  }, [fontIn, loaded, lit]);
   const [active, setActive] = useState(0);
   const [hour, setHour] = useState(CHAPTERS[0].hour);
   const [chosen, setChosen] = useState(() => typeof location !== "undefined" && location.hash.startsWith("#day-"));
@@ -132,11 +158,14 @@ export default function Life() {
       if (e.pointerType === "touch") return;
       pointer.tx = e.clientX / innerWidth - 0.5;
       pointer.ty = e.clientY / innerHeight - 0.5;
+      // on the title screen, the letters on the deck hop when touched
+      if (c.title) worldRef.current?.titlePointer((e.clientX / innerWidth) * 2 - 1, 1 - (e.clientY / innerHeight) * 2, false);
     };
     addEventListener("pointermove", onMove, { passive: true });
     // in the game, dragging the scene looks around: left and right, up and down
     let drag: { id: number; x: number; y: number } | null = null;
     const onDown = (e: PointerEvent) => {
+      if (c.title && !(e.target as HTMLElement).closest?.("button, a")) worldRef.current?.titlePointer((e.clientX / innerWidth) * 2 - 1, 1 - (e.clientY / innerHeight) * 2, true);
       if (ctl.current.play && e.target === canvasRef.current) drag = { id: e.pointerId, x: e.clientX, y: e.clientY };
     };
     const onDrag = (e: PointerEvent) => {
@@ -169,7 +198,9 @@ export default function Life() {
       const from = far ? now : target > now ? Math.max(now, Math.floor(now) + HOLD) : Math.min(now, target + 0.92);
       const to = target === N - 1 ? N - 1 : target + HOLD;
       scrollTo(0, from * unit());
-      Object.assign(tween, { from, to, t0: performance.now(), dur: far ? 1200 : 1700, on: true });
+      // into the laptop (and back out) is the slow one: desk, a moment at work, then the screen
+      const laptop = !far && (target === N - 1 || from > N - 2);
+      Object.assign(tween, { from, to, t0: performance.now(), dur: laptop ? 5200 : far ? 1200 : 1700, on: true });
     };
     ctl.current.goTo = goTo;
     const current = () => Math.max(0, Math.min(N - 1, Math.floor(at() - HOLD + 0.999)));
@@ -282,13 +313,14 @@ export default function Life() {
       const chase = { cam: new THREE.Vector3(), look: new THREE.Vector3(), fresh: true };
       const focus = new THREE.Vector3();
       const orbitCam = new THREE.Vector3();
-      const orbitLook = new THREE.Vector3(1, 3.2, 0);
+      const orbitLook = new THREE.Vector3(1.3, 2.2, 3.4);
       let titleK = c.title ? 1 : 0;
       let shown = -1;
       let shownHour = -1;
       let laptopOn = false;
       let last = performance.now();
       let mapT = 0;
+      const tone = createTone(canvasRef.current);
 
       const frame = () => {
         const now = performance.now();
@@ -368,10 +400,11 @@ export default function Life() {
           chase.cam.lerp(cam, k);
           chase.look.lerp(look, k);
           chase.fresh = false;
-          // opening the laptop: the warp plays out over a second, then the desktop is there
-          const warpK = c.laptop ? Math.min(1, (now - c.warpAt) / 900) : 0;
+          // opening the laptop: the push into the screen plays out, then the desktop is there
+          const warpK = c.laptop ? Math.min(1, (now - c.warpAt) / 1600) : 0;
           const warp = REDUCED ? 0 : warpK * warpK;
           world.render({ cam: chase.cam, look: chase.look, hour: c.hour, zone: "ride", mx: 0, my: 0, warp });
+          tone(now);
           // markers over the stations and the rides
           const box = markersRef.current;
           if (box) {
@@ -397,6 +430,7 @@ export default function Life() {
             setNear(n);
           }
           if (c.audio) {
+            c.audio.story({});
             if (r.wading && !c.wasWading && r.mode === "walk") c.audio.splash();
             c.wasWading = r.wading;
             c.audio.set({
@@ -429,36 +463,63 @@ export default function Life() {
         }
         const p = Math.min(N - 1, Math.max(0, scrollY / unit()));
         const i = Math.min(N - 2, Math.floor(p));
-        const e = inOut(smooth(HOLD, 0.9, p - i));
         const A = CHAPTERS[i];
         const B = CHAPTERS[i + 1];
+        const final = i === N - 2;
+        const k = p - i;
+        // the last stretch has its own path: in to the desk, a moment of Atharv at work,
+        // then a slow push over his shoulder into the screen
+        const e = final ? inOut(smooth(HOLD, 0.6, k)) : inOut(smooth(HOLD, 0.9, k));
+        const to = final ? DESK : B;
 
         // arc out and up between shots so the camera never cuts through a floor;
         // long hops (to the beach and back) arc less, relative to their length
-        cam.fromArray(A.cam).lerp(b.fromArray(B.cam), e);
+        cam.fromArray(A.cam).lerp(b.fromArray(to.cam), e);
         const span = a.fromArray(A.cam).distanceTo(b);
         const arc = Math.min(span, 18 + span * 0.15);
         out.copy(cam).setY(0).normalize().multiplyScalar(arc * 0.28 * Math.sin(Math.PI * e));
         cam.add(out).add(a.set(0, arc * 0.14 * Math.sin(Math.PI * e), 0));
-        look.fromArray(A.look).lerp(b.fromArray(B.look), e);
+        look.fromArray(A.look).lerp(b.fromArray(to.look), e);
+        if (final) {
+          // then the push: a curve round behind his right shoulder, so the screen is met face on
+          const t = inOut(smooth(0.68, 1, k));
+          if (t > 0) {
+            a.copy(cam).multiplyScalar((1 - t) * (1 - t));
+            out.fromArray(SHOULDER).multiplyScalar(2 * (1 - t) * t);
+            cam.copy(a).add(out).add(b.fromArray(B.cam).multiplyScalar(t * t));
+            look.lerp(b.fromArray(B.look), t);
+          }
+        }
 
         let h = A.hour + (B.hour - A.hour) * e;
         // the title screen: a slow golden-hour orbit of the villa, eased out once you choose
         titleK += ((c.title ? 1 : 0) - titleK) * Math.min(1, dt * 1.6);
         if (titleK > 0.001) {
-          const ang = now / 1000 * 0.05 + 0.6;
-          orbitCam.set(1 + Math.sin(ang) * 30, 12 + Math.sin(now / 1000 * 0.13) * 1.5, Math.cos(ang) * 30);
+          // a slow sway across the front: the name on the deck, the villa behind it
+          const ang = 0.12 + Math.sin(now / 1000 * 0.06) * 0.32;
+          orbitCam.set(1.3 + Math.sin(ang) * 18, 16 + Math.sin(now / 1000 * 0.13) * 0.6, 3.4 + Math.cos(ang) * 18);
           const k2 = titleK * titleK * (3 - 2 * titleK);
           cam.lerp(orbitCam, k2);
           look.lerp(orbitLook, k2);
           h += (17.4 - h) * k2;
         }
         const cur = e < 0.5 ? i : i + 1;
+        // Atharv steps out of the shot only as the camera reaches his shoulder
+        const zone = final && cam.distanceTo(a.fromArray(HEAD)) < 1.1 ? "os" : final && e >= 0.5 ? "outro" : CHAPTERS[cur].zone;
         pointer.x += (pointer.tx - pointer.x) * 0.05;
         pointer.y += (pointer.ty - pointer.y) * 0.05;
-        // the last stretch warps into the laptop; scrolling back runs it in reverse
-        const dive = i === N - 2 ? smooth(0.4, 0.97, p - i) : 0;
-        world.render({ cam, look, hour: h, zone: CHAPTERS[cur].zone, mx: pointer.x, my: pointer.y, warp: REDUCED ? 0 : dive * dive });
+        // the screen fills the view; scrolling back runs it all in reverse
+        const dive = final ? smooth(0.8, 1, k) : 0;
+        // the sound of the day: the two moments either side of the flight, crossfaded
+        if (c.audio) {
+          const push = final ? inOut(smooth(0.68, 1, k)) : 0;
+          const wts: Partial<Record<SceneId, number>> = final ? { outro: 1 - push * 0.8, os: push } : titleK > 0.5 ? { intro: 1 } : { [A.zone]: 1 - e, [B.zone]: e };
+          c.audio.story(wts, push);
+          c.audio.set({ surf: (wts.run ?? 0) * 0.9, night: smooth(19, 20.5, h), engine: "none", throttle: 0 });
+          c.audio.tick(dt);
+        }
+        world.render({ cam, look, hour: h, zone, title: c.title, mx: final ? pointer.x * (1 - smooth(0.6, 0.8, k)) : pointer.x, my: final ? pointer.y * (1 - smooth(0.6, 0.8, k)) : pointer.y, warp: REDUCED ? 0 : dive });
+        tone(now);
 
         if (cur !== shown) {
           shown = cur;
@@ -469,13 +530,13 @@ export default function Life() {
           shownHour = h;
           setHour(h);
         }
-        // out of the white, the desktop takes over the page
-        const os = i === N - 2 ? smooth(REDUCED ? 0.78 : 0.88, 0.99, p - i) : 0;
+        // as the screen fills the view, the desktop takes over the page
+        const os = final ? smooth(REDUCED ? 0.8 : 0.93, 0.995, k) : 0;
         if (osRef.current) {
           osRef.current.style.opacity = String(os);
           osRef.current.style.pointerEvents = os > 0.9 ? "auto" : "none";
         }
-        if (uiRef.current) uiRef.current.style.opacity = String((1 - smooth(0.55, 0.8, i === N - 2 ? p - i : 0)) * (1 - titleK));
+        if (uiRef.current) uiRef.current.style.opacity = String((1 - smooth(0.72, 0.86, final ? k : 0)) * (1 - titleK));
         if ((os > 0.9) !== laptopOn) {
           laptopOn = os > 0.9;
           setAtLaptop(laptopOn);
@@ -520,6 +581,16 @@ export default function Life() {
     setNote(text);
     setTimeout(() => setNote((n) => (n === text ? null : n)), 3400);
   });
+  // sound needs a click to start: choosing how to spend the day is one
+  const begin = useCallback(() => {
+    try {
+      ctl.current.audio ??= createAudio();
+      void ctl.current.audio.start();
+      setSound(true);
+    } catch {
+      setSound(false);
+    }
+  }, []);
   const startPlay = useCallback(() => {
     const c = ctl.current;
     c.play = startState();
@@ -544,7 +615,6 @@ export default function Life() {
     c.play = null;
     c.near = null;
     c.busy = c.talking = c.laptop = c.work = c.photo = false;
-    c.audio?.stop();
     setPlaying(false);
     setPlayer(null);
     setNear(null);
@@ -552,7 +622,6 @@ export default function Life() {
     setLaptop(false);
     setWorkAt(null);
     setPhoto(false);
-    setSound(false);
     setPhone(false);
   });
   const endTalk = useRef(() => {
@@ -677,7 +746,10 @@ export default function Life() {
   useEffect(() => {
     ctl.current.title = !chosen;
   }, [chosen]);
-  const watch = () => setChosen(true);
+  const watch = () => {
+    begin();
+    setChosen(true);
+  };
   const titleKey = useRef((_e: KeyboardEvent) => undefined as void);
   titleKey.current = (e: KeyboardEvent) => {
     if (["ArrowDown", "ArrowUp", "s", "w"].includes(e.key)) {
@@ -708,11 +780,15 @@ export default function Life() {
     <main className={`life${night ? " is-night" : ""}${playing ? " is-riding" : ""}${photo ? " is-photo" : ""}`}>
       <canvas ref={canvasRef} className="life__canvas" aria-hidden="true" />
 
-      <div className={`life__loader${ready ? " is-done" : ""}`} aria-hidden={ready}>
-        <p className="life__loader-name">Atharv Golait</p>
-        <div className="life__loader-bar">
-          <span style={{ width: `${loaded}%` }} />
-        </div>
+      <div className={`life__loader${ready && lit >= LOADER_NAME.length ? " is-done" : ""}`} aria-hidden={ready}>
+        <LoaderArt progress={loaded} />
+        <p className="life__loader-name" aria-label="Atharv Golait">
+          {LOADER_NAME.split("").map((c, i) => (
+            <span key={i} aria-hidden="true" className={i < lit ? "is-on" : undefined} style={{ "--i": i } as CSSProperties}>
+              {c}
+            </span>
+          ))}
+        </p>
         <p className="life__loader-note">Waking up the day, {loaded}%</p>
       </div>
 
@@ -724,6 +800,11 @@ export default function Life() {
           </div>
         </header>
 
+        {!playing && chosen && (
+          <button type="button" className="life__sound glass" aria-label={sound ? "Mute" : "Sound on"} onClick={toggleSound}>
+            {sound ? "🔊" : "🔇"}
+          </button>
+        )}
         <div className="life__clock glass" aria-label={`Time of day ${time} ${ampm}`}>
           <span className="life__clock-icon" aria-hidden="true">{night ? "☾" : "☀"}</span>
           <span className="life__clock-time">
@@ -782,18 +863,14 @@ export default function Life() {
 
       {ready && !chosen && (
         <div className="title" role="dialog" aria-label="How do you want to spend the day?">
-          <div className="title__bar is-top" aria-hidden="true" />
-          <div className="title__bar is-bottom" aria-hidden="true" />
+          {/* the name itself stands on the pool deck, in 3D (titleword.ts) */}
           <div className="title__block">
+            <h1 className="title__name">A day in Bali with Atharv Golait</h1>
             <p className="title__kicker">
-              <span>Canggu, Bali</span>
-              <span>January 2027</span>
+              <span>A day in Bali</span>
+              <span>Canggu</span>
               <span>Day 01</span>
             </p>
-            <h2 className="title__name">
-              A day in Bali
-              <em>with Atharv Golait</em>
-            </h2>
             <ul className="title__menu" role="menu">
               {[
                 { label: "Live it", sub: "Free roam. Walk the villa, ride the scooter, take the jet ski out.", go: startPlay },

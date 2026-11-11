@@ -1,3 +1,5 @@
+import { createScenes, type SceneId } from "./scenes";
+
 /**
  * Bali, by ear, synthesised in the browser so there is nothing to license or
  * download: wind in the palms, surf that grows as you near the beach, birds by
@@ -96,6 +98,15 @@ export function createAudio() {
   cricket.start();
   pulse.start();
 
+  // a meter on the output, for tests: is anything playing?
+  const meter = ctx.createAnalyser();
+  meter.fftSize = 1024;
+  master.connect(meter);
+  const frame = new Float32Array(meter.fftSize);
+
+  // the story's moments, each with its own sound (scenes.ts)
+  const scenes = createScenes(ctx, master, buf);
+
   let on = false;
   let mix: Mix = { surf: 0, night: 0, engine: "none", throttle: 0 };
   let birdT = 0;
@@ -116,6 +127,15 @@ export function createAudio() {
     },
     set(m: Mix) {
       mix = m;
+    },
+    /** Output loudness right now (RMS), for tests. */
+    level() {
+      meter.getFloatTimeDomainData(frame);
+      return Math.sqrt(frame.reduce((a, v) => a + v * v, 0) / frame.length);
+    },
+    /** The story: how much of each moment is playing, and how far into the laptop the camera is. */
+    story(weights: Partial<Record<SceneId, number>>, dive = 0) {
+      scenes.set(weights, dive);
     },
     /** A splash: a burst of filtered noise that falls away. */
     splash() {
@@ -151,6 +171,7 @@ export function createAudio() {
       oscs.forEach((o) => ramp(o.frequency, base + mix.throttle * (mix.engine === "jetski" ? 70 : 110), 0.1));
       ramp(lp.frequency, 380 + mix.throttle * 1400, 0.1);
       ramp(pulseDepth.gain, mix.night * 0.012, 0.6);
+      scenes.tick(t);
       birdT -= dt;
       if (birdT < 0 && mix.night < 0.5) {
         const n = 2 + Math.floor(Math.random() * 3);

@@ -1,21 +1,29 @@
-@import url("https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Anton&family=Instrument+Serif:ital@0;1&family=Inter+Tight:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap");
 
 /* "A day with Atharv": the 3D world fills the screen, the page scrolls a tall
    empty track behind it, and frosted glass panels float at the edges. */
 
 .life {
-  --glass: rgba(255, 255, 255, 0.5);
-  --glass-line: rgba(255, 255, 255, 0.7);
-  --glass-ink: #1d1b1a;
-  --glass-soft: #5d5853;
+  --glass: rgba(255, 255, 255, 0.06);
+  --glass-hi: rgba(255, 255, 255, 0.2);
+  --glass-line: rgba(255, 255, 255, 0.35);
+  --glass-rim: rgba(255, 255, 255, 0.95);
+  --glass-on: #fff;
+  --glass-ink: #15120f;
+  --glass-soft: #2c2723;
+  --glass-halo: rgba(255, 255, 255, 0.55);
   --accent: #ff7a45;
   position: relative;
   color: var(--glass-ink);
   font-family: Geist, ui-sans-serif, system-ui, sans-serif;
 }
 .life.is-night {
-  --glass: rgba(20, 22, 44, 0.42);
-  --glass-line: rgba(255, 255, 255, 0.16);
+  --glass: rgba(20, 22, 44, 0.14);
+  --glass-hi: rgba(140, 150, 220, 0.16);
+  --glass-halo: rgba(8, 8, 24, 0.6);
+  --glass-line: rgba(255, 255, 255, 0.14);
+  --glass-rim: rgba(255, 255, 255, 0.5);
+  --glass-on: #14162c;
   --glass-ink: #f4f1ff;
   --glass-soft: #b9b8d6;
 }
@@ -26,14 +34,49 @@
 .life__track { position: relative; z-index: -1; pointer-events: none; }
 .life__anchor { position: absolute; left: 0; width: 1px; height: 1px; }
 
+/* liquid glass: nearly clear, a light blur so the world still reads through,
+   a bright rim catching the light at the top left, a curved sheen across the
+   top, and the edges thickened with an inner glow like the lip of a lens */
 .glass {
-  background: var(--glass);
+  position: relative;
+  color: var(--glass-ink);
+  background: linear-gradient(135deg, var(--glass-hi), var(--glass) 50%);
   border: 1px solid var(--glass-line);
-  -webkit-backdrop-filter: blur(18px) saturate(1.4);
-  backdrop-filter: blur(18px) saturate(1.4);
-  box-shadow: 0 10px 40px rgba(20, 16, 40, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  -webkit-backdrop-filter: blur(9px) saturate(1.8) brightness(1.12);
+  backdrop-filter: blur(9px) saturate(1.8) brightness(1.12);
+  box-shadow:
+    0 14px 40px -12px rgba(10, 8, 30, 0.35),
+    inset 1px 1px 0 rgba(255, 255, 255, 0.7),
+    inset -1px -1px 0 rgba(255, 255, 255, 0.18),
+    inset 0 0 14px rgba(255, 255, 255, 0.22);
+  text-shadow: 0 0 12px var(--glass-halo), 0 0 2px var(--glass-halo);
   transition: background-color 0.6s, color 0.6s, border-color 0.6s;
 }
+.glass::before,
+.glass::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  border-radius: inherit;
+  pointer-events: none;
+}
+.glass::before {
+  inset: -1px;
+  padding: 1px;
+  background: linear-gradient(135deg, var(--glass-rim), transparent 35%, transparent 65%, rgba(255, 255, 255, 0.45));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+}
+.glass::after {
+  inset: 0;
+  background: radial-gradient(120% 70% at 15% -10%, rgba(255, 255, 255, 0.32), transparent 55%);
+}
+.glass button, .glass a, .glass kbd, .life__time, .life__chips span { text-shadow: none; }
+/* the text follows the scene behind the glass (tone.ts): light text over dark ground, dark over light */
+.glass[data-tone="dark"] { --glass-ink: #fbf8f4; --glass-soft: #efe9e3; --glass-halo: rgba(0, 0, 0, 0.5); --glass-on: #15120f; --glass: rgba(14, 12, 24, 0.2); --glass-hi: rgba(255, 255, 255, 0.12); }
+.glass[data-tone="light"] { --glass-ink: #15120f; --glass-soft: #2c2723; --glass-halo: rgba(255, 255, 255, 0.6); --glass-on: #fff; --glass: rgba(255, 255, 255, 0.14); --glass-hi: rgba(255, 255, 255, 0.3); }
+.glass[data-tone="dark"] .life__time, .glass[data-tone="dark"] .life__chips span { background: rgba(255, 255, 255, 0.14); }
 
 /* top-left identity */
 .life__top { position: fixed; top: 24px; left: 24px; z-index: 2; display: flex; flex-direction: column; gap: 8px; max-width: 330px; }
@@ -56,28 +99,45 @@
 .life.is-night .life__chips span { background: rgba(255, 255, 255, 0.08); }
 .life__title { font-family: "Instrument Serif", Georgia, serif; font-weight: 400; font-size: clamp(26px, 2.4vw, 34px); line-height: 1.02; letter-spacing: -0.015em; }
 .life__text { margin-top: 6px; font-size: 13.5px; line-height: 1.5; color: var(--glass-soft); }
-.life__cta { display: inline-flex; align-items: center; gap: 8px; margin-top: 12px; padding: 8px 16px; border-radius: 999px; background: var(--glass-ink); color: var(--glass); font-size: 14px; font-weight: 600; transition: transform 0.2s, background-color 0.6s, color 0.6s; }
+.life__cta { display: inline-flex; align-items: center; gap: 8px; margin-top: 12px; padding: 8px 16px; border-radius: 999px; background: var(--glass-ink); color: var(--glass-on); font-size: 14px; font-weight: 600; transition: transform 0.2s, background-color 0.6s, color 0.6s; }
 .life.is-night .life__cta { color: #15162c; }
 .life__cta:hover { transform: translateY(-2px); }
+.life__time { display: inline-block; margin-bottom: 8px; padding: 3px 10px; border-radius: 999px; font-size: 11.5px; font-weight: 600; background: rgba(255, 255, 255, 0.45); border: 1px solid var(--glass-line); color: var(--glass-soft); }
+.life.is-night .life__time { background: rgba(255, 255, 255, 0.08); }
 
 /* bottom pills */
 .life__pills { position: fixed; left: 24px; bottom: 24px; z-index: 2; display: flex; gap: 2px; padding: 5px; border-radius: 999px; max-width: calc(100vw - 48px); overflow-x: auto; scrollbar-width: none; }
 .life__pills::-webkit-scrollbar { display: none; }
 .life__pills button { flex: none; padding: 8px 14px; border-radius: 999px; font-size: 13px; font-weight: 600; color: var(--glass-soft); transition: background-color 0.3s, color 0.3s; }
 .life__pills button:hover { color: var(--glass-ink); }
-.life__pills button.is-on { background: var(--glass-ink); color: var(--glass); }
+.life__pills button.is-on { background: var(--glass-ink); color: var(--glass-on); }
 .life.is-night .life__pills button.is-on { color: #15162c; }
 
 .life__hint { position: fixed; left: 50%; bottom: 92px; z-index: 2; transform: translateX(-50%); padding: 8px 16px; border-radius: 999px; font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: #fff; background: rgba(20, 16, 40, 0.35); animation: life-bob 2.2s ease-in-out infinite; }
 @keyframes life-bob { 50% { transform: translate(-50%, -6px); } }
 
+
 /* loader */
-.life__loader { position: fixed; inset: 0; z-index: 10; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px; background: #f3ede5; transition: opacity 0.9s ease, visibility 0.9s; }
+.life__loader { position: fixed; inset: 0; z-index: 10; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px; background: #f3ede5; transition: opacity 0.8s ease 0.45s, visibility 0.8s 0.45s; }
 .life__loader.is-done { opacity: 0; visibility: hidden; }
-.life__loader-name { font-family: "Instrument Serif", Georgia, serif; font-size: 44px; letter-spacing: -0.01em; color: #1d1b1a; }
-.life__loader-bar { width: 200px; height: 2px; background: #ddd3c6; border-radius: 2px; overflow: hidden; }
-.life__loader-bar span { display: block; height: 100%; background: #1d1b1a; transition: width 0.4s ease; }
-.life__loader-note { font-size: 13px; color: #6f665d; }
+/* the villa draws itself in line as the world loads, the sun rising behind it; then the name shoots up letter by letter (after 925studios.co) */
+.life__loader-art { width: min(400px, 76vw); height: auto; overflow: visible; }
+.life__loader-art path { fill: none; stroke: #1d1b1a; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; transition: stroke-dashoffset 0.5s ease; }
+.life__loader-sun { fill: #f2924f; transition: cx 0.6s ease, cy 0.6s ease; }
+.life__loader.is-done .life__loader-art { animation: loader-art-out 0.6s cubic-bezier(0.6, 0, 0.8, 0.4) forwards; }
+@keyframes loader-art-out { to { transform: translateY(-28px); opacity: 0; } }
+.life__loader-name { display: flex; margin-top: 0; font-family: Anton, Impact, "Arial Narrow", sans-serif; font-size: min(108px, 14.6vw); line-height: 0.9; letter-spacing: 0.005em; color: #1d1b1a; transform: skewX(-9deg); overflow: hidden; padding: 0.06em 0.1em; }
+.life__loader-name span { display: inline-block; white-space: pre; opacity: 0; transform: translateY(115%) scaleY(1.5); }
+.life__loader-name span.is-on { animation: loader-rise 0.7s cubic-bezier(0.2, 0.9, 0.25, 1) both; }
+.life__loader.is-done .life__loader-name span { animation: loader-leave 0.5s cubic-bezier(0.6, 0, 0.9, 0.5) calc(var(--i) * 0.025s) both; }
+@keyframes loader-rise {
+  from { transform: translateY(115%) scaleY(1.5); filter: blur(5px); opacity: 0; }
+  55% { filter: blur(0); opacity: 1; }
+  80% { transform: translateY(-6%) scaleY(0.97); }
+  to { transform: none; opacity: 1; }
+}
+@keyframes loader-leave { from { transform: none; opacity: 1; } to { transform: translateY(-115%) scaleY(1.4); filter: blur(4px); opacity: 0; } }
+.life__loader-note { margin-top: -6px; font-size: 13px; letter-spacing: 0.02em; color: #6f665d; font-variant-numeric: tabular-nums; }
 
 @media (max-width: 760px) {
   .life__top { top: 14px; left: 14px; max-width: calc(100vw - 150px); }
@@ -95,7 +155,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .life__hint { animation: none; }
+  .life__hint, .life__loader-art, .life__loader-name span { animation: none !important; }
+  .life__loader-name span.is-on { opacity: 1; transform: none; }
 }
 
 /* the minimap: the only thing in the bottom-right corner */
@@ -132,15 +193,13 @@
 @keyframes marker-bob { 50% { transform: rotate(45deg) translate(-3px, -3px); } }
 .ride__bar { position: fixed; top: 24px; left: 50%; z-index: 3; display: flex; align-items: center; gap: 14px; padding: 8px 8px 8px 18px; border-radius: 999px; font-size: 13px; transform: translateX(-50%); white-space: nowrap; }
 .ride__keys { color: var(--glass-soft); }
-kbd { display: inline-grid; place-items: center; min-width: 20px; height: 20px; margin: 0 1px; padding: 0 5px; border-radius: 5px; font: 600 11px/1 Geist, ui-sans-serif, sans-serif; color: var(--glass-ink); background: rgba(255, 255, 255, 0.7); box-shadow: 0 1px 0 rgba(0, 0, 0, 0.18); }
+kbd { display: inline-grid; place-items: center; min-width: 20px; height: 20px; margin: 0 1px; padding: 0 5px; border-radius: 5px; font: 600 11px/1 Geist, ui-sans-serif, sans-serif; color: #1d1b1a; background: rgba(255, 255, 255, 0.7); box-shadow: 0 1px 0 rgba(0, 0, 0, 0.18); }
 .ride__bar button { padding: 8px 14px; border-radius: 999px; font-weight: 600; color: #fff; background: #1d1b1a; }
 .ride__prompt { position: fixed; left: 50%; bottom: 110px; z-index: 3; display: flex; align-items: center; gap: 12px; padding: 12px 14px 12px 20px; border-radius: 18px; font-size: 14px; transform: translateX(-50%); animation: play-in 0.3s both; }
 .ride__prompt span { color: var(--glass-soft); font-weight: 600; }
 .ride__note { position: fixed; left: 50%; bottom: 180px; z-index: 3; max-width: min(420px, 90vw); padding: 12px 18px; border-radius: 16px; font-size: 14px; text-align: center; transform: translateX(-50%); animation: play-in 0.3s both; }
 
 /* lighter story chrome */
-.life__time { display: inline-block; margin-bottom: 8px; padding: 3px 10px; border-radius: 999px; font-size: 11.5px; font-weight: 600; background: rgba(255, 255, 255, 0.45); border: 1px solid var(--glass-line); color: var(--glass-soft); }
-.life.is-night .life__time { background: rgba(255, 255, 255, 0.08); }
 
 @media (max-width: 760px) {
   .hud__map { right: 12px; top: 70px; bottom: auto; padding: 4px; border-radius: 16px; }
@@ -195,27 +254,21 @@ kbd { display: inline-grid; place-items: center; min-width: 20px; height: 20px; 
 }
 
 /* the title screen: letterboxed, a slow orbit of the villa behind a game menu */
-.title { position: fixed; inset: 0; z-index: 6; display: flex; flex-direction: column; justify-content: flex-end; padding: 0 clamp(20px, 6vw, 96px) calc(11vh + 28px); color: #fff; background: linear-gradient(90deg, rgba(12, 9, 24, 0.62), rgba(12, 9, 24, 0.12) 55%, transparent); }
-.title__bar { position: absolute; left: 0; right: 0; height: 9vh; background: #08070c; animation: title-bar 1.1s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
-.title__bar.is-top { top: 0; transform-origin: top; }
-.title__bar.is-bottom { bottom: 0; transform-origin: bottom; }
-@keyframes title-bar { from { transform: scaleY(0); } }
-.title__block { max-width: 640px; animation: title-in 0.9s 0.25s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
-@keyframes title-in { from { opacity: 0; transform: translateY(18px); } }
-.title__kicker { display: flex; gap: 18px; font: 600 11px/1 ui-monospace, "SF Mono", monospace; letter-spacing: 0.16em; text-transform: uppercase; opacity: 0.75; }
-.title__kicker span + span::before { content: ""; display: inline-block; width: 4px; height: 4px; margin: 0 18px 2px 0; border-radius: 50%; background: #ff9a5c; }
-.title__name { margin-top: 14px; font-family: "Instrument Serif", Georgia, serif; font-weight: 400; font-size: clamp(54px, 8vw, 112px); line-height: 0.9; letter-spacing: -0.025em; text-shadow: 0 8px 50px rgba(0, 0, 0, 0.35); }
-.title__name em { display: block; margin-top: 10px; font-size: 0.32em; font-style: italic; letter-spacing: 0; opacity: 0.85; }
-.title__menu { display: flex; flex-direction: column; margin-top: 34px; border-top: 1px solid rgba(255, 255, 255, 0.22); }
-.title__menu button { position: relative; display: grid; grid-template-columns: 44px 1fr; align-items: baseline; width: 100%; padding: 16px 0 16px 0; text-align: left; color: #fff; border-bottom: 1px solid rgba(255, 255, 255, 0.22); opacity: 0.55; transition: opacity 0.25s, padding 0.35s cubic-bezier(0.2, 0.8, 0.2, 1); }
-.title__menu button::before { content: ""; position: absolute; left: -22px; top: 50%; width: 10px; height: 10px; border-radius: 2px; background: #ff9a5c; box-shadow: 0 0 18px rgba(255, 154, 92, 0.9); transform: translateY(-50%) rotate(45deg) scale(0); transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); }
-.title__menu button.is-sel { opacity: 1; padding-left: 14px; }
-.title__menu button.is-sel::before { transform: translateY(-50%) rotate(45deg) scale(1); }
-.title__num { font: 600 12px/1 ui-monospace, monospace; letter-spacing: 0.1em; color: #ff9a5c; }
-.title__label { font-family: "Instrument Serif", Georgia, serif; font-size: clamp(30px, 3.4vw, 44px); line-height: 1; }
-.title__sub { grid-column: 2; margin-top: 6px; font-size: 13.5px; opacity: 0.75; max-height: 0; overflow: hidden; transition: max-height 0.35s; }
-.title__menu button.is-sel .title__sub { max-height: 40px; }
-.title__help { position: absolute; left: clamp(20px, 6vw, 96px); right: clamp(20px, 6vw, 96px); bottom: calc(9vh - 32px); display: flex; justify-content: space-between; font-size: 11.5px; letter-spacing: 0.04em; color: rgba(255, 255, 255, 0.6); animation: title-in 0.9s 0.6s both; }
+/* the title screen: the name stands in the scene (titleword.ts); here only a quiet strip at the bottom */
+.title { position: fixed; inset: 0; z-index: 6; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding: 0 20px 92px; color: #fff; pointer-events: none; background: linear-gradient(0deg, rgba(10, 8, 20, 0.55), transparent 32%); }
+.title__block { display: flex; flex-direction: column; align-items: center; animation: title-in 0.9s 1.4s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+@keyframes title-in { from { opacity: 0; transform: translateY(14px); } }
+.title__name { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.title__kicker { display: flex; gap: 14px; font: 600 11px/1 ui-monospace, "SF Mono", monospace; letter-spacing: 0.22em; text-transform: uppercase; opacity: 0.8; text-shadow: 0 1px 8px rgba(0, 0, 0, 0.5); }
+.title__kicker span + span::before { content: ""; display: inline-block; width: 4px; height: 4px; margin: 0 14px 2px 0; border-radius: 50%; background: #ff9a5c; }
+.title__menu { display: flex; gap: 12px; margin-top: 18px; }
+.title__menu button { pointer-events: auto; display: flex; align-items: center; gap: 10px; padding: 13px 24px; border-radius: 999px; color: #fff; border: 1px solid rgba(255, 255, 255, 0.3); background: rgba(255, 255, 255, 0.12); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25); transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), background 0.25s, box-shadow 0.25s; }
+.title__menu li:first-child button { color: #1b1206; border-color: transparent; background: linear-gradient(180deg, #ffd6a0, #ff9a5c); box-shadow: 0 10px 40px rgba(255, 154, 92, 0.45); }
+.title__menu button.is-sel { transform: translateY(-3px) scale(1.03); }
+.title__menu button:not(.is-sel) { opacity: 0.88; }
+.title__num, .title__sub { display: none; }
+.title__label { font-size: 15.5px; font-weight: 600; letter-spacing: 0.01em; }
+.title__help { position: absolute; left: 0; right: 0; bottom: 28px; display: flex; justify-content: center; gap: 28px; font-size: 11.5px; letter-spacing: 0.04em; color: rgba(255, 255, 255, 0.65); text-shadow: 0 1px 6px rgba(0, 0, 0, 0.5); animation: title-in 0.9s 1.8s both; }
 .title__help kbd { display: inline-block; min-width: 18px; margin: 0 2px; padding: 0 5px; border-radius: 4px; font: 600 10.5px/1.6 ui-monospace, monospace; text-align: center; border: 1px solid rgba(255, 255, 255, 0.35); }
 
 /* phone → laptop: ask first */
@@ -242,8 +295,8 @@ kbd { display: inline-grid; place-items: center; min-width: 20px; height: 20px; 
 
 /* the laptop: Atharv OS on a MacBook Pro, the room blurred behind */
 .life__os { display: grid; place-items: center; background: radial-gradient(120% 90% at 50% 38%, #2a3140 0%, #161a23 55%, #0b0d12 100%); }
-/* out of the warp's white: the laptop arrives bright, soft and too close, then settles */
-.mbp { --w: min(92vw, calc((100vh - 64px) * 1.5)); position: relative; width: var(--w); transform: scale(1.22); filter: blur(14px) brightness(2.4); transition: transform 1.1s cubic-bezier(0.16, 1, 0.3, 1), filter 0.9s cubic-bezier(0.2, 0.8, 0.2, 1); }
+/* out of the screen: the laptop arrives soft and too close, then settles back into its frame */
+.mbp { --w: min(92vw, calc((100vh - 64px) * 1.5)); position: relative; width: var(--w); transform: scale(1.22); filter: blur(8px) brightness(1.35); transition: transform 1.6s cubic-bezier(0.16, 1, 0.3, 1), filter 1.2s cubic-bezier(0.2, 0.8, 0.2, 1); }
 .mbp.is-on { transform: none; filter: none; }
 @media (prefers-reduced-motion: reduce) { .mbp { transform: none; filter: none; transition: none; } }
 .mbp__lid { position: relative; padding: calc(var(--w) * 0.024) calc(var(--w) * 0.024) 0; border-radius: calc(var(--w) * 0.03) calc(var(--w) * 0.03) calc(var(--w) * 0.008) calc(var(--w) * 0.008); background: linear-gradient(180deg, #3b4352, #2a303b 55%, #222731); box-shadow: inset 0 0 0 1px rgba(160, 175, 205, 0.22), inset 0 -2px 0 rgba(0, 0, 0, 0.3), 0 40px 90px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(0, 0, 0, 0.5); }
@@ -292,3 +345,7 @@ kbd { display: inline-grid; place-items: center; min-width: 20px; height: 20px; 
 /* always reachable in the game: a quiet link, bottom left */
 .ride__book { position: fixed; left: 24px; bottom: 24px; z-index: 3; padding: 8px 14px; border-radius: 999px; font-size: 13px; font-weight: 600; }
 @media (max-width: 760px) { .ride__book { left: 16px; top: 16px; bottom: auto; } }
+
+/* sound on and off, next to the clock */
+.life__sound { position: fixed; top: 24px; right: 172px; z-index: 2; width: 46px; height: 46px; border-radius: 50%; font-size: 17px; display: grid; place-items: center; }
+@media (max-width: 760px) { .life__sound { top: 62px; right: auto; left: 14px; width: 38px; height: 38px; font-size: 15px; } }

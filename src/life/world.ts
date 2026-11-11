@@ -15,6 +15,7 @@ import { SEA_LEVEL, groundY, swell, type PlayState } from "./play";
 import { createSky } from "./sky";
 import { TRIAL_GATES, TRIAL_START } from "./trial";
 import { createScaler } from "./adapt";
+import { titleWord } from "./titleword";
 import { contactShadows, fireflies, headlight, lanterns as pathLanterns, wake } from "./fx";
 import { grass, patchCalm, patchCaustics, patchFoam, patchGround, patchSand, patchWater, patchWind, rice, windTime, camFadeA, camFadeB, skinRim } from "./nature";
 
@@ -34,8 +35,10 @@ export interface Frame {
   /** Pointer, -0.5..0.5 on each axis. */
   mx: number;
   my: number;
-  /** The dive into the laptop, 0..1: a rush into the screen that burns to white. */
+  /** The dive into the laptop, 0..1: a push right into the screen. */
   warp?: number;
+  /** The title screen is up: the name stands on the pool deck. */
+  title?: boolean;
 }
 
 const F = 3.5; // first floor
@@ -394,11 +397,11 @@ export async function createWorld(canvas: HTMLCanvasElement, onProgress: (k: num
   lid.add(rbox(0.52, 0.34, 0.012, 0.01, alu));
   // the screen, facing the chair: the Atharv OS desktop the camera dives into
   const lcdMat = new THREE.MeshBasicMaterial({ color: "#20242a", toneMapped: false });
-  new THREE.TextureLoader().load("/life/wallpaper-aventador.webp", (t) => {
+  new THREE.TextureLoader().load("/life/wallpaper-black-villa.webp", (t) => {
     t.colorSpace = THREE.SRGBColorSpace;
-    // the photo is 3:2: crop it to the screen like the desktop does
-    t.repeat.set(1, (0.31 / 0.49) * 1.5);
-    t.offset.set(0, (1 - t.repeat.y) * 0.45);
+    // the photo is 4:5: crop it to the screen's band, balcony to driveway, like the desktop does
+    t.repeat.set(1, ((0.31 / 0.49) * 1080) / 1350);
+    t.offset.set(0, 0.28);
     lcdMat.map = t;
     lcdMat.color.set("#ffffff");
     lcdMat.needsUpdate = true;
@@ -500,6 +503,12 @@ export async function createWorld(canvas: HTMLCanvasElement, onProgress: (k: num
     scene.add(l);
     return l;
   });
+
+  // the title: ATHARV GOLAIT in big letters on the deck between the pool and the house
+  // portrait screens get it in two rows, so it fits the width
+  const tall = canvas.clientWidth / canvas.clientHeight < 0.8;
+  const name = await titleWord(tall ? "ATHARV\nGOLAIT" : "ATHARV GOLAIT", new THREE.Vector3(1.3, 0, 5.15), tall ? 1.1 : 1.0);
+  world.add(name.group);
 
   // the work wall: client products framed on the villa's west wall, facing the side lawn
   const teak = new THREE.MeshStandardMaterial({ color: "#5a3d27", roughness: 0.55 });
@@ -865,15 +874,15 @@ export async function createWorld(canvas: HTMLCanvasElement, onProgress: (k: num
         vec2 d = vUv - 0.5;
         c.rgb *= 1.0 - dot(d, d) * (0.42 + uNight * 0.3);
         if (uWarp > 0.001) {
-          // pulled into the screen: everything smears towards it, the colours tear apart
+          // drawn into the screen: a soft smear towards it, the colours parting a little
           vec2 v = vUv - uCenter;
-          float s = uWarp * uWarp * 0.55;
+          float s = uWarp * uWarp * 0.18;
           vec3 acc = vec3(0.0);
           for (int i = 0; i < 16; i++) {
             float k = 1.0 - s * float(i) / 15.0;
-            acc.r += texture2D(tDiffuse, uCenter + v * k * (1.0 + 0.03 * uWarp)).r;
+            acc.r += texture2D(tDiffuse, uCenter + v * k * (1.0 + 0.012 * uWarp)).r;
             acc.g += texture2D(tDiffuse, uCenter + v * k).g;
-            acc.b += texture2D(tDiffuse, uCenter + v * k * (1.0 - 0.03 * uWarp)).b;
+            acc.b += texture2D(tDiffuse, uCenter + v * k * (1.0 - 0.012 * uWarp)).b;
           }
           c.rgb = mix(c.rgb, acc / 16.0, smoothstep(0.0, 0.25, uWarp));
           // light-speed streaks rushing in from the edges
@@ -887,10 +896,10 @@ export async function createWorld(canvas: HTMLCanvasElement, onProgress: (k: num
           float run = fract(r * (0.6 + h * 0.8) - uTime * (0.8 + h * 1.6) * (0.4 + uWarp * 1.6) + h * 7.0);
           float dash = smoothstep(0.0, 0.08, run) * (1.0 - smoothstep(0.35, 0.55, run));
           float streak = dash * (1.0 - smoothstep(0.12, 0.45, across)) * step(1.0 - uWarp * 1.3, h) * smoothstep(0.08, 0.5, r);
-          c.rgb += mix(vec3(0.75, 0.85, 1.0), vec3(1.0, 0.8, 0.55), h) * streak * uWarp * 1.8;
-          // the core of the tunnel glows, then everything burns to white
-          c.rgb += vec3(1.0, 0.95, 0.85) * exp(-r * 6.0) * uWarp * uWarp * 1.5;
-          c.rgb = mix(c.rgb, vec3(1.0, 0.98, 0.95), smoothstep(0.72, 1.0, uWarp));
+          c.rgb += mix(vec3(0.75, 0.85, 1.0), vec3(1.0, 0.8, 0.55), h) * streak * smoothstep(0.5, 1.0, uWarp) * 0.1;
+          // the screen's glow spreads as you reach it
+          c.rgb += vec3(1.0, 0.95, 0.85) * exp(-r * 5.0) * uWarp * uWarp * 0.35;
+          c.rgb = mix(c.rgb, vec3(1.0, 0.98, 0.95), smoothstep(0.85, 1.0, uWarp) * 0.25);
         }
         gl_FragColor = c;
       }`,
@@ -1434,8 +1443,11 @@ export async function createWorld(canvas: HTMLCanvasElement, onProgress: (k: num
 
   const ORIGIN = new THREE.Vector3();
   const look = new THREE.Vector3();
+  let lastT = 0;
   function render(f: Frame) {
     const t = T.getElapsedTime();
+    name.update(Math.min(0.05, t - lastT), !!f.title);
+    lastT = t;
     adapt();
     windTime.value = t;
     sky.time.value = t;
@@ -1460,16 +1472,19 @@ export async function createWorld(canvas: HTMLCanvasElement, onProgress: (k: num
     camera.position.y -= f.my * 0.35;
     look.copy(f.look);
     camera.lookAt(look);
-    // in the game, thin out the leaves between the camera and the player
+    // in the game, thin out the leaves between the camera and the player; on the title, between it and the villa
     if (f.zone === "ride" && play && !play.action) {
       camFadeA.value.copy(camera.position);
       camFadeB.value.set(look.x, look.y, look.z, 1.6);
+    } else if (f.title) {
+      camFadeA.value.copy(camera.position);
+      camFadeB.value.set(look.x, look.y, look.z, 3);
     } else camFadeB.value.w = 0;
-    // the warp: the camera lunges at the screen and the lens flares wide
+    // the warp: the camera eases right up to the screen and the lens opens a little
     const warp = f.warp ?? 0;
     if (warp > 0 || lastWarp > 0) {
-      camera.position.lerp(look, warp * 0.6);
-      camera.fov = baseFov + warp * warp * 40;
+      camera.position.lerp(look, warp * 0.75);
+      camera.fov = baseFov + warp * warp * 8;
       camera.updateProjectionMatrix();
       lastWarp = warp;
     }
@@ -1520,6 +1535,10 @@ export async function createWorld(canvas: HTMLCanvasElement, onProgress: (k: num
       c.height = canvas.height;
       c.getContext("2d")!.drawImage(canvas, 0, 0);
       return c;
+    },
+    /** The title letters: the pointer, in normalised device coords; a click hops harder. */
+    titlePointer(nx: number, ny: number, click: boolean) {
+      name.pointer(camera, nx, ny, click);
     },
     /** The beach run: the gate to make next, or null when no run is on. */
     setTrial(next: number | null) {
