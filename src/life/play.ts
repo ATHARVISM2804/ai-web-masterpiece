@@ -64,6 +64,10 @@ export interface Station {
   work?: boolean;
   /** Open Atharv's booking page. */
   book?: boolean;
+  /** Start the HYROX challenge. */
+  hyrox?: boolean;
+  /** Start the Canggu tour. */
+  tour?: boolean;
 }
 
 export const STATIONS: Station[] = [
@@ -77,12 +81,14 @@ export const STATIONS: Station[] = [
     ],
   },
   { id: "gym", label: "Gym bale", verb: "Do a HIIT set", x: 11.6, z: 0.4, reach: 2.2, on: ["walk"], act: "hiit", seconds: 7, note: "20 jumping jacks done. Heart rate 168." },
+  { id: "hyrox", label: "HYROX sim", verb: "Race a HYROX", x: 13.4, z: -2.4, reach: 1.6, on: ["walk"], hyrox: true },
   { id: "ice", label: "Ice bath", verb: "Take the plunge", x: 12.0, z: -6.7, reach: 2.2, on: ["walk"], act: "recovery", seconds: 7, note: "Three minutes at 4°C. Cold, clear, ready." },
   { id: "kitchen", label: "Kitchen", verb: "Cook breakfast", x: -3.0, z: -1.7, reach: 1.8, on: ["walk"], act: "cook", seconds: 6, note: "Eggs, avocado, rice. 52 g protein." },
   { id: "sofa", label: "Sofa", verb: "Post on X", x: 2.6, z: -0.9, reach: 1.6, on: ["walk"], act: "post", seconds: 6, note: "Posted. 1.2K likes and three DMs from founders." },
   { id: "studio", label: "Up to the studio", verb: "Open my laptop", x: 5.9, z: -2.3, reach: 1.6, on: ["walk"], laptop: true },
   { id: "book", label: "Villa gate", verb: "Book a call with Atharv", x: 5.3, z: 12.9, reach: 1.6, on: ["walk"], book: true },
   { id: "work", label: "Work wall", verb: "Look at the work", x: -7.6, z: -1.6, reach: 2.4, on: ["walk"], work: true },
+  { id: "tour", label: "Canggu tour", verb: "Ride the tour", x: 1.2, z: 15.6, reach: 1.8, on: ["walk"], tour: true },
   { id: "kopi", label: "Kopi", verb: "Order a coffee", x: 4.5, z: 17.4, reach: 2.4, on: ["walk", "scooter"], note: "Iced oat latte, the usual. Back to work." },
   { id: "warung", label: "Warung", verb: "Grab lunch", x: -6.5, z: 17.4, reach: 2.4, on: ["walk", "scooter"], note: "Nasi campur and a fresh coconut, 40k rupiah." },
 ];

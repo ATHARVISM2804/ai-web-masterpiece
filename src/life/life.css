@@ -216,6 +216,7 @@ kbd { display: inline-grid; place-items: center; min-width: 20px; height: 20px; 
 }
 
 .ride__icon { width: 34px; height: 34px; padding: 0 !important; border-radius: 50%; background: rgba(255, 255, 255, 0.22) !important; color: inherit !important; }
+.ride__sky { padding: 7px 12px !important; border-radius: 999px; font-size: 12.5px; font-weight: 600; white-space: nowrap; background: rgba(255, 255, 255, 0.22) !important; color: inherit !important; }
 .ride__marker.is-ride::after { background: linear-gradient(135deg, #e7f0ff, #7aa7ff); box-shadow: 0 0 14px rgba(120, 160, 255, 0.8); }
 .ride__keys kbd { display: inline-block; min-width: 20px; margin: 0 1px; padding: 1px 5px; border-radius: 5px; font: 600 11px/1.5 ui-monospace, monospace; text-align: center; background: rgba(255, 255, 255, 0.18); border: 1px solid rgba(255, 255, 255, 0.3); }
 
@@ -226,9 +227,53 @@ kbd { display: inline-grid; place-items: center; min-width: 20px; height: 20px; 
 .talk > button, .talk__end button { margin-top: 12px; padding: 8px 14px; border-radius: 999px; font-weight: 600; color: #fff; background: #1d1b1a; }
 .talk__end { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 .talk__end .life__cta { margin-top: 12px; }
+/* the Canggu tour: the next stop's marker, and a card at each stop */
+.ride__marker.is-tour { position: fixed; top: 0; left: 0; z-index: 2; pointer-events: none; transition: opacity 0.3s; }
+.ride__marker.is-tour b { background: #ff7a45; color: #1d1b1a; }
+.tourcard { position: fixed; left: 50%; top: 84px; z-index: 4; width: min(440px, calc(100vw - 32px)); padding: 16px 20px; border-radius: 20px; transform: translateX(-50%); animation: play-in 0.3s both; }
+.tourcard h3 { margin-top: 4px; font-family: "Instrument Serif", Georgia, serif; font-weight: 400; font-size: 28px; line-height: 1.05; }
+.tourcard p { margin-top: 6px; font-size: 14.5px; line-height: 1.5; }
+.tourcard .tourcard__next { font-size: 12.5px; font-weight: 600; opacity: 0.75; }
+.tourcard__end { position: fixed; right: 24px; bottom: 24px; z-index: 3; padding: 9px 14px; border-radius: 999px; font-size: 13px; font-weight: 600; }
+@media (max-width: 760px) {
+  .tourcard__end { top: 140px; right: 16px; bottom: auto; }
+}
+
+/* the HYROX challenge, over the gym shot */
+.hyrox { position: fixed; left: 50%; bottom: 36px; z-index: 4; width: min(480px, calc(100vw - 32px)); padding: 18px 20px 16px; border-radius: 22px; transform: translateX(-50%); animation: play-in 0.3s both; }
+.hyrox__top { display: flex; align-items: baseline; justify-content: space-between; }
+.hyrox__clock { font: 400 26px/1 Anton, Impact, sans-serif; font-variant-numeric: tabular-nums; }
+.hyrox__name { margin-top: 6px; font: 400 34px/1.05 Anton, Impact, sans-serif; letter-spacing: 0.01em; }
+.hyrox__name small { margin-left: 6px; font: 600 13px/1 Geist, ui-sans-serif, system-ui, sans-serif; letter-spacing: 0.02em; opacity: 0.7; }
+.hyrox__bar, .hyrox__track { position: relative; height: 14px; margin-top: 14px; border-radius: 999px; overflow: hidden; background: rgba(0, 0, 0, 0.18); }
+.hyrox__bar span { position: absolute; inset: 0 auto 0 0; border-radius: inherit; background: #ff7a45; transition: width 0.08s; }
+.hyrox__zone { position: absolute; top: 0; bottom: 0; background: rgba(120, 220, 140, 0.75); }
+.hyrox__needle { position: absolute; top: -2px; bottom: -2px; width: 4px; margin-left: -2px; border-radius: 2px; background: #fff; box-shadow: 0 0 6px rgba(0, 0, 0, 0.4); }
+.hyrox__how { margin-top: 10px; font-size: 13.5px; }
+.hyrox__how kbd { display: inline-block; min-width: 22px; padding: 1px 6px; border-radius: 5px; font: 600 11px/1.6 ui-monospace, monospace; text-align: center; color: #1d1b1a; background: rgba(255, 255, 255, 0.85); }
+.hyrox__miss { margin-left: 4px; font-style: normal; font-weight: 800; color: #ff5a3c; animation: play-in 0.3s both; }
+.hyrox__pads { display: none; gap: 10px; margin-top: 12px; }
+.hyrox__pads button { flex: 1; padding: 18px 0; border-radius: 16px; font-size: 16px; font-weight: 700; color: #fff; background: #1d1b1a; touch-action: manipulation; user-select: none; -webkit-user-select: none; }
+.hyrox__pads button:active { transform: scale(0.96); background: #ff7a45; }
+.hyrox__quit { display: block; margin-top: 10px; font-size: 12px; font-weight: 600; opacity: 0.7; }
+.hyrox__quit kbd { font: 600 10px/1 ui-monospace, monospace; }
+@media (max-width: 760px) {
+  .hyrox { bottom: 96px; }
+}
+@media (pointer: coarse) {
+  .hyrox__pads { display: flex; }
+  .hyrox__how kbd, .hyrox__quit kbd { display: none; }
+}
+
+/* the founder pass, the medals prize and the postcard: a card that sits up top, out of the way of the stick */
+.pass { position: fixed; left: 50%; top: 84px; z-index: 4; width: min(480px, calc(100vw - 32px)); padding: 18px 20px; border-radius: 20px; transform: translateX(-50%); animation: play-in 0.3s both; }
+.pass p { margin-top: 6px; font-size: 14px; line-height: 1.5; }
+.pass__big { margin-top: 4px; font: 400 44px/1.05 Anton, Impact, sans-serif; letter-spacing: 0.01em; }
+.pass .talk__end > a:not(.life__cta) { margin-top: 12px; font-size: 14px; font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+.pass .talk__end button { margin-top: 12px; padding: 8px 14px; border-radius: 999px; font-size: 14px; font-weight: 600; color: #fff; background: #1d1b1a; }
 @media (max-width: 760px) {
   .talk { bottom: 150px; }
-  .ride__icon:not(.ride__cam) { display: none; }
+  .ride__icon:not(.ride__cam), .ride__sky { display: none; }
 }
 @media (max-width: 760px) {
 }
@@ -247,6 +292,9 @@ kbd { display: inline-grid; place-items: center; min-width: 20px; height: 20px; 
 .phone__day { display: flex; flex-wrap: wrap; gap: 4px; }
 .phone__day span { padding: 3px 8px; border-radius: 999px; font-size: 10.5px; background: #232327; opacity: 0.6; }
 .phone__day span.is-done { background: #ff7a45; color: #1d1b1a; opacity: 1; font-weight: 700; }
+.phone__medals { display: flex; gap: 4px; font-size: 18px; }
+.phone__medals span { filter: grayscale(1); opacity: 0.3; }
+.phone__medals span.is-done { filter: none; opacity: 1; }
 .phone__cta { margin-top: auto; padding: 10px; border-radius: 14px; font-size: 13px; font-weight: 700; text-align: center; color: #1d1b1a; background: linear-gradient(135deg, #ffd27a, #ff9a5c); }
 @media (max-width: 760px) {
   .phone-btn { right: 12px; top: 182px; }
@@ -333,7 +381,7 @@ kbd { display: inline-grid; place-items: center; min-width: 20px; height: 20px; 
 .trial[hidden] { display: none; }
 
 /* photo mode: the HUD steps away, a shutter takes its place */
-.life.is-photo .life__ui, .life.is-photo .ride > :not(.photo, .photo__flash) { display: none; }
+.life.is-photo .life__ui, .life.is-photo .ride > :not(.photo, .photo__flash, .pass) { display: none; }
 .photo__hint { position: fixed; left: 50%; top: 24px; z-index: 4; padding: 8px 16px; border-radius: 999px; transform: translateX(-50%); font-size: 13px; white-space: nowrap; }
 .photo__shutter { position: fixed; left: 50%; bottom: 36px; z-index: 4; width: 68px; height: 68px; border-radius: 50%; transform: translateX(-50%); background: #fff; border: 5px solid rgba(255, 255, 255, 0.45); background-clip: padding-box; box-shadow: 0 6px 24px rgba(0, 0, 0, 0.3); transition: transform 0.15s; }
 .photo__shutter:active { transform: translateX(-50%) scale(0.92); }
@@ -349,3 +397,17 @@ kbd { display: inline-grid; place-items: center; min-width: 20px; height: 20px; 
 /* sound on and off, next to the clock */
 .life__sound { position: fixed; top: 24px; right: 172px; z-index: 2; width: 46px; height: 46px; border-radius: 50%; font-size: 17px; display: grid; place-items: center; }
 @media (max-width: 760px) { .life__sound { top: 62px; right: auto; left: 14px; width: 38px; height: 38px; font-size: 15px; } }
+
+/* the villa in AR: model-viewer in a glass card over everything */
+.arv { position: fixed; inset: 0; z-index: 20; display: flex; align-items: center; justify-content: center; padding: 16px; background: rgba(12, 10, 20, 0.62); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); animation: play-in 0.3s both; }
+.arv__card { width: min(560px, 100%); padding: 18px 18px 16px; border-radius: 24px; }
+.arv__head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.arv__head h3 { margin-top: 2px; font-family: "Instrument Serif", Georgia, serif; font-weight: 400; font-size: 30px; line-height: 1.05; }
+.arv__close { width: 34px; height: 34px; border-radius: 50%; font-size: 14px; font-weight: 700; color: #fff; background: #1d1b1a; }
+.arv__stage { position: relative; height: min(52vh, 420px); margin-top: 12px; border-radius: 18px; overflow: hidden; background: radial-gradient(120% 90% at 50% 20%, #fff6e8, #e8dccb); }
+.arv__stage model-viewer { --poster-color: transparent; }
+.arv__msg { position: absolute; inset: 0; display: grid; place-items: center; padding: 20px; font-size: 14px; color: #3b342e; text-align: center; }
+.arv__go { margin-top: 14px; }
+.arv__hint { margin-top: 12px; font-size: 13.5px; line-height: 1.5; }
+.title__ar { pointer-events: auto; margin-left: 4px; padding: 5px 11px; border-radius: 999px; font-size: 12px; font-weight: 600; color: #fff; border: 1px solid rgba(255, 255, 255, 0.35); background: rgba(255, 255, 255, 0.12); }
+.phone__ar { display: block; width: 100%; margin-top: 10px; padding: 10px 12px; border-radius: 14px; font-size: 13px; font-weight: 600; color: #fff; text-align: left; background: #232327; }

@@ -8,7 +8,7 @@ import * as THREE from "three";
 
 const frag = /* glsl */ `
   uniform vec3 uTop, uBottom, uSun, uSunDir;
-  uniform float uNight, uTime, uDisc;
+  uniform float uNight, uTime, uDisc, uCloud;
   varying vec3 vDir;
   float hash(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
   float noise(vec2 p) {
@@ -25,16 +25,19 @@ const frag = /* glsl */ `
     vec3 d = normalize(vDir);
     float h = clamp(d.y, -0.05, 1.0);
     vec3 col = mix(uBottom, uTop, pow(smoothstep(0.0, 0.62, h), 0.7));
+    // an overcast sky goes grey, and the sun hides behind it
+    col = mix(col, vec3(dot(col, vec3(0.3, 0.55, 0.15))) * 0.82, uCloud * 0.7);
     float s = max(dot(d, uSunDir), 0.0);
-    col += uSun * (pow(s, 6.0) * 0.28 + pow(s, 64.0) * 0.5) * (1.0 - uNight);
-    col += uSun * smoothstep(0.9994, 0.9998, s) * uDisc * (1.0 - uNight);
+    col += uSun * (pow(s, 6.0) * 0.28 + pow(s, 64.0) * 0.5) * (1.0 - uNight) * (1.0 - uCloud * 0.8);
+    col += uSun * smoothstep(0.9994, 0.9998, s) * uDisc * (1.0 - uNight) * (1.0 - uCloud);
     if (d.y > 0.0) {
       vec2 p = d.xz / (d.y + 0.16) * 1.15 + uTime * vec2(0.006, 0.002);
-      float c = smoothstep(0.5, 0.78, fbm(p));
+      float c = smoothstep(0.5 - uCloud * 0.42, 0.78 - uCloud * 0.3, fbm(p));
       float shade = smoothstep(0.5, 0.95, fbm(p + uSunDir.xz * 0.12));
       vec3 lit = mix(vec3(1.0), uSun, 0.45) * mix(1.15, 0.68, shade);
       lit = mix(lit, uBottom * 1.25, 0.22);
       lit = mix(lit, uTop * 1.5 + 0.015, uNight);
+      lit = mix(lit, vec3(0.6, 0.62, 0.66) * (1.0 - uNight * 0.85), uCloud * 0.75);
       col = mix(col, lit, c * smoothstep(0.0, 0.14, d.y) * 0.92);
     }
     gl_FragColor = vec4(col, 1.0);
@@ -50,6 +53,7 @@ export function createSky(renderer: THREE.WebGLRenderer, scene: THREE.Scene) {
     uNight: { value: 0 },
     uTime: { value: 0 },
     uDisc: { value: 1 },
+    uCloud: { value: 0 },
   };
   const material = new THREE.ShaderMaterial({
     uniforms,
@@ -86,6 +90,8 @@ export function createSky(renderer: THREE.WebGLRenderer, scene: THREE.Scene) {
 
   return {
     time: uniforms.uTime,
+    /** 0 is a clear sky, 1 is overcast. */
+    cloud: uniforms.uCloud,
     update(s: { top: THREE.Color; bottom: THREE.Color; sun: THREE.Color; night: number }, dir: THREE.Vector3, hour: number) {
       uniforms.uTop.value.copy(s.top);
       uniforms.uBottom.value.copy(s.bottom);

@@ -9,9 +9,15 @@ import { createAudio, type Audio } from "@/life/audio";
 import type { SceneId } from "@/life/scenes";
 import { postcard } from "@/life/photo";
 import LoaderArt from "@/life/LoaderArt";
+import ArVilla from "@/life/ArVilla";
 import { createTone } from "@/life/tone";
 import type { World } from "@/life/world";
 import { TRIAL_GATES, TRIAL_START, clockText, createTrial, type Trial } from "@/life/trial";
+import { MEDALS, createMedals, type Medals } from "@/life/medals";
+import { SITE, bookWith, spawnFrom, xPost, type Spawn } from "@/life/links";
+import { WEATHER_ICON, baliHour, fetchBali, skyHour, type Weather } from "@/life/bali";
+import { HYROX, ZONE, createRace, needleAt, type Race } from "@/life/hyrox";
+import { STOPS, createTour, type Tour } from "@/life/tour";
 import "@/life/life.css";
 
 /**
@@ -38,6 +44,7 @@ const TOP: Record<PlayState["mode"], number> = { walk: 5.2, scooter: 11, jetski:
 const angleTo = (from: number, to: number) => Math.atan2(Math.sin(to - from), Math.cos(to - from));
 const LOADER_NAME = "ATHARV GOLAIT";
 const MODE_LABEL: Record<PlayState["mode"], string> = { walk: "On foot", scooter: "Scooter", jetski: "Jet ski" };
+const SHARE_PHOTO = "A postcard from Atharv Golait's villa in Bali. You can walk around it 🌴";
 
 const smooth = (a: number, b: number, x: number) => {
   const k = Math.min(1, Math.max(0, (x - a) / (b - a)));
@@ -104,9 +111,24 @@ export default function Life() {
   const [photo, setPhoto] = useState(false);
   const [flash, setFlash] = useState(0);
   const [sound, setSound] = useState(false);
-  const [playNight, setPlayNight] = useState(false);
+  // Live it's sky: Bali as it is right now, or a fixed golden hour or night
+  const [skyMode, setSkyMode] = useState<"bali" | "day" | "night">("bali");
+  const [playHour, setPlayHour] = useState(DAY);
+  const [weather, setWeather] = useState<Weather | null>(null);
   const [phone, setPhone] = useState(false);
   const [done, setDone] = useState<string[]>([]);
+  const [medalCount, setMedalCount] = useState(0);
+  // the founder pass after a beach run, the prize for all six medals, or a postcard to share
+  const [reward, setReward] = useState<{ kind: "run" | "hyrox"; time: number; best: boolean } | { kind: "medals" | "photo" | "tour" } | null>(null);
+  // the Canggu tour: on or off, and the stop whose card is up
+  const [touring, setTouring] = useState(false);
+  const [tourCard, setTourCard] = useState<number | null>(null);
+  // the villa in AR (ArVilla), over everything
+  const [ar, setAr] = useState(false);
+  const tourMarkRef = useRef<HTMLDivElement>(null);
+  // the HYROX challenge: which station and how many reps, while a race is on
+  const [race, setRace] = useState<{ station: number; reps: number; miss: number } | null>(null);
+  const raceRef = useRef<HTMLDivElement>(null);
   const did = (id: string) => setDone((d) => (d.includes(id) ? d : [...d, id]));
 
   // shared between the render loop and the handlers
@@ -119,6 +141,8 @@ export default function Life() {
     talking: false,
     laptop: false,
     hour: DAY,
+    skyMode: "bali" as "bali" | "day" | "night",
+    weather: null as Weather | null,
     audio: null as Audio | null,
     /** The game camera: yaw and pitch round the player, and how far back. */
     camYaw: Math.PI,
@@ -144,6 +168,15 @@ export default function Life() {
     /** The beach run, made on first use; `armed` once you're clear of the start arch. */
     trial: null as Trial | null,
     armed: true,
+    /** The six hidden medals, made once storage can be read. */
+    medals: null as Medals | null,
+    /** The HYROX race, made on first use; `racing` while one is on. */
+    race: null as Race | null,
+    racing: false,
+    raceEndedAt: -1e9,
+    tour: null as Tour | null,
+    /** The AR viewer is open: the page's own keys, wheel and swipes stand down. */
+    ar: false,
   });
 
   useEffect(() => {
@@ -165,7 +198,7 @@ export default function Life() {
     // in the game, dragging the scene looks around: left and right, up and down
     let drag: { id: number; x: number; y: number } | null = null;
     const onDown = (e: PointerEvent) => {
-      if (c.title && !(e.target as HTMLElement).closest?.("button, a")) worldRef.current?.titlePointer((e.clientX / innerWidth) * 2 - 1, 1 - (e.clientY / innerHeight) * 2, true);
+      if (c.title && !(e.target as HTMLElement).closest?.("button, a, .arv")) worldRef.current?.titlePointer((e.clientX / innerWidth) * 2 - 1, 1 - (e.clientY / innerHeight) * 2, true);
       if (ctl.current.play && e.target === canvasRef.current) drag = { id: e.pointerId, x: e.clientX, y: e.clientY };
     };
     const onDrag = (e: PointerEvent) => {
@@ -207,6 +240,7 @@ export default function Life() {
     let wheelAcc = 0;
     let wheelT = 0;
     const onWheel = (e: WheelEvent) => {
+      if (c.ar) return;
       if (ctl.current.play) {
         // the wheel zooms the game camera
         if ((e.target as HTMLElement).closest?.(".life__os, .phone")) return;
@@ -230,11 +264,11 @@ export default function Life() {
     let touchY = 0;
     const onTouchStart = (e: TouchEvent) => (touchY = e.touches[0].clientY);
     const onTouchMove = (e: TouchEvent) => {
-      if (ctl.current.play || (e.target as HTMLElement).closest?.(".life__os, button, a")) return;
+      if (ctl.current.play || c.ar || (e.target as HTMLElement).closest?.(".life__os, button, a, .arv")) return;
       e.preventDefault();
     };
     const onTouchEnd = (e: TouchEvent) => {
-      if (ctl.current.play || c.title || (e.target as HTMLElement).closest?.(".life__os")) return;
+      if (ctl.current.play || c.title || c.ar || (e.target as HTMLElement).closest?.(".life__os")) return;
       const dy = touchY - e.changedTouches[0].clientY;
       if (Math.abs(dy) > 40 && !tween.on) goTo(current() + Math.sign(dy));
     };
@@ -248,8 +282,19 @@ export default function Life() {
         c.keyAxis.y = (k("w", "arrowup") ? 1 : 0) - (k("s", "arrowdown") ? 1 : 0);
         c.keyAxis.x = (k("d", "arrowright") ? 1 : 0) - (k("a", "arrowleft") ? 1 : 0);
         c.run = keys.has("shift");
+        if (c.ar) return; // the keys are still followed, so none stays held after AR closes
         if (ctl.current.laptop) {
           if (down && e.key === "Escape") closeLaptop.current();
+          return;
+        }
+        if (ctl.current.racing) {
+          if (!down || e.repeat) return;
+          const k = e.key.toLowerCase();
+          if (["arrowleft", "a"].includes(k)) racePress.current("L");
+          else if (["arrowright", "d"].includes(k)) racePress.current("R");
+          else if (k === " " || k === "enter") racePress.current("hit");
+          else if (k === "escape") endRace.current();
+          if (k !== "escape") e.preventDefault();
           return;
         }
         if (ctl.current.photo) {
@@ -275,7 +320,7 @@ export default function Life() {
         }
         return;
       }
-      if (!down || (e.target as HTMLElement).closest?.(".life__os, input, textarea")) return;
+      if (c.ar || !down || (e.target as HTMLElement).closest?.(".life__os, input, textarea")) return;
       if (c.title) {
         titleKey.current(e);
         return;
@@ -301,6 +346,9 @@ export default function Life() {
       const world = await createWorld(canvasRef.current, (k) => setLoaded(Math.round(k * 100)));
       if (disposed) return world.dispose();
       worldRef.current = world;
+      c.medals ??= createMedals(storage());
+      world.setMedals(c.medals.found());
+      setMedalCount(c.medals.count());
       if (import.meta.env.DEV) (window as unknown as { __world: typeof world }).__world = world;
       const onResize = () => world.resize();
       addEventListener("resize", onResize);
@@ -320,12 +368,18 @@ export default function Life() {
       let laptopOn = false;
       let last = performance.now();
       let mapT = 0;
+      let hourT = 0;
       const tone = createTone(canvasRef.current);
 
       const frame = () => {
         const now = performance.now();
         const dt = (now - last) / 1000;
         last = now;
+        // under the AR viewer the world rests: model-viewer has its own GPU work to do
+        if (c.ar) {
+          raf = requestAnimationFrame(frame);
+          return;
+        }
 
         /* ---------- live it ---------- */
         const r = ctl.current.play;
@@ -359,10 +413,53 @@ export default function Life() {
             } else if (fromStart > 8) c.armed = true;
             if (tr.state === "running" && tr.tick(now / 1000, r.x, r.z, document.hidden) === "done") {
               const best = tr.best();
-              toast.current(`Beach run ${clockText(tr.time())}${best !== null && best >= tr.time() ? ", a new best." : ` · best ${clockText(best ?? 0)}`}`);
+              setReward({ kind: "run", time: tr.time(), best: best !== null && best >= tr.time() });
             }
           } else if (tr.state === "running") tr.cancel();
           world.setTrial(tr.state === "running" ? tr.next() : null);
+          // the Canggu tour: ride to the next stop and its card comes up
+          const tour = c.tour;
+          if (tour?.state === "running") {
+            const at = tour.arrive(r.x, r.z);
+            if (at !== null) {
+              c.audio?.splash();
+              if (tour.next() === null) {
+                setTouring(false);
+                setTourCard(null);
+                setReward({ kind: "tour" });
+              } else setTourCard(at);
+            }
+          }
+          const tm = tourMarkRef.current;
+          if (tm) {
+            const n = tour?.next();
+            const stop = n != null ? STOPS[n] : null;
+            const sp = stop ? world.project(stop.x, (stop.x > 140 ? -1.2 : 0) + 3, stop.z) : null;
+            tm.style.opacity = sp ? "1" : "0";
+            if (sp && stop) {
+              tm.style.transform = `translate(${sp.x}px, ${sp.y}px) translate(-50%, -100%)`;
+              (tm.lastChild as HTMLElement).textContent = `${Math.round(Math.hypot(stop.x - r.x, stop.z - r.z))} m`;
+            }
+          }
+          // the HYROX race: the clock and the needle move every frame, outside React
+          if (c.racing && c.race && raceRef.current) {
+            const t = now / 1000;
+            const clk = raceRef.current.querySelector<HTMLElement>(".hyrox__clock");
+            if (clk) clk.textContent = clockText(c.race.time(t));
+            const nd = raceRef.current.querySelector<HTMLElement>(".hyrox__needle");
+            if (nd) nd.style.left = `${needleAt(c.race.since(t)) * 100}%`;
+            r.actionT = 99; // Atharv keeps training while the race is on
+          }
+          // the hidden medals: pass close to one, on foot or riding, and it's yours
+          const md = (c.medals ??= createMedals(storage()));
+          const got = md.near(r.x, r.z);
+          if (got) {
+            world.setMedals(md.found());
+            setMedalCount(md.count());
+            c.audio?.splash();
+            if (md.complete()) setReward({ kind: "medals" });
+            else toast.current(`🥇 ${MEDALS.find((m) => m.id === got)!.where}. ${md.count()} of ${MEDALS.length} found.`);
+          }
           if (trialRef.current) {
             const best = tr.best();
             trialRef.current.hidden = tr.state !== "running";
@@ -444,6 +541,11 @@ export default function Life() {
           if (osRef.current) {
             osRef.current.style.opacity = String(REDUCED ? warpK : smooth(0.8, 1, warpK));
             osRef.current.style.pointerEvents = warpK > 0.9 ? "auto" : "none";
+          }
+          if (c.skyMode === "bali" && now - hourT > 20000) {
+            hourT = now;
+            c.hour = skyHour(baliHour(new Date()));
+            setPlayHour(c.hour);
           }
           if (now - mapT > 66) {
             mapT = now;
@@ -591,23 +693,42 @@ export default function Life() {
       setSound(false);
     }
   }, []);
-  const startPlay = useCallback(() => {
+  const applySky = useRef((m: "bali" | "day" | "night") => {
+    const c = ctl.current;
+    c.skyMode = m;
+    c.hour = m === "bali" ? skyHour(baliHour(new Date())) : m === "day" ? DAY : NIGHT;
+    const w = m === "bali" ? c.weather : null;
+    worldRef.current?.setWeather(w?.cloud ?? 0, w?.rain ?? 0);
+    setSkyMode(m);
+    setPlayHour(c.hour);
+  });
+  const startPlay = useCallback((at?: Spawn, silent = false) => {
     const c = ctl.current;
     c.play = startState();
+    if (at) Object.assign(c.play, at);
+    applySky.current("bali");
+    if (!c.weather)
+      void fetchBali().then((w) => {
+        if (!w) return;
+        c.weather = w;
+        setWeather(w);
+        if (c.skyMode === "bali" && c.play) worldRef.current?.setWeather(w.cloud, w.rain);
+      });
     Object.assign(c, { camYaw: c.play.yaw, camPitch: 0.32, zoom: 4.6, run: false });
     c.keyAxis = { x: 0, y: 0 };
     c.stick = { x: 0, y: 0 };
     c.busy = c.talking = c.laptop = false;
     setChosen(true);
     setPlaying(true);
-    // sound needs a click to start, and this is one
-    try {
-      c.audio ??= createAudio();
-      void c.audio.start();
-      setSound(true);
-    } catch {
-      setSound(false);
-    }
+    // sound needs a click to start, and this is one (a ?at= link isn't: it starts silent, 🔇 turns it on)
+    if (!silent)
+      try {
+        c.audio ??= createAudio();
+        void c.audio.start();
+        setSound(true);
+      } catch {
+        setSound(false);
+      }
     toast.current(matchMedia("(pointer: coarse)").matches ? "Left thumb moves, right thumb looks. Tap a prompt to use it." : "WASD to move, drag to look, scroll to zoom. E uses what's near you.");
   }, []);
   const stopPlay = useRef(() => {
@@ -623,6 +744,14 @@ export default function Life() {
     setWorkAt(null);
     setPhoto(false);
     setPhone(false);
+    setReward(null);
+    c.race?.cancel();
+    c.racing = false;
+    setRace(null);
+    c.tour?.cancel();
+    setTouring(false);
+    setTourCard(null);
+    worldRef.current?.setWeather(0, 0); // the story keeps its own clear day
   });
   const endTalk = useRef(() => {
     did("pool");
@@ -632,6 +761,44 @@ export default function Life() {
   const closeLaptop = useRef(() => {
     ctl.current.busy = ctl.current.laptop = false;
     setLaptop(false);
+  });
+  useEffect(() => {
+    if (tourCard === null) return;
+    const t = setTimeout(() => setTourCard(null), 9000);
+    return () => clearTimeout(t);
+  }, [tourCard]);
+  const endTour = () => {
+    ctl.current.tour?.cancel();
+    setTouring(false);
+    setTourCard(null);
+  };
+  const endRace = useRef(() => {
+    const c = ctl.current;
+    c.race?.cancel();
+    c.busy = c.racing = false;
+    if (c.play) {
+      c.play.action = null;
+      c.play.actionT = 0;
+    }
+    setRace(null);
+  });
+  const racePress = useRef((p: "L" | "R" | "hit") => {
+    const c = ctl.current;
+    const race = c.race;
+    if (!race || !c.racing) return;
+    const now = performance.now() / 1000;
+    const ev = race.press(p, now);
+    if (!ev) return;
+    if (ev === "done") {
+      c.raceEndedAt = performance.now();
+      const best = race.best();
+      endRace.current();
+      setReward({ kind: "hyrox", time: race.time(now), best: best !== null && best >= race.time(now) });
+      c.audio?.splash();
+      return;
+    }
+    if (ev === "station") c.audio?.splash();
+    setRace((v) => ({ station: race.station(), reps: race.reps(), miss: ev === "miss" ? (v?.miss ?? 0) + 1 : v?.miss ?? 0 }));
   });
   const togglePhoto = useRef(() => {
     const c = ctl.current;
@@ -647,14 +814,26 @@ export default function Life() {
     if (!world) return;
     const card = postcard(world.snapshot(), `${profile.name}, VelyxLabs`, "Canggu, Bali");
     setFlash((n) => n + 1);
-    card.toBlob((blob) => {
-      if (!blob) return;
+    // made synchronously: iOS only opens the share sheet while the tap is still being handled
+    const bytes = atob(card.toDataURL("image/png").split(",")[1]);
+    const buf = new Uint8Array(bytes.length);
+    for (let i = 0; i < bytes.length; i++) buf[i] = bytes.charCodeAt(i);
+    const blob = new Blob([buf], { type: "image/png" });
+    const save = () => {
       const a = document.createElement("a");
       a.href = URL.createObjectURL(blob);
       a.download = "bali-postcard.png";
       a.click();
       setTimeout(() => URL.revokeObjectURL(a.href), 4000);
-    }, "image/png");
+      setReward({ kind: "photo" });
+    };
+    // phones hand the postcard to the share sheet; elsewhere, or if sharing fails, it's saved with X a click away
+    const file = new File([blob], "bali-postcard.png", { type: "image/png" });
+    if (matchMedia("(pointer: coarse)").matches && navigator.canShare?.({ files: [file] })) {
+      navigator.share({ files: [file], text: SHARE_PHOTO, url: SITE }).catch((e: Error) => e.name !== "AbortError" && save());
+      return;
+    }
+    save();
   });
   const closeWork = useRef(() => {
     ctl.current.busy = ctl.current.work = false;
@@ -689,6 +868,27 @@ export default function Life() {
       c.busy = c.laptop = true;
       setLaptop(true);
       c.warpAt = performance.now();
+    } else if (st.tour) {
+      did(st.id);
+      // straight onto a scooter at the sign, facing west to the first stop, and off
+      Object.assign(s.scooter, { x: st.x, z: 16.4, yaw: -Math.PI / 2 });
+      swap(s, { ...st, mount: "scooter" });
+      c.camYaw = s.yaw;
+      (c.tour ??= createTour()).start();
+      setTouring(true);
+      setTourCard(null);
+      toast.current(`Six stops, lane to beach. First: ${STOPS[0].title.toLowerCase()}, just west.`);
+    } else if (st.hyrox) {
+      // a finishing tap on Enter or E shouldn't roll straight into another race
+      if (performance.now() - c.raceEndedAt < 1500) return;
+      did(st.id);
+      setReward(null);
+      const race = (c.race ??= createRace(storage()));
+      race.start(performance.now() / 1000);
+      c.busy = c.racing = true;
+      s.action = "hiit";
+      s.actionT = 99;
+      setRace({ station: 0, reps: 0, miss: 0 });
     } else if (st.book) {
       did(st.id);
       window.open(profile.booking, "_blank", "noopener");
@@ -707,17 +907,18 @@ export default function Life() {
     c.near = null;
     setNear(null);
   });
-  const toggleSound = () => {
-    const a = ctl.current.audio;
-    if (!a) return;
-    if (a.on) a.stop();
-    else void a.start();
-    setSound(a.on);
+  const toggleSound = async () => {
+    let a = ctl.current.audio;
+    try {
+      a ??= ctl.current.audio = createAudio();
+      if (a.on) a.stop();
+      else await a.start();
+    } catch {
+      // no Web Audio here: stays off
+    }
+    setSound(!!a?.on);
   };
-  const toggleNight = () => {
-    ctl.current.hour = ctl.current.hour === DAY ? NIGHT : DAY;
-    setPlayNight(ctl.current.hour === NIGHT);
-  };
+  const cycleSky = () => applySky.current(skyMode === "bali" ? "day" : skyMode === "day" ? "night" : "bali");
   // the touch stick: drag from its centre, up to its rim
   const stickRef = useRef<HTMLDivElement>(null);
   const stickPtr = useRef<number | null>(null);
@@ -750,6 +951,20 @@ export default function Life() {
     begin();
     setChosen(true);
   };
+  useEffect(() => {
+    ctl.current.ar = ar;
+  }, [ar]);
+  const closeAr = useCallback(() => setAr(false), []);
+  // ?ar opens the villa in AR straight away
+  useEffect(() => {
+    if (new URLSearchParams(location.search).has("ar")) setAr(true);
+  }, []);
+  // a ?at= link (a business card, a post) skips the title and starts you there
+  useEffect(() => {
+    if (!ready) return;
+    const at = spawnFrom(location.search);
+    if (at) startPlay(at, true);
+  }, [ready, startPlay]);
   const titleKey = useRef((_e: KeyboardEvent) => undefined as void);
   titleKey.current = (e: KeyboardEvent) => {
     if (["ArrowDown", "ArrowUp", "s", "w"].includes(e.key)) {
@@ -764,8 +979,10 @@ export default function Life() {
 
   const leaveLaptop = () => (ctl.current.play ? closeLaptop.current() : ctl.current.goTo(N - 2));
   const ch = CHAPTERS[active];
-  const { time, ampm } = clock(playing ? (playNight ? NIGHT : DAY) : hour);
-  const night = playing ? playNight : hour >= 19.5 || hour < 5.5;
+  const shownHour = playing ? playHour : hour;
+  const { time, ampm } = clock(skyMode === "bali" && playing ? baliHour(new Date()) : shownHour);
+  const night = shownHour >= 19.5 || shownHour < 5.5;
+  const skyLabel = skyMode === "day" ? "☀ Golden hour" : skyMode === "night" ? "☾ Night" : `${weather ? WEATHER_ICON[weather.kind] : "🌴"} Bali now${weather?.temp != null ? ` · ${weather.temp}°` : ""}`;
   const line = talk?.st.talk?.[talk.i];
   // the phone fills up as the day happens
   const inbox = [
@@ -852,7 +1069,7 @@ export default function Life() {
               </aside>
             )}
 
-            <button type="button" className="life__play" onClick={startPlay}>
+            <button type="button" className="life__play" onClick={() => startPlay()}>
               <span aria-hidden="true">🎮</span> Live it
             </button>
           </>
@@ -873,7 +1090,7 @@ export default function Life() {
             </p>
             <ul className="title__menu" role="menu">
               {[
-                { label: "Live it", sub: "Free roam. Walk the villa, ride the scooter, take the jet ski out.", go: startPlay },
+                { label: "Live it", sub: "Free roam. Walk the villa, ride the scooter, take the jet ski out.", go: () => startPlay() },
                 { label: "Watch my day", sub: "Ten moments, sunrise to midnight. Just scroll.", go: watch },
               ].map((m, i) => (
                 <li key={m.label} role="none">
@@ -889,6 +1106,7 @@ export default function Life() {
           <p className="title__help">
             <span className="title__keys"><kbd>↑</kbd><kbd>↓</kbd> choose <kbd>Enter</kbd> start</span>
             <span>Founder, VelyxLabs · best with sound</span>
+            <button type="button" className="title__ar" onClick={() => setAr(true)}>🏝 See it in AR</button>
           </p>
         </div>
       )}
@@ -905,6 +1123,23 @@ export default function Life() {
             <div className="ride__marker is-ride"><b>🛵 Scooter</b><span /></div>
             <div className="ride__marker is-ride"><b>🌊 Jet ski</b><span /></div>
           </div>
+          {touring && (
+            <div className="ride__marker is-tour" ref={tourMarkRef} aria-hidden="true">
+              <b>{STOPS[ctl.current.tour?.next() ?? 0]?.title}</b>
+              <span />
+            </div>
+          )}
+          {touring && tourCard !== null && (
+            <div className="tourcard glass" role="status">
+              <p className="talk__who">Canggu tour · stop {tourCard + 1} of {STOPS.length}</p>
+              <h3>{STOPS[tourCard].title}</h3>
+              <p>{STOPS[tourCard].line}</p>
+              <p className="tourcard__next">Next: {STOPS[tourCard + 1]?.title.toLowerCase()} →</p>
+            </div>
+          )}
+          {touring && tourCard === null && (
+            <button type="button" className="tourcard__end glass" onClick={endTour}>End the tour</button>
+          )}
 
           <div className="ride__bar glass">
             <strong>{MODE_LABEL[mode]}</strong>
@@ -912,7 +1147,7 @@ export default function Life() {
               <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> move · <kbd>Shift</kbd> {mode === "walk" ? "run" : "boost"} · <kbd>E</kbd> interact
             </span>
             <button type="button" className="ride__icon" aria-label={sound ? "Mute" : "Sound on"} onClick={toggleSound}>{sound ? "🔊" : "🔇"}</button>
-            <button type="button" className="ride__icon" aria-label={playNight ? "Make it day" : "Make it night"} onClick={toggleNight}>{playNight ? "☀" : "☾"}</button>
+            <button type="button" className="ride__sky" title="The sky: Bali right now, golden hour, or night" onClick={cycleSky}>{skyLabel}</button>
             <button type="button" className="ride__icon ride__cam" aria-label="Photo mode" title="Photo mode (C)" onClick={() => togglePhoto.current()}>📷</button>
             <button type="button" onClick={() => stopPlay.current()}>Back to the story</button>
           </div>
@@ -955,6 +1190,104 @@ export default function Life() {
             </button>
           )}
           {note && <p className="ride__note glass" role="status">{note}</p>}
+          {race && (() => {
+            const st = HYROX[race.station];
+            return (
+              <div className="hyrox glass" ref={raceRef} role="dialog" aria-label="HYROX challenge">
+                <div className="hyrox__top">
+                  <p className="talk__who">HYROX · {race.station + 1} of {HYROX.length}</p>
+                  <p className="hyrox__clock">0:00.0</p>
+                </div>
+                <h3 className="hyrox__name">{st.name} <small>{st.what}</small></h3>
+                {st.kind === "alt" ? (
+                  <>
+                    <div className="hyrox__bar"><span style={{ width: `${(race.reps / st.reps) * 100}%` }} /></div>
+                    <p className="hyrox__how">Alternate <kbd>←</kbd> <kbd>→</kbd> as fast as you can</p>
+                    <div className="hyrox__pads">
+                      <button type="button" onPointerDown={() => racePress.current("L")}>Left</button>
+                      <button type="button" onPointerDown={() => racePress.current("R")}>Right</button>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="hyrox__track">
+                      <span className="hyrox__zone" style={{ left: `${ZONE[0] * 100}%`, width: `${(ZONE[1] - ZONE[0]) * 100}%` }} />
+                      <span className="hyrox__needle" />
+                    </div>
+                    <p className="hyrox__how">
+                      <kbd>Space</kbd> when the needle is in the zone · {race.reps}/{st.reps}
+                      {race.miss > 0 && <em key={race.miss} className="hyrox__miss"> +1s</em>}
+                    </p>
+                    <div className="hyrox__pads">
+                      <button type="button" onPointerDown={() => racePress.current("hit")}>Now!</button>
+                    </div>
+                  </>
+                )}
+                <button type="button" className="hyrox__quit" onClick={() => endRace.current()}>Quit <kbd>Esc</kbd></button>
+              </div>
+            );
+          })()}
+          {reward && (
+            <div className="pass glass" role="dialog" aria-label={reward.kind === "photo" ? "Share your postcard" : "Founder pass"}>
+              {reward.kind === "hyrox" && (
+                <>
+                  <p className="talk__who">HYROX sim{reward.best ? " · new best" : ""}</p>
+                  <h3 className="pass__big">{clockText(reward.time)}</h3>
+                  <p>All eight stations done. Atharv races the real thing in 2027: HYROX Bangalore, Mumbai and Delhi.</p>
+                  <div className="talk__end">
+                    <a className="life__cta" href={xPost(`Finished the HYROX sim in Atharv Golait's Bali villa gym in ${clockText(reward.time)} 🏋️ Your turn:`, `${SITE}/?at=gym`)} target="_blank" rel="noopener noreferrer">Post my time on X <span aria-hidden="true">↗</span></a>
+                    <button type="button" onClick={() => setReward(null)}>Back to the gym</button>
+                  </div>
+                </>
+              )}
+              {reward.kind === "tour" && (
+                <>
+                  <p className="talk__who">Canggu tour · done</p>
+                  <h3 className="pass__big">That's my Canggu.</h3>
+                  <p>{STOPS[STOPS.length - 1].line} Thanks for riding along. If you're building something, come talk about it.</p>
+                  <div className="talk__end">
+                    <a className="life__cta" href={bookWith(profile.booking, "Rode the Canggu tour")} target="_blank" rel="noopener noreferrer">Book a call <span aria-hidden="true">↗</span></a>
+                    <a href={xPost("Rode a scooter tour of Canggu inside Atharv Golait's portfolio 🛵🌴", `${SITE}/?at=lane`)} target="_blank" rel="noopener noreferrer">Post it on X ↗</a>
+                    <button type="button" onClick={() => setReward(null)}>Keep riding</button>
+                  </div>
+                </>
+              )}
+              {reward.kind === "run" && (
+                <>
+                  <p className="talk__who">Founder pass</p>
+                  <h3 className="pass__big">{clockText(reward.time)}</h3>
+                  <p>{reward.best ? "Beach run, a new best. " : "Beach run done. "}Riders who make it to the sand get a call with Atharv, no pitch deck needed.</p>
+                  <div className="talk__end">
+                    <a className="life__cta" href={bookWith(profile.booking, `Founder pass: beach run ${clockText(reward.time)}`)} target="_blank" rel="noopener noreferrer">Book a call <span aria-hidden="true">↗</span></a>
+                    <a href={xPost(`Just did the beach run through Atharv Golait's Bali villa in ${clockText(reward.time)} 🛵 Beat that:`, `${SITE}/?at=lane`)} target="_blank" rel="noopener noreferrer">Post my time on X ↗</a>
+                    <button type="button" onClick={() => setReward(null)}>Keep riding</button>
+                  </div>
+                </>
+              )}
+              {reward.kind === "medals" && (
+                <>
+                  <p className="talk__who">All {MEDALS.length} medals</p>
+                  <h3 className="pass__big">🥇🥇🥇🥇🥇🥇</h3>
+                  <p>Six marathons, six gold medals, and now you've found every one. That earns you a free automation audit of your business.</p>
+                  <div className="talk__end">
+                    <a className="life__cta" href={bookWith(profile.booking, "Found all 6 medals: free automation audit")} target="_blank" rel="noopener noreferrer">Claim the audit <span aria-hidden="true">↗</span></a>
+                    <a href={xPost("Found all 6 hidden gold medals in Atharv Golait's Bali villa 🥇 Can you?", SITE)} target="_blank" rel="noopener noreferrer">Post it on X ↗</a>
+                    <button type="button" onClick={() => setReward(null)}>Keep exploring</button>
+                  </div>
+                </>
+              )}
+              {reward.kind === "photo" && (
+                <>
+                  <p className="talk__who">Postcard saved</p>
+                  <p>Attach it to a post and tag @Atharv_Golait.</p>
+                  <div className="talk__end">
+                    <a className="life__cta" href={xPost(SHARE_PHOTO, SITE)} target="_blank" rel="noopener noreferrer">Post on X <span aria-hidden="true">↗</span></a>
+                    <button type="button" onClick={() => setReward(null)}>Close</button>
+                  </div>
+                </>
+              )}
+            </div>
+          )}
 
           {talk && line && (
             <div className="talk glass" role="dialog" aria-label={talk.st.label}>
@@ -988,19 +1321,24 @@ export default function Life() {
                   </li>
                 ))}
               </ul>
+              <p className="phone__head">Medals · {medalCount}/{MEDALS.length}</p>
+              <p className="phone__medals" aria-label={`${medalCount} of ${MEDALS.length} medals found`}>
+                {MEDALS.map((m, i) => <span key={m.id} className={i < medalCount ? "is-done" : ""}>🥇</span>)}
+              </p>
               <p className="phone__head">Today · {done.length}/{STATIONS.length}</p>
               <div className="phone__day">
                 {STATIONS.map((st) => (
                   <span key={st.id} className={done.includes(st.id) ? "is-done" : ""} title={st.label}>{st.label}</span>
                 ))}
               </div>
+              <button type="button" className="phone__ar" onClick={() => setAr(true)}>🏝 Put the villa on your table (AR)</button>
               <a className="phone__cta" href={profile.booking} target="_blank" rel="noopener noreferrer">Book a call with Atharv ↗</a>
             </aside>
           )}
 
           <div
             ref={stickRef}
-            className={`stick${talk || laptop ? " is-off" : ""}`}
+            className={`stick${talk || laptop || race ? " is-off" : ""}`}
             aria-label="Move"
             onPointerDown={(e) => {
               stickPtr.current = e.pointerId;
@@ -1034,6 +1372,8 @@ export default function Life() {
           </button>
         )}
       </div>
+
+      {ar && <ArVilla onClose={closeAr} />}
 
       <div className="life__track" style={{ height: `${(N - 1) * STEP * 100 + 100}vh` }}>
         {CHAPTERS.map((c, i) => (

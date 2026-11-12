@@ -14,6 +14,7 @@ import { castFrom, rig, type Body, type CastId } from "./cast";
 import { SEA_LEVEL, groundY, swell, type PlayState } from "./play";
 import { createSky } from "./sky";
 import { TRIAL_GATES, TRIAL_START } from "./trial";
+import { MEDALS } from "./medals";
 import { createScaler } from "./adapt";
 import { titleWord } from "./titleword";
 import { contactShadows, fireflies, headlight, lanterns as pathLanterns, wake } from "./fx";
@@ -244,15 +245,18 @@ export async function createWorld(canvas: HTMLCanvasElement, onProgress: (k: num
 
   /* the villa, its garden and Bali around it: built in Blender (blender/build_villa.py) */
   const loader = new GLTFLoader().setMeshoptDecoder(MeshoptDecoder);
+  // decoded off the main thread (an <img> 2048 map decoded during its upload, a 140 ms stall),
+  // unflipped for glTF UVs
+  const bmpLoader = new THREE.ImageBitmapLoader().setOptions({ imageOrientation: "none" });
   const lightmap = async (url: string, key: "sky" | "lamp") => {
-    const t = await texLoader.loadAsync(url);
+    const t = new THREE.Texture(await bmpLoader.loadAsync(url));
     t.colorSpace = THREE.SRGBColorSpace;
-    t.flipY = false; // glTF UVs
+    t.flipY = false;
     t.channel = 1;
+    t.needsUpdate = true;
     part(key)(1);
     return t;
   };
-  const texLoader = new THREE.TextureLoader();
   const [gltf, men, skyMap, lampMap] = await Promise.all([
     loader.loadAsync("/life/villa.glb", part("villa")).then((g) => (part("villa")(1), g)),
     loader.loadAsync("/life/men.glb", part("men")).then((g) => (part("men")(1), g)),
@@ -562,6 +566,29 @@ export async function createWorld(canvas: HTMLCanvasElement, onProgress: (k: num
       // i = 0 is the start; while a run is on, gate i - 1 is the one to make
       const lit = trialNext === null ? i === 0 : i === trialNext + 1;
       a.children.forEach((m) => ((m as THREE.Mesh).material = lit ? archOn : archOff));
+    });
+  }
+
+  // the six hidden marathon medals: gold on a coral ribbon, turning slowly, gone once found
+  const gold = new THREE.MeshStandardMaterial({ color: "#f2c14e", emissive: "#b97a0e", emissiveIntensity: 0.55, metalness: 0.9, roughness: 0.22 });
+  const ribbon = new THREE.MeshStandardMaterial({ color: "#ff6a45", roughness: 0.6, side: THREE.DoubleSide });
+  const discGeo = new THREE.CylinderGeometry(0.3, 0.3, 0.06, 28).rotateX(Math.PI / 2);
+  const medals = MEDALS.map((m) => {
+    const g = group(new THREE.Mesh(discGeo, gold), at(new THREE.Mesh(new THREE.PlaneGeometry(0.12, 0.34), ribbon), 0, 0.46, 0));
+    g.userData.y = m.sea ? SEA_LEVEL + 1.3 : groundY(m.x, m.z) + 1.2;
+    g.position.set(m.x, g.userData.y, m.z);
+    g.scale.setScalar(m.sea ? 2.6 : 1.5);
+    g.visible = false;
+    world.add(g);
+    return g;
+  });
+  let medalsFound = new Set<string>();
+  function showMedals(t: number) {
+    medals.forEach((g, i) => {
+      g.visible = !medalsFound.has(MEDALS[i].id);
+      if (!g.visible) return;
+      g.rotation.y = t * 1.6 + i;
+      g.position.y = g.userData.y + Math.sin(t * 2 + i) * 0.08;
     });
   }
 
@@ -938,6 +965,8 @@ export async function createWorld(canvas: HTMLCanvasElement, onProgress: (k: num
   const ENV = 1.35;
   let lastHour = -1;
   let nightNow = 0;
+  // the weather in Bali right now (setWeather): cloud dims the sun, rain falls round the camera
+  const weather = { cloud: 0, rain: 0 };
   function light(hour: number) {
     if (Math.abs(hour - lastHour) < 0.005) return;
     lastHour = hour;
@@ -947,17 +976,18 @@ export async function createWorld(canvas: HTMLCanvasElement, onProgress: (k: num
     const a = THREE.MathUtils.mapLinear(THREE.MathUtils.clamp(hour, 5, 20), 5, 20, -0.2, Math.PI + 0.2);
     const el = Math.max(0.18, Math.sin(a));
     sunDir.set(Math.cos(a) * -22, 6 + el * 24, 16);
+    sky.cloud.value = weather.cloud;
     sky.update(s, sunDir, hour);
     dayLight.value = 1 - s.night;
     // by day the map adds a little warm bounce, so shaded rooms don't go blue
     baked.forEach((m) => (m.lightMapIntensity = 1.15 + s.night * 6.5));
     lanterns.forEach((m) => (m.emissiveIntensity = s.night * 1.5));
     sun.color.copy(s.sun);
-    sun.intensity = s.sunI;
+    sun.intensity = s.sunI * (1 - weather.cloud * 0.65);
     // the sky's own light does most of the ambient work, so shade takes the sky's colour
     hemi.color.copy(s.hemi);
-    hemi.intensity = s.hemiI * HEMI;
-    scene.environmentIntensity = (1.15 - s.night * 1.0) * ENV;
+    hemi.intensity = s.hemiI * HEMI * (1 - weather.cloud * 0.25);
+    scene.environmentIntensity = (1.15 - s.night * 1.0) * ENV * (1 - weather.cloud * 0.3);
     skinRim.value.copy(s.sun).multiplyScalar(s.sunI * 0.09 * (1 - s.night) + s.night * 0.05);
     starM.opacity = s.night * 0.9;
     lamps.forEach((l) => (l.intensity = (l.userData.max as number) * s.night * 0.45));
@@ -967,7 +997,9 @@ export async function createWorld(canvas: HTMLCanvasElement, onProgress: (k: num
     // a city of windows comes on after dusk
     cityWin.forEach((m) => (m.emissiveIntensity = s.night * 1.6));
     (scene.fog as THREE.Fog).color.copy(s.bottom).lerp(s.top, 0.15);
-    (scene.fog as THREE.Fog).far = 9000 - s.night * 5000;
+    (scene.fog as THREE.Fog).far = (9000 - s.night * 5000) * (1 - weather.rain * 0.9);
+    // rain hangs a grey haze over everything
+    (scene.fog as THREE.Fog).color.lerp(cB.set("#8d949c").multiplyScalar(1 - s.night * 0.8), weather.rain * 0.7);
     // the pool lights up after dark
     waters.forEach((m) => {
       if (m.name !== "pool_water") return;
@@ -991,12 +1023,20 @@ export async function createWorld(canvas: HTMLCanvasElement, onProgress: (k: num
     if (!m.isMesh || (m as THREE.InstancedMesh).isInstancedMesh) return;
     if (m.name.startsWith("soft:") || (!m.name.startsWith("solid:") && softName(m))) return;
     if (!bb.setFromObject(m).intersectsBox(near)) return;
-    m.geometry.boundsTree = new MeshBVH(m.geometry);
-    m.raycast = acceleratedRaycast;
     solids.push(m);
   };
   world.updateMatrixWorld(true);
   villa.traverse(solidMesh);
+  // the trees take a while: built a few at a time, so the loader keeps moving
+  let slice = performance.now();
+  for (const m of solids) {
+    m.geometry.boundsTree = new MeshBVH(m.geometry);
+    m.raycast = acceleratedRaycast;
+    if (performance.now() - slice > 12) {
+      await new Promise((r) => setTimeout(r, 0));
+      slice = performance.now();
+    }
+  }
   const ray = new THREE.Raycaster();
   ray.firstHitOnly = true;
   const rayDir = new THREE.Vector3();
@@ -1058,6 +1098,44 @@ export async function createWorld(canvas: HTMLCanvasElement, onProgress: (k: num
     });
   }
 
+  // rain: short streaks in a box that follows the camera, wrapped as they fall through it
+  const DROPS = 2600;
+  const RAIN_BOX = 26;
+  const rainPos = new Float32Array(DROPS * 6);
+  for (let i = 0; i < DROPS; i++) {
+    const x = (Math.random() - 0.5) * RAIN_BOX;
+    const y = Math.random() * RAIN_BOX * 0.6;
+    const z = (Math.random() - 0.5) * RAIN_BOX;
+    rainPos.set([x, y, z, x + 0.04, y + 0.55, z], i * 6);
+  }
+  const rainGeo = new THREE.BufferGeometry();
+  rainGeo.setAttribute("position", new THREE.BufferAttribute(rainPos, 3));
+  const rainM = new THREE.LineBasicMaterial({ color: "#aebccd", transparent: true, opacity: 0, depthWrite: false });
+  const rain = new THREE.LineSegments(rainGeo, rainM);
+  rain.frustumCulled = false;
+  rain.visible = false;
+  world.add(rain);
+  let rainT = 0;
+  function showRain(on: boolean, t: number, cam: THREE.Vector3) {
+    // under a roof (the house, the gym bale) it stays dry
+    const roofed = (Math.abs(cam.x) < 6.4 && Math.abs(cam.z) < 4.4 && cam.y < 7.2) || (cam.x > 8.8 && cam.x < 14.4 && cam.z > -3.9 && cam.z < 2.9 && cam.y < 3);
+    rain.visible = on && weather.rain > 0 && !roofed;
+    const dt = Math.min(0.05, t - rainT);
+    rainT = t;
+    if (!rain.visible) return;
+    rainM.opacity = 0.35 + weather.rain * 0.45;
+    // each drop falls and comes back in at the top of the box; the box rides with the camera
+    const H = RAIN_BOX * 0.6;
+    for (let i = 0; i < DROPS; i++) {
+      let y = rainPos[i * 6 + 1] - dt * 16;
+      if (y < 0) y += H;
+      rainPos[i * 6 + 1] = y;
+      rainPos[i * 6 + 4] = y + 0.55;
+    }
+    rainGeo.attributes.position.needsUpdate = true;
+    rain.position.set(Math.round(cam.x), cam.y - H * 0.45, Math.round(cam.z));
+  }
+
   /* ---------- poses ---------- */
   const T = new THREE.Clock();
   function pose(zone: Zone, t: number) {
@@ -1070,6 +1148,7 @@ export async function createWorld(canvas: HTMLCanvasElement, onProgress: (k: num
     // the game's own props only stand while the game is on
     if (zone !== "ride" || !play) {
       arches.forEach((a) => (a.visible = false));
+      medals.forEach((m) => (m.visible = false));
       foam.mesh.visible = false;
     }
     // at the laptop Atharv has stepped away; only the screen is left
@@ -1354,6 +1433,7 @@ export async function createWorld(canvas: HTMLCanvasElement, onProgress: (k: num
   // everyone else, and the things you can ride when you aren't on them
   function town(s: PlayState, t: number) {
     showArches();
+    showMedals(t);
     if (s.mode !== "scooter") placeScooter(scooter, s.scooter.x, groundOf(s.scooter.x, s.scooter.z), s.scooter.z, s.scooter.yaw, 0.1, 0.3);
     else placeScooter(scooter, s.x, s.y, s.z, s.yaw, s.lean, s.steer);
     const lit = s.mode === "scooter" && nightNow > 0.3;
@@ -1453,6 +1533,7 @@ export async function createWorld(canvas: HTMLCanvasElement, onProgress: (k: num
     sky.time.value = t;
     riceField.visible = f.cam.distanceTo(ORIGIN) < 150;
     light(f.hour);
+    showRain(f.zone === "ride" && !!play, t, f.cam);
     pose(f.zone, t);
     perform();
     splash(t, f.zone === "ride");
@@ -1513,11 +1594,43 @@ export async function createWorld(canvas: HTMLCanvasElement, onProgress: (k: num
   camera.lookAt(2, 1, 0);
   // in pieces, so the bar keeps moving: Metal compiles slowly and there are many programs
   const pieces = [...scene.children.filter((o) => o !== world), ...world.children.filter((o) => o !== villa), ...villa.children];
+  // compiled for where the scene is really drawn, N8AO's linear target, not the screen: a program's
+  // variant depends on its target, so compiling for the screen meant compiling everything again on frame one
+  renderer.setRenderTarget(ao.beautyRenderTarget);
   for (let i = 0; i < pieces.length; i += 8) {
     await Promise.all(pieces.slice(i, i + 8).map((o) => renderer.compileAsync(o, camera, scene)));
-    report(0.85 + (Math.min(pieces.length, i + 8) / pieces.length) * 0.12);
+    report(0.85 + (Math.min(pieces.length, i + 8) / pieces.length) * 0.1);
   }
-  composer.render();
+  renderer.setRenderTarget(null);
+  // the textures go up to the GPU a few at a time: the first frame used to upload all of them
+  // at once, a second's freeze right as the loader finished its name
+  const uploads = new Set<THREE.Texture>();
+  const grab = (v: unknown) => v instanceof THREE.Texture && uploads.add(v);
+  scene.traverse((o) => {
+    const m = (o as THREE.Mesh).material;
+    (Array.isArray(m) ? m : m ? [m] : []).forEach((mat: THREE.Material) => {
+      Object.values(mat).forEach(grab);
+      if (mat instanceof THREE.ShaderMaterial) Object.values(mat.uniforms).forEach((u) => grab(u.value));
+    });
+  });
+  let budget = performance.now();
+  let up = 0;
+  for (const tx of uploads) {
+    renderer.initTexture(tx);
+    if (performance.now() - budget > 10) {
+      report(0.95 + (++up / uploads.size) * 0.04);
+      await new Promise((r) => setTimeout(r, 0));
+      budget = performance.now();
+    }
+  }
+  // the full-screen passes compile on first use: bring them in one per tick
+  const passOn = composer.passes.map((p) => p.enabled);
+  composer.passes.forEach((p, i) => (p.enabled = i === 0));
+  for (let i = 0; i < composer.passes.length; i++) {
+    composer.passes[i].enabled = passOn[i];
+    composer.render();
+    await new Promise((r) => setTimeout(r, 0));
+  }
   hidden.forEach((o) => (o.visible = false));
   lastHour = -1; // the first real frame lights the scene for its own hour
   report(1);
@@ -1540,9 +1653,19 @@ export async function createWorld(canvas: HTMLCanvasElement, onProgress: (k: num
     titlePointer(nx: number, ny: number, click: boolean) {
       name.pointer(camera, nx, ny, click);
     },
+    /** Bali's weather now: cloud and rain, each 0..1. */
+    setWeather(cloud: number, rain: number) {
+      weather.cloud = cloud;
+      weather.rain = rain;
+      lastHour = -1; // relight with the new sky
+    },
     /** The beach run: the gate to make next, or null when no run is on. */
     setTrial(next: number | null) {
       trialNext = next;
+    },
+    /** The medals already found, so they stop being drawn. */
+    setMedals(found: string[]) {
+      medalsFound = new Set(found);
     },
     /** A world point on screen, in CSS pixels; null when behind the camera. */
     project(x: number, y: number, z: number) {
